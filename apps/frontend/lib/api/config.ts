@@ -9,7 +9,8 @@ export type LLMProvider =
   | 'gemini'
   | 'deepseek'
   | 'groq'
-  | 'ollama';
+  | 'ollama'
+  | 'nvidia';
 
 // Reasoning-effort levels supported by LiteLLM. `null` (or absent) means
 // "do not send the parameter" — the default for max compatibility.
@@ -30,6 +31,18 @@ export interface LLMConfigUpdate {
   api_base?: string | null;
   // Pass '' (empty string) to clear; null is ignored by the server.
   reasoning_effort?: ReasoningEffort | '' | null;
+}
+
+export interface ApiKeysUpdateRequest {
+  openai?: string;
+  anthropic?: string;
+  google?: string;
+  openrouter?: string;
+  deepseek?: string;
+  groq?: string;
+  openai_compatible?: string;
+  ollama?: string;
+  nvidia?: string;
 }
 
 export interface DatabaseStats {
@@ -159,6 +172,7 @@ export const PROVIDER_INFO: Record<
   deepseek: { name: 'DeepSeek', defaultModel: 'deepseek-chat', requiresKey: true },
   groq: { name: 'Groq', defaultModel: 'llama-3.3-70b-versatile', requiresKey: true },
   ollama: { name: 'Ollama (Local)', defaultModel: 'gemma3:4b', requiresKey: false },
+  nvidia: { name: 'NVIDIA', defaultModel: 'meta/llama-4-maverick-17b-128e-instruct', requiresKey: true },
 };
 
 // Feature configuration types
@@ -377,7 +391,8 @@ export type ApiKeyProvider =
   | 'deepseek'
   | 'groq'
   | 'openai_compatible'
-  | 'ollama';
+  | 'ollama'
+  | 'nvidia';
 
 // Map an LLM provider (the active-provider axis) to its key-store provider
 // name. Mirrors the backend `_PROVIDER_KEY_MAP` (gemini → google; the local
@@ -406,6 +421,7 @@ export interface ApiKeysUpdateRequest {
   groq?: string;
   openai_compatible?: string;
   ollama?: string;
+  nvidia?: string;
 }
 
 export interface ApiKeysUpdateResponse {
@@ -424,6 +440,7 @@ export const API_KEY_PROVIDER_INFO: Record<ApiKeyProvider, { name: string; descr
     groq: { name: 'Groq', description: 'Llama, Mixtral, Gemma on Groq' },
     openai_compatible: { name: 'OpenAI-Compatible', description: 'Self-hosted / proxy endpoints' },
     ollama: { name: 'Ollama', description: 'Local Ollama server' },
+    nvidia: { name: 'NVIDIA', description: 'NVIDIA API for Llama and other models' },
   };
 
 // Fetch API key status for all providers

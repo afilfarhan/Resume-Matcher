@@ -99,11 +99,24 @@ async def get_llm_config_endpoint() -> LLMConfigResponse:
 
     provider = stored.get("provider", settings.llm_provider)
     reasoning_effort = stored.get("reasoning_effort", settings.reasoning_effort)
+    
+    # Normalize NVIDIA API base for response
+    api_base = stored.get("api_base", settings.llm_api_base)
+    if provider == "nvidia":
+        if not api_base:
+            api_base = "https://integrate.api.nvidia.com/v1"
+        else:
+            api_base = api_base.rstrip("/")
+            if api_base.endswith("/chat/completions"):
+                api_base = api_base[: -len("/chat/completions")]
+            if not api_base.endswith("/v1"):
+                api_base = api_base + "/v1"
+    
     return LLMConfigResponse(
         provider=provider,
         model=stored.get("model", settings.llm_model),
         api_key=_mask_api_key(resolve_api_key(stored, provider)),
-        api_base=stored.get("api_base", settings.llm_api_base),
+        api_base=api_base,
         reasoning_effort=reasoning_effort or None,
     )
 
@@ -159,6 +172,17 @@ async def update_llm_config(
         reasoning_effort=resolved_reasoning_effort,
     )
 
+    # Normalize NVIDIA API base - set default if not provided and normalize format
+    if test_config.provider == "nvidia":
+        if not test_config.api_base:
+            test_config.api_base = "https://integrate.api.nvidia.com/v1"
+        else:
+            test_config.api_base = test_config.api_base.rstrip("/")
+            if test_config.api_base.endswith("/chat/completions"):
+                test_config.api_base = test_config.api_base[: -len("/chat/completions")]
+            if not test_config.api_base.endswith("/v1"):
+                test_config.api_base = test_config.api_base + "/v1"
+
     # Save config regardless of health check outcome (see docstring).
     _save_config(stored)
 
@@ -212,6 +236,17 @@ async def test_llm_connection(request: LLMConfigRequest | None = None) -> dict:
             else (stored.get("reasoning_effort") or settings.reasoning_effort) or None
         ),
     )
+
+    # Normalize NVIDIA API base - set default if not provided and normalize format
+    if config.provider == "nvidia":
+        if not config.api_base:
+            config.api_base = "https://integrate.api.nvidia.com/v1"
+        else:
+            config.api_base = config.api_base.rstrip("/")
+            if config.api_base.endswith("/chat/completions"):
+                config.api_base = config.api_base[: -len("/chat/completions")]
+            if not config.api_base.endswith("/v1"):
+                config.api_base = config.api_base + "/v1"
 
     test_prompt = "Hi"
     return await check_llm_health(config, include_details=True, test_prompt=test_prompt)

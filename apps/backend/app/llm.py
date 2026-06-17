@@ -35,6 +35,78 @@ litellm.drop_params = True
 # current code path sends thinking, but future-proofs the Router.
 litellm.modify_params = True
 
+# Monkey-patch LiteLLM's provider detection to route NVIDIA's public API
+# (integrate.api.nvidia.com) to 'openai' instead of 'nvidia_nim'.
+# The 'nvidia_nim' provider is for self-hosted NIM deployments only; the public
+# API uses OpenAI-compatible format and should be treated as standard OpenAI.
+_original_get_llm_provider = None
+
+
+def _patch_nvidia_public_api_provider() -> None:
+    """Patch LiteLLM to route public NVIDIA API to openai provider."""
+    global _original_get_llm_provider
+    
+    if _original_get_llm_provider is not None:
+        return  # Already patched
+    
+    try:
+        from litellm.litellm_core_utils import get_llm_provider_logic
+        
+        original_get_llm_provider = get_llm_provider_logic.get_llm_provider
+        
+        def patched_get_llm_provider(
+            model: str,
+            custom_llm_provider: Any = None,
+            api_base: Any = None,
+            api_key: Any = None,
+            litellm_params: Any = None,
+        ):
+            # If api_base matches NVIDIA public API and no explicit provider set,
+            # force openai provider instead of nvidia_nim
+            if (
+                api_base
+                and custom_llm_provider is None
+                and "integrate.api.nvidia.com" in api_base
+            ):
+                # Return openai provider instead of nvidia_nim
+                # This makes the public API use standard OpenAI-compatible format
+                result = original_get_llm_provider(
+                    model=model,
+                    custom_llm_provider=custom_llm_provider,
+                    api_base=api_base,
+                    api_key=api_key,
+                    litellm_params=litellm_params,
+                )
+                # Change nvidia_nim to openai for public NVIDIA API
+                _model, provider, dynamic_api_key, _api_base = result
+                logging.debug(
+                    f"NVIDIA patch: original provider={provider}, model={_model}, api_base={_api_base}"
+                )
+                if provider == "nvidia_nim":
+                    logging.debug("NVIDIA patch: changing provider from nvidia_nim to openai")
+                    return (_model, "openai", dynamic_api_key, _api_base)
+                return result
+            
+            return original_get_llm_provider(
+                model=model,
+                custom_llm_provider=custom_llm_provider,
+                api_base=api_base,
+                api_key=api_key,
+                litellm_params=litellm_params,
+            )
+        
+        get_llm_provider_logic.get_llm_provider = patched_get_llm_provider
+        _original_get_llm_provider = original_get_llm_provider
+    except Exception:
+        # If patching fails, log but don't break the app
+        logging.warning(
+            "Failed to patch NVIDIA public API provider detection",
+            exc_info=True,
+        )
+
+
+_patch_nvidia_public_api_provider()
+
 # LLM timeout configuration (seconds) - base values
 LLM_TIMEOUT_HEALTH_CHECK = 30
 LLM_TIMEOUT_COMPLETION = 120
@@ -85,7 +157,7 @@ def _normalize_api_base(provider: str, api_base: str | None) -> str | None:
 
     # OpenAI / OpenAI-compatible: preserve the URL as-is. The OpenAI client
     # resolves paths correctly whether the base includes /v1 or not.
-    if provider in ("openai", "openai_compatible"):
+    if provider in ("openai", "openai_compatible", "nvidia"):
         return base or None
 
     # Anthropic handler appends '/v1/messages'. If base already ends with '/v1',
@@ -308,6 +380,7 @@ _PROVIDER_KEY_MAP: dict[str, str] = {
     "deepseek": "deepseek",
     "groq": "groq",
     "ollama": "ollama",
+    "nvidia": "nvidia",
 }
 
 
@@ -346,6 +419,9 @@ def resolve_api_key(stored: dict, provider: str) -> str:
             else settings.llm_api_key
         )
         api_key = api_keys.get(config_provider, env_default)
+    logging.debug(
+        f"resolve_api_key: provider={provider}, config_provider={config_provider}, has_key={bool(api_key)}, key_prefix={api_key[:20] if api_key else 'None'}..."
+    )
     return api_key
 
 
@@ -391,11 +467,24 @@ def get_llm_config() -> LLMConfig:
     # Normalize empty string to None — user explicitly cleared.
     reasoning_effort = raw_re if raw_re else None
 
+    # NVIDIA public API uses OpenAI-compatible format with default base URL
+    api_base = stored.get("api_base", settings.llm_api_base)
+    if provider == "nvidia" and not api_base:
+        api_base = "https://integrate.api.nvidia.com/v1"
+    
+    # Normalize NVIDIA API base - strip /chat/completions suffix if present
+    if provider == "nvidia" and api_base:
+        api_base = api_base.rstrip("/")
+        if api_base.endswith("/chat/completions"):
+            api_base = api_base[: -len("/chat/completions")]
+        if not api_base.endswith("/v1"):
+            api_base = api_base + "/v1"
+
     return LLMConfig(
         provider=provider,
         model=model,
         api_key=api_key,
-        api_base=stored.get("api_base", settings.llm_api_base),
+        api_base=api_base,
         reasoning_effort=reasoning_effort,
     )
 
@@ -406,7 +495,18 @@ def get_model_name(config: LLMConfig) -> str:
     For most providers, adds the provider prefix if not already present.
     For OpenRouter, always adds 'openrouter/' prefix since OpenRouter models
     use nested prefixes like 'openrouter/anthropic/claude-3.5-sonnet'.
+    
+    For NVIDIA public API (integrate.api.nvidia.com), use openai provider
+    with the model name as-is (no prefix).
     """
+    # NVIDIA public API uses OpenAI-compatible format with openai provider
+    if config.provider == "nvidia":
+        # The model name is already in the correct format (e.g., meta/llama3-70b-instruct)
+        # Use openai/ prefix so LiteLLM routes to OpenAI client
+        if config.model.startswith("openai/"):
+            return config.model
+        return f"openai/{config.model}"
+    
     provider_prefixes = {
         "openai": "",  # OpenAI models don't need prefix
         # openai_compatible: route via LiteLLM's openai/ prefix so the OpenAI
@@ -419,6 +519,7 @@ def get_model_name(config: LLMConfig) -> str:
         "deepseek": "deepseek/",
         "groq": "groq/",
         "ollama": "ollama_chat/",  # ollama_chat/ routes to /api/chat (supports messages array)
+        "nvidia": "nvidia_nim/",  # NVIDIA NIM uses nvidia_nim/ prefix
     }
 
     prefix = provider_prefixes.get(config.provider, "")
@@ -440,6 +541,7 @@ def get_model_name(config: LLMConfig) -> str:
         "ollama/",
         "ollama_chat/",
         "openai/",
+        "nvidia_nim/",
     ]
     if any(config.model.startswith(p) for p in known_prefixes):
         return config.model
@@ -555,16 +657,29 @@ async def check_llm_health(
     try:
         # Make a minimal test call with timeout
         # Pass API key directly to avoid race conditions with global os.environ
+        api_base = _normalize_api_base(config.provider, config.api_base)
+        logging.debug(
+            f"Health check: provider={config.provider}, model={model_name}, api_base={api_base}"
+        )
+        effective_key = _effective_api_key(config.provider, config.api_key)
+        logging.debug(
+            f"Health check: effective_api_key={effective_key[:20] if effective_key else 'None'}..."
+        )
         kwargs: dict[str, Any] = {
             "model": model_name,
             "messages": [{"role": "user", "content": prompt}],
             "max_tokens": 64,
-            "api_key": _effective_api_key(config.provider, config.api_key),
-            "api_base": _normalize_api_base(config.provider, config.api_base),
+            "api_key": effective_key,
+            "api_base": api_base,
             "timeout": LLM_TIMEOUT_HEALTH_CHECK,
         }
         if config.reasoning_effort:
             kwargs["reasoning_effort"] = config.reasoning_effort
+
+        logging.debug(f"Health check kwargs: {list(kwargs.keys())}")
+        logging.debug(f"Health check model: {kwargs.get('model')}")
+        logging.debug(f"Health check api_base: {kwargs.get('api_base')}")
+        logging.debug(f"Health check api_key (first 20 chars): {kwargs.get('api_key', '')[:20] if kwargs.get('api_key') else 'None'}...")
 
         response = await litellm.acompletion(**kwargs)
         content = _extract_choice_text(response.choices[0])
@@ -918,6 +1033,7 @@ def _calculate_timeout(
         "openrouter": 1.5,  # More variable latency
         "groq": 1.0,
         "ollama": 2.0,  # Local models can be slower
+        "nvidia": 1.0,  # NVIDIA API is hosted, similar to OpenAI
     }
     provider_factor = provider_factors.get(provider, 1.0)
 

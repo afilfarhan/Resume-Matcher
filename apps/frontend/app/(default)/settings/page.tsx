@@ -76,6 +76,7 @@ const PROVIDERS: LLMProvider[] = [
   'deepseek',
   'groq',
   'ollama',
+  'nvidia',
 ];
 
 const SEGMENTED_BUTTON_BASE =
