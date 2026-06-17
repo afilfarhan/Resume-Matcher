@@ -179,6 +179,13 @@ class Project(BaseModel):
         return _coerce_string_list(value)
 
 
+class SkillCategory(BaseModel):
+    """A category of skills with its member skills."""
+    
+    name: str
+    skills: list[str]
+
+
 class AdditionalInfo(BaseModel):
     """Additional information section."""
 
@@ -186,6 +193,8 @@ class AdditionalInfo(BaseModel):
     languages: list[str] = Field(default_factory=list)
     certificationsTraining: list[str] = Field(default_factory=list)
     awards: list[str] = Field(default_factory=list)
+    # Dynamic sub-categorization of technical skills (optional, for enhanced rendering)
+    categorizedSkills: list[SkillCategory] = Field(default_factory=list)
 
     @field_validator(
         "technicalSkills",
@@ -335,6 +344,9 @@ def normalize_resume_data(data: dict[str, Any]) -> dict[str, Any]:
         data["sectionMeta"] = copy.deepcopy(DEFAULT_SECTION_META)
     if "customSections" not in data:
         data["customSections"] = {}
+    # Migration: rename additionalInfo → additional (used before v1.3.0)
+    if "additionalInfo" in data and "additional" not in data:
+        data["additional"] = data.pop("additionalInfo")
     return data
 
 

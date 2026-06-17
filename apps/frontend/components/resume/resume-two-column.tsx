@@ -34,11 +34,22 @@ export const ResumeTwoColumn: React.FC<ResumeTwoColumnProps> = ({
 
   // Drop blank/whitespace-only entries so empty lines (e.g. from editing in the
   // builder) never render in the resume or PDF (issue #763).
-  const technicalSkills = additional?.technicalSkills?.filter((item): item is string => typeof item === 'string' && item.trim() !== '') ?? [];
+  
+  // Support categorized skills (new) with fallback to flat list (legacy)
+  const categorizedSkills = additional?.categorizedSkills;
+  const technicalSkills = categorizedSkills && categorizedSkills.length > 0
+    ? [] // Will be rendered via categories
+    : additional?.technicalSkills?.filter((item): item is string => typeof item === 'string' && item.trim() !== '') ?? [];
   const languages = additional?.languages?.filter((item): item is string => typeof item === 'string' && item.trim() !== '') ?? [];
   const certificationsTraining =
     additional?.certificationsTraining?.filter((item): item is string => typeof item === 'string' && item.trim() !== '') ?? [];
   const awards = additional?.awards?.filter((item): item is string => typeof item === 'string' && item.trim() !== '') ?? [];
+
+  console.log('[ResumeTwoColumn] categorizedSkills:', categorizedSkills);
+  console.log('[ResumeTwoColumn] technicalSkills:', technicalSkills);
+  console.log('[ResumeTwoColumn] languages:', languages);
+  console.log('[ResumeTwoColumn] certificationsTraining:', certificationsTraining);
+  console.log('[ResumeTwoColumn] awards:', awards);
 
   // Get sorted visible sections
   const sortedSections = getSortedSections(data);
@@ -402,16 +413,33 @@ export const ResumeTwoColumn: React.FC<ResumeTwoColumnProps> = ({
           )}
 
           {/* Skills Section */}
-          {isSectionVisible('additional') && technicalSkills.length > 0 && (
+          {isSectionVisible('additional') && (technicalSkills.length > 0 || (categorizedSkills && categorizedSkills.length > 0)) && (
             <div className={baseStyles['resume-section']}>
               <h3 className={baseStyles['resume-section-title-sm']}>{headingFallbacks.skills}</h3>
-              <div className="flex flex-wrap gap-1">
-                {technicalSkills.map((skill, index) => (
-                  <span key={index} className={baseStyles['resume-skill-pill']}>
-                    {skill}
-                  </span>
-                ))}
-              </div>
+              {categorizedSkills && categorizedSkills.length > 0 ? (
+                <div className={baseStyles['resume-stack']}>
+                  {categorizedSkills.map((category, idx) => (
+                    <div key={idx}>
+                      <strong>{category.name}:</strong>
+                      <div className="flex flex-wrap gap-1">
+                        {category.skills.map((skill, skillIdx) => (
+                          <span key={skillIdx} className={baseStyles['resume-skill-pill']}>
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-1">
+                  {technicalSkills.map((skill, index) => (
+                    <span key={index} className={baseStyles['resume-skill-pill']}>
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

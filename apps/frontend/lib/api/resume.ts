@@ -46,6 +46,7 @@ interface ProcessedResume {
     languages?: string[];
     certificationsTraining?: string[];
     awards?: string[];
+    categorizedSkills?: Array<{ name: string; skills: string[] }>;
   };
 }
 

@@ -133,7 +133,8 @@
         "languages": "Español\nInglés",
         "certifications": "AWS Solution Architect\nGoogle Analytics",
         "awards": "Empleado del mes\nGanador de hackathon"
-      }
+      },
+      "categorizedSkillsNotice": "Las habilidades están categorizadas automáticamente. Usa el modo de edición para gestionar categorías."
     },
     "customSections": {
       "dialogTitle": "Agregar sección personalizada",

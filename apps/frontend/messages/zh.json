@@ -133,7 +133,8 @@
         "languages": "中文\n英语",
         "certifications": "AWS 解决方案架构师\nGoogle Analytics",
         "awards": "月度最佳员工\n黑客松冠军"
-      }
+      },
+      "categorizedSkillsNotice": "技能已自动分类。使用编辑模式管理分类。"
     },
     "customSections": {
       "dialogTitle": "添加自定义板块",

@@ -59,7 +59,9 @@ export default function ResumeViewerPage() {
       try {
         setLoading(true);
         setError(null);
+        console.log('[ResumePage] Loading resume:', resumeId);
         const data = await fetchResume(resumeId);
+        console.log('[ResumePage] API response data:', data);
 
         // Get processing status
         const status = (data.raw_resume?.processing_status || 'pending') as ProcessingStatus;
@@ -70,6 +72,8 @@ export default function ResumeViewerPage() {
 
         // Prioritize processed_resume if available (structured JSON)
         if (data.processed_resume) {
+          console.log('[ResumePage] Using processed_resume:', data.processed_resume);
+          console.log('[ResumePage] processed_resume.additional:', data.processed_resume.additional);
           setResumeData(data.processed_resume as ResumeData);
           setError(null);
         } else if (status === 'failed') {
@@ -80,6 +84,7 @@ export default function ResumeViewerPage() {
           // Try to parse raw_resume content as JSON (for tailored resumes stored as JSON)
           try {
             const parsed = JSON.parse(data.raw_resume.content);
+            console.log('[ResumePage] Parsed raw_resume.content:', parsed);
             setResumeData(parsed as ResumeData);
           } catch {
             setError(t('resumeViewer.errors.notProcessedYet'));

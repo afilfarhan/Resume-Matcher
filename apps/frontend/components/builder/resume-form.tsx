@@ -48,6 +48,18 @@ interface ResumeFormProps {
 }
 
 export const ResumeForm: React.FC<ResumeFormProps> = ({ resumeData, onUpdate }) => {
+  // Debug logging to track categorizedSkills flow
+  React.useEffect(() => {
+    const hasCategorized = (resumeData.additional?.categorizedSkills?.length ?? 0) > 0;
+    const technicalSkills = resumeData.additional?.technicalSkills;
+    console.log('[RESUME_FORM] Received resumeData:', {
+      hasCategorizedSkills: hasCategorized,
+      categorizedSkillsCount: resumeData.additional?.categorizedSkills?.length ?? 0,
+      technicalSkillsCount: technicalSkills?.length ?? 0,
+      technicalSkills,
+      categorizedSkills: resumeData.additional?.categorizedSkills,
+    });
+  }, [resumeData]);
   const { t } = useTranslations();
 
   // Get section metadata, falling back to defaults

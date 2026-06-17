@@ -458,6 +458,30 @@ Output this exact JSON format:
   "strategy_notes": "brief notes for the next editing pass"
 }}"""
 
+SKILL_CLASSIFICATION_PROMPT = """Classify the technical skills into appropriate sub-categories for a professional resume.
+
+Rules:
+1. Every skill must end up in exactly one category - no drops, no duplicates.
+2. Use conventional, resume-appropriate category names (e.g., Programming Languages, Cloud & DevOps, Databases, Frameworks, Tools, Testing).
+3. Limit to 3-6 categories maximum to avoid section sprawl.
+4. Anything that doesn't cleanly fit goes into a catch-all "Additional Skills".
+5. For small skill lists (<=4 skills), use a single category or keep flat.
+6. Output ONLY valid JSON - no prose, no explanations.
+
+Example output:
+{{
+  "categories": [
+    {{"name": "Programming Languages", "skills": ["Python", "TypeScript", "JavaScript"]}},
+    {{"name": "Cloud & DevOps", "skills": ["AWS", "Docker", "Kubernetes", "CI/CD"]}},
+    {{"name": "Databases", "skills": ["PostgreSQL", "MongoDB", "Redis"]}}
+  ]
+}}
+
+Skills to classify:
+{skills_list}
+
+Output JSON only:"""
+
 DIFF_IMPROVE_PROMPT = """Given this resume and job description, output a JSON object with targeted changes to better align the resume with the job.
 
 RULES:

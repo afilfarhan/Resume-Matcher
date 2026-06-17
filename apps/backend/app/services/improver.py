@@ -16,6 +16,7 @@ from app.prompts import (
     DIFF_STRATEGY_INSTRUCTIONS,
     EXTRACT_KEYWORDS_PROMPT,
     IMPROVE_RESUME_PROMPTS,
+    SKILL_CLASSIFICATION_PROMPT,
     SKILL_TARGET_PLAN_PROMPT,
     get_language_name,
 )
@@ -1512,3 +1513,91 @@ def generate_improvements(job_keywords: dict[str, Any]) -> list[dict[str, Any]]:
         )
 
     return improvements
+
+
+async def classify_skills(skills: list[str]) -> list[dict[str, Any]]:
+    """Classify technical skills into appropriate sub-categories.
+    
+    Args:
+        skills: List of skill names to classify
+        
+    Returns:
+        List of category objects with name and skills, or empty list if classification fails
+    """
+    if not skills:
+        return []
+    
+    # For very small skill lists, keep flat (no categorization)
+    if len(skills) <= 4:
+        return []
+    
+    try:
+        prompt = SKILL_CLASSIFICATION_PROMPT.format(
+            skills_list=", ".join(f'"{skill}"' for skill in skills)
+        )
+        
+        result = await complete_json(
+            prompt=prompt,
+            schema_type="enrichment",
+            max_tokens=2048,
+        )
+        
+        if not result:
+            return []
+        
+        parsed = json.loads(json.dumps(result))
+        
+        if not isinstance(parsed, dict):
+            return []
+        
+        categories = parsed.get("categories", [])
+        
+        if not isinstance(categories, list):
+            return []
+        
+        # Validate structure and filter empty categories
+        valid_categories = []
+        seen_skills = set()
+        
+        for category in categories:
+            if not isinstance(category, dict):
+                continue
+            
+            name = category.get("name", "").strip()
+            category_skills = category.get("skills", [])
+            
+            if not name or not isinstance(category_skills, list):
+                continue
+            
+            category_skills = [s.strip() for s in category_skills if s.strip()]
+            
+            if not category_skills:
+                continue
+            
+            # Check for duplicates across categories
+            duplicate_skills = [s for s in category_skills if s in seen_skills]
+            if duplicate_skills:
+                continue
+            
+            seen_skills.update(category_skills)
+            valid_categories.append({"name": name, "skills": category_skills})
+        
+        # If all skills weren't classified, add catch-all category
+        classified_skills = seen_skills
+        unclassified_skills = [s for s in skills if s not in classified_skills]
+        
+        if unclassified_skills:
+            # Check if "Additional Skills" category already exists
+            additional_idx = next((i for i, c in enumerate(valid_categories) if c["name"] == "Additional Skills"), None)
+            if additional_idx is not None:
+                # Merge with existing Additional Skills category
+                valid_categories[additional_idx]["skills"].extend(unclassified_skills)
+            else:
+                # Create new Additional Skills category
+                valid_categories.append({"name": "Additional Skills", "skills": unclassified_skills})
+        
+        return valid_categories if valid_categories else []
+        
+    except Exception as e:
+        logger.error(f"Skill classification failed: {e}")
+        return []

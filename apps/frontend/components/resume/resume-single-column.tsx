@@ -363,18 +363,28 @@ const AdditionalSection: React.FC<{
   displayName?: string;
   labels?: Partial<AdditionalSectionLabels>;
 }> = ({ additional, displayName = 'Skills & Awards', labels }) => {
-  if (!additional) return null;
+  console.log('[ResumeSingleColumn AdditionalSection] additional prop:', additional);
+  
+  if (!additional) {
+    console.log('[ResumeSingleColumn AdditionalSection] additional is null/undefined, returning null');
+    return null;
+  }
 
   const {
     technicalSkills: rawTechnicalSkills = [],
     languages: rawLanguages = [],
     certificationsTraining: rawCertificationsTraining = [],
     awards: rawAwards = [],
+    categorizedSkills,
   } = additional;
 
   // Drop blank/whitespace-only entries so empty lines (e.g. from editing in the
   // builder) never render in the resume or PDF (issue #763).
-  const technicalSkills = rawTechnicalSkills.filter((item): item is string => typeof item === 'string' && item.trim() !== '');
+  
+  // Support categorized skills (new) with fallback to flat list (legacy)
+  const technicalSkills = categorizedSkills && categorizedSkills.length > 0
+    ? [] // Will be rendered via categories
+    : rawTechnicalSkills.filter((item): item is string => typeof item === 'string' && item.trim() !== '');
   const languages = rawLanguages.filter((item): item is string => typeof item === 'string' && item.trim() !== '');
   const certificationsTraining = rawCertificationsTraining.filter((item): item is string => typeof item === 'string' && item.trim() !== '');
   const awards = rawAwards.filter((item): item is string => typeof item === 'string' && item.trim() !== '');
@@ -387,21 +397,44 @@ const AdditionalSection: React.FC<{
   };
 
   const hasContent =
+    (categorizedSkills && categorizedSkills.length > 0) ||
     technicalSkills.length > 0 ||
     languages.length > 0 ||
     certificationsTraining.length > 0 ||
     awards.length > 0;
 
-  if (!hasContent) return null;
+  console.log('[ResumeSingleColumn AdditionalSection] hasContent:', hasContent);
+  console.log('[ResumeSingleColumn AdditionalSection] categorizedSkills:', categorizedSkills);
+  console.log('[ResumeSingleColumn AdditionalSection] technicalSkills:', technicalSkills);
+  console.log('[ResumeSingleColumn AdditionalSection] languages:', languages);
+  console.log('[ResumeSingleColumn AdditionalSection] certificationsTraining:', certificationsTraining);
+  console.log('[ResumeSingleColumn AdditionalSection] awards:', awards);
+
+  if (!hasContent) {
+    console.log('[ResumeSingleColumn AdditionalSection] no content, returning null');
+    return null;
+  }
 
   return (
     <div className={baseStyles['resume-section']}>
       <h3 className={baseStyles['resume-section-title']}>{displayName}</h3>
       <div className={`${baseStyles['resume-stack']} ${baseStyles['resume-text-sm']}`}>
-        {technicalSkills.length > 0 && (
+        {(technicalSkills.length > 0 || (categorizedSkills && categorizedSkills.length > 0)) && (
           <div className="flex">
             <span className="font-bold w-32 shrink-0">{mergedLabels.technicalSkills}</span>
-            <span>{technicalSkills.join(', ')}</span>
+            <span>
+              {categorizedSkills && categorizedSkills.length > 0 ? (
+                <div className={baseStyles['resume-stack']}>
+                  {categorizedSkills.map((category, idx) => (
+                    <div key={idx}>
+                      <strong>{category.name}:</strong> {category.skills.join(', ')}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                technicalSkills.join(', ')
+              )}
+            </span>
           </div>
         )}
         {languages.length > 0 && (

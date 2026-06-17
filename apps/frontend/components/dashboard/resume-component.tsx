@@ -54,11 +54,17 @@ export interface Project {
   description?: string[];
 }
 
+export interface SkillCategory {
+  name: string;
+  skills: string[];
+}
+
 export interface AdditionalInfo {
   technicalSkills?: string[];
   languages?: string[];
   certificationsTraining?: string[];
   awards?: string[];
+  categorizedSkills?: SkillCategory[];
 }
 
 export interface AdditionalSectionLabels {

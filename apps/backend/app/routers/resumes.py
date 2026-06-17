@@ -46,6 +46,7 @@ from app.services.parser import parse_document, parse_resume_to_json, restore_da
 from app.services.improver import (
     MONTH_PATTERN,
     apply_diffs,
+    classify_skills,
     extract_job_keywords,
     generate_improvements,
     generate_skill_target_plan,
@@ -663,6 +664,7 @@ async def get_resume(resume_id: str = Query(...)) -> ResumeFetchResponse:
 
     # Get processed data if available (no more on-demand parsing)
     processed_data = resume.get("processed_data")
+    logger.info(f"[SKILL_CLASSIFICATION] get_resume fetched processed_data, categorizedSkills present: {'categorizedSkills' in (processed_data.get('additional', {}) if processed_data else {})}")
 
     # Apply lazy migration - add section metadata to old resumes
     if processed_data:
@@ -962,7 +964,19 @@ async def _improve_preview_flow(
         if refinement_attempted:
             response_warnings.append(f"Refinement failed: {str(e)}")
 
+    # Classify technical skills into categories (after improvement, before response)
+    if "additional" in improved_data and isinstance(improved_data["additional"], dict):
+        original_skills = improved_data["additional"].get("technicalSkills", [])
+        if isinstance(original_skills, list) and original_skills:
+            logger.info(f"[SKILL_CLASSIFICATION] Starting classification for skills: {original_skills}")
+            categorized = await classify_skills(original_skills)
+            logger.info(f"[SKILL_CLASSIFICATION] Raw classification result: {categorized}")
+            if categorized:
+                improved_data["additional"]["categorizedSkills"] = categorized
+                logger.info(f"[SKILL_CLASSIFICATION] Set categorizedSkills in improved_data")
+    
     improved_text = json.dumps(improved_data, indent=2)
+    logger.info(f"[SKILL_CLASSIFICATION] improved_text JSON includes categorizedSkills: {'categorizedSkills' in improved_data.get('additional', {})}")
     preview_hash = _hash_improved_data(improved_data)
     preview_hashes = job.get("preview_hashes")
     if not isinstance(preview_hashes, dict):
@@ -1045,6 +1059,7 @@ async def improve_resume_confirm_endpoint(
     detail = "Failed to confirm resume. Please try again."
     try:
         improved_data = request.improved_data.model_dump()
+        logger.info(f"[SKILL_CLASSIFICATION] Confirm endpoint received categorizedSkills: {'categorizedSkills' in improved_data.get('additional', {})}")
         improved_text = json.dumps(improved_data, indent=2)
         # NOTE: This endpoint relies on preview-hash validation to ensure the payload matches a prior preview.
         # Stronger guarantees would require server-side preview storage or re-running the improvement.
@@ -1112,6 +1127,7 @@ async def improve_resume_confirm_endpoint(
         response_warnings.extend(aux_warnings)
 
         stage = "create_resume"
+        logger.info(f"[SKILL_CLASSIFICATION] About to save to DB, categorizedSkills present: {'categorizedSkills' in improved_data.get('additional', {})}")
         tailored_resume = await db.create_resume(
             content=improved_text,
             content_type="json",
@@ -1320,8 +1336,19 @@ async def improve_resume_endpoint(
             if refinement_attempted:
                 response_warnings.append(f"Refinement failed: {str(e)}")
 
-        # Convert improved data to JSON string for storage
+        # Classify technical skills into categories (after improvement, before response)
+        if "additional" in improved_data and isinstance(improved_data["additional"], dict):
+            original_skills = improved_data["additional"].get("technicalSkills", [])
+            if isinstance(original_skills, list) and original_skills:
+                logger.info(f"[SKILL_CLASSIFICATION] Starting classification for skills: {original_skills}")
+                categorized = await classify_skills(original_skills)
+                logger.info(f"[SKILL_CLASSIFICATION] Raw classification result: {categorized}")
+                if categorized:
+                    improved_data["additional"]["categorizedSkills"] = categorized
+                    logger.info(f"[SKILL_CLASSIFICATION] Set categorizedSkills in improved_data")
+        
         improved_text = json.dumps(improved_data, indent=2)
+        logger.info(f"[SKILL_CLASSIFICATION] improved_text JSON includes categorizedSkills: {'categorizedSkills' in improved_data.get('additional', {})}")
 
         # Calculate differences between original and improved resume
         diff_summary, detailed_changes, diff_error = _calculate_diff_from_resume(

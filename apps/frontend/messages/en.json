@@ -133,7 +133,8 @@
         "languages": "English\nSpanish",
         "certifications": "AWS Solution Architect\nGoogle Analytics",
         "awards": "Employee of the Month\nHackathon Winner"
-      }
+      },
+      "categorizedSkillsNotice": "Skills are automatically categorized. Use the edit mode to manage categories."
     },
     "customSections": {
       "dialogTitle": "Add Custom Section",

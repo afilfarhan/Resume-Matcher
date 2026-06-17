@@ -36,6 +36,16 @@ export const ResumeClean: React.FC<ResumeCleanProps> = ({
 }) => {
   const { personalInfo, summary, workExperience, education, personalProjects, additional } = data;
 
+  // Debug logging to track categorizedSkills in renderer
+  React.useEffect(() => {
+    console.log('[RESUME_CLEAN] Renderer received data:', {
+      hasCategorizedSkills: (additional?.categorizedSkills?.length ?? 0) > 0,
+      categorizedSkillsCount: additional?.categorizedSkills?.length ?? 0,
+      technicalSkills: additional?.technicalSkills,
+      categorizedSkills: additional?.categorizedSkills,
+    });
+  }, [additional]);
+
   const sortedSections = getSortedSections(data);
 
   const contactIcons: Record<string, React.ReactNode> = {
@@ -330,7 +340,11 @@ const AdditionalSection: React.FC<{
   const clean = (items?: string[]) =>
     (items ?? []).filter((item): item is string => typeof item === 'string' && item.trim() !== '');
 
-  const technicalSkills = clean(additional.technicalSkills);
+  // Support categorized skills (new) with fallback to flat list (legacy)
+  const categorizedSkills = additional?.categorizedSkills;
+  const technicalSkills = categorizedSkills && categorizedSkills.length > 0
+    ? [] // Will be rendered via categories
+    : clean(additional.technicalSkills);
   const languages = clean(additional.languages);
   const certificationsTraining = clean(additional.certificationsTraining);
   const awards = clean(additional.awards);
@@ -343,6 +357,7 @@ const AdditionalSection: React.FC<{
   };
 
   const hasContent =
+    (categorizedSkills && categorizedSkills.length > 0) ||
     technicalSkills.length > 0 ||
     languages.length > 0 ||
     certificationsTraining.length > 0 ||
@@ -361,7 +376,15 @@ const AdditionalSection: React.FC<{
     <div className={baseStyles['resume-section']}>
       <h3 className={styles.sectionTitle}>{displayName}</h3>
       <div className={`${baseStyles['resume-stack']} ${baseStyles['resume-text-sm']}`}>
-        {line(mergedLabels.technicalSkills, technicalSkills)}
+        {categorizedSkills && categorizedSkills.length > 0 ? (
+          categorizedSkills.map((category, idx) => (
+            <div key={idx}>
+              <strong>{category.name}:</strong> {category.skills.join(', ')}
+            </div>
+          ))
+        ) : (
+          line(mergedLabels.technicalSkills, technicalSkills)
+        )}
         {line(mergedLabels.languages, languages)}
         {line(mergedLabels.certifications, certificationsTraining)}
         {line(mergedLabels.awards, awards)}

@@ -135,6 +135,10 @@ export default function TailorPage() {
     ) {
       throw new Error('Resume preview data is invalid.');
     }
+    console.log('[TAILOR_PAGE] Building confirm payload:', {
+      hasCategorizedSkills: (resumePreview.additional?.categorizedSkills?.length ?? 0) > 0,
+      categorizedSkillsCount: resumePreview.additional?.categorizedSkills?.length ?? 0,
+    });
     return {
       resume_id: masterResumeId,
       job_id: result.data.job_id,
@@ -178,6 +182,11 @@ export default function TailorPage() {
 
       // 2. Preview Resume
       const result = await previewImproveResume(resumeId, jobId, selectedPromptId);
+      console.log('[TAILOR_PAGE] Received preview result:', {
+        hasCategorizedSkills: (result.data?.resume_preview?.additional?.categorizedSkills?.length ?? 0) > 0,
+        categorizedSkillsCount: result.data?.resume_preview?.additional?.categorizedSkills?.length ?? 0,
+        technicalSkillsCount: result.data?.resume_preview?.additional?.technicalSkills?.length ?? 0,
+      });
 
       if (!result?.data?.diff_summary || !result?.data?.detailed_changes) {
         console.warn('Diff data missing for tailor preview; requesting user confirmation.');

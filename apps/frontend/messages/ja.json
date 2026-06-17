@@ -133,7 +133,8 @@
         "languages": "日本語\n英語",
         "certifications": "AWS Solution Architect\nGoogle Analytics",
         "awards": "月間MVP\nハッカソン優勝"
-      }
+      },
+      "categorizedSkillsNotice": "スキルは自動的に分類されます。編集モードでカテゴリを管理してください。"
     },
     "customSections": {
       "dialogTitle": "カスタムセクションを追加",

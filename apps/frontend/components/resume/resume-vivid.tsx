@@ -38,10 +38,24 @@ export const ResumeVivid: React.FC<ResumeVividProps> = ({
 }) => {
   const { personalInfo, summary, workExperience, education, personalProjects, additional } = data;
 
+  // Debug logging to track categorizedSkills in renderer
+  React.useEffect(() => {
+    console.log('[RESUME_VIVID] Renderer received data:', {
+      hasCategorizedSkills: (additional?.categorizedSkills?.length ?? 0) > 0,
+      categorizedSkillsCount: additional?.categorizedSkills?.length ?? 0,
+      technicalSkills: additional?.technicalSkills,
+      categorizedSkills: additional?.categorizedSkills,
+    });
+  }, [additional]);
+
   const clean = (items?: string[]) =>
     (items ?? []).filter((item): item is string => typeof item === 'string' && item.trim() !== '');
 
-  const technicalSkills = clean(additional?.technicalSkills);
+  // Support categorized skills (new) with fallback to flat list (legacy)
+  const categorizedSkills = additional?.categorizedSkills;
+  const technicalSkills = categorizedSkills && categorizedSkills.length > 0 
+    ? [] // Will be rendered via categories
+    : clean(additional?.technicalSkills);
   const languages = clean(additional?.languages);
   const certificationsTraining = clean(additional?.certificationsTraining);
   const awards = clean(additional?.awards);
@@ -310,10 +324,23 @@ export const ResumeVivid: React.FC<ResumeVividProps> = ({
 
         {/* Sidebar Column - Right */}
         <div className={styles.sidebarColumn}>
-          {isSectionVisible('additional') && technicalSkills.length > 0 && (
+          {isSectionVisible('additional') && (technicalSkills.length > 0 || (categorizedSkills && categorizedSkills.length > 0)) && (
             <div className={baseStyles['resume-section']}>
               <h3 className={styles.sectionTitleSm}>{headingFallbacks.skills}</h3>
-              <p className={baseStyles['resume-text-xs']}>{technicalSkills.join(' • ')}</p>
+              {categorizedSkills && categorizedSkills.length > 0 ? (
+                <div className={baseStyles['resume-stack']}>
+                  {categorizedSkills.map((category, idx) => (
+                    <div key={idx}>
+                      <strong>{category.name}:</strong>
+                      <p className={baseStyles['resume-text-xs']}>
+                        {category.skills.join(' • ')}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className={baseStyles['resume-text-xs']}>{technicalSkills.join(' • ')}</p>
+              )}
             </div>
           )}
 
