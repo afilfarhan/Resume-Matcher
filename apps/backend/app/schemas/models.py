@@ -323,7 +323,7 @@ DEFAULT_SECTION_META: list[dict[str, Any]] = [
     {
         "id": "additional",
         "key": "additional",
-        "displayName": "Skills & Awards",
+        "displayName": "Skills and Certifications",
         "sectionType": SectionType.STRING_LIST,
         "isDefault": True,
         "isVisible": True,
