@@ -132,9 +132,12 @@
         "technicalSkills": "React\nTypeScript\nNode.js",
         "languages": "中文\n英语",
         "certifications": "AWS 解决方案架构师\nGoogle Analytics",
-        "awards": "月度最佳员工\n黑客松冠军"
+        "awards": "月度最佳员工\n黑客松冠军",
+        "categoryName": "分类名称（例如：编程语言）",
+        "skills": "技能 1\n技能 2\n技能 3"
       },
-      "categorizedSkillsNotice": "技能已自动分类。使用编辑模式管理分类。"
+      "categorizedSkillsNotice": "技能已自动分类。在下方编辑分类和技能。",
+      "addCategory": "添加分类"
     },
     "customSections": {
       "dialogTitle": "添加自定义板块",

@@ -3,7 +3,7 @@
 import React from 'react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { AdditionalInfo } from '@/components/dashboard/resume-component';
+import { AdditionalInfo, SkillCategory } from '@/components/dashboard/resume-component';
 import { useTranslations } from '@/lib/i18n';
 
 interface AdditionalFormProps {
@@ -30,12 +30,45 @@ export const AdditionalForm: React.FC<AdditionalFormProps> = ({ data, onChange }
     // so pressing Enter creates a new line (issue #763); consumers filter empty
     // entries at render time, and the backend drops them on save.
     const items = value.split('\n');
-    // Clear categorizedSkills when user manually edits skills to avoid stale分类 data
     const newData: AdditionalInfo = { ...data, [field]: items };
-    if (field === 'technicalSkills') {
-      newData.categorizedSkills = undefined;
-    }
     onChange(newData);
+  };
+
+  // Handle categorized skills changes
+  const handleCategoryChange = (categoryIndex: number, field: 'name' | 'skills', value: string | string[]) => {
+    const newData = { ...data };
+    if (!newData.categorizedSkills) {
+      newData.categorizedSkills = [];
+    }
+    newData.categorizedSkills[categoryIndex] = {
+      ...newData.categorizedSkills[categoryIndex],
+      [field]: value,
+    };
+    onChange(newData);
+  };
+
+  // Add a new category
+  const addCategory = () => {
+    const newData = { ...data };
+    if (!newData.categorizedSkills) {
+      newData.categorizedSkills = [];
+    }
+    newData.categorizedSkills.push({ name: '', skills: [] });
+    onChange(newData);
+  };
+
+  // Remove a category
+  const removeCategory = (categoryIndex: number) => {
+    const newData = { ...data };
+    if (newData.categorizedSkills) {
+      newData.categorizedSkills.splice(categoryIndex, 1);
+      onChange(newData);
+    }
+  };
+
+  // Convert skills array to newline-separated string for textarea
+  const formatSkillsArray = (skills?: string[]) => {
+    return skills?.join('\n') || '';
   };
 
   const formatArray = (arr?: string[]) => {
@@ -59,7 +92,7 @@ export const AdditionalForm: React.FC<AdditionalFormProps> = ({ data, onChange }
         {t('builder.additionalForm.instructions')}
       </p>
 
-      {/* Technical Skills - show categorized or flat */}
+      {/* Technical Skills - always editable */}
       <div className="space-y-2">
         <Label
           htmlFor="technicalSkills"
@@ -69,19 +102,43 @@ export const AdditionalForm: React.FC<AdditionalFormProps> = ({ data, onChange }
         </Label>
         {hasCategorizedSkills ? (
           <div className="space-y-3">
-            <div className="text-xs text-ink-soft italic mb-2">
-              {t('builder.additionalForm.categorizedSkillsNotice')}
+            <div className="flex items-center justify-between">
+              <div className="text-xs text-ink-soft italic">
+                {t('builder.additionalForm.categorizedSkillsNotice')}
+              </div>
+              <button
+                type="button"
+                onClick={addCategory}
+                className="text-xs font-mono text-primary hover:underline"
+              >
+                + {t('builder.additionalForm.addCategory')}
+              </button>
             </div>
             {data.categorizedSkills?.map((category, idx) => (
-              <div key={idx} className="border border-black p-3 rounded-none shadow-sm">
-                <div className="font-bold mb-2 text-sm">{category.name}</div>
-                <div className="text-black">
-                  {category.skills?.map((skill, skillIdx) => (
-                    <span key={skillIdx} className="inline-block bg-canvas mr-2 mb-2 px-2 py-1 text-xs rounded-none border border-black">
-                      {skill}
-                    </span>
-                  ))}
+              <div key={idx} className="border border-black p-3 rounded-none shadow-sm relative">
+                <button
+                  type="button"
+                  onClick={() => removeCategory(idx)}
+                  className="absolute top-2 right-2 text-xs text-destructive hover:underline"
+                >
+                  ×
+                </button>
+                <div className="mb-2">
+                  <input
+                    type="text"
+                    value={category.name}
+                    onChange={(e) => handleCategoryChange(idx, 'name', e.target.value)}
+                    placeholder={t('builder.additionalForm.placeholders.categoryName')}
+                    className="w-full border border-black rounded-none p-1 text-sm font-bold"
+                  />
                 </div>
+                <Textarea
+                  value={formatSkillsArray(category.skills)}
+                  onChange={(e) => handleCategoryChange(idx, 'skills', e.target.value.split('\n'))}
+                  onKeyDown={handleKeyDown}
+                  placeholder={t('builder.additionalForm.placeholders.skills')}
+                  className="min-h-[80px] text-black rounded-none border-black bg-white focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-blue-700"
+                />
               </div>
             ))}
           </div>

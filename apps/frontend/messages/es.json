@@ -132,9 +132,12 @@
         "technicalSkills": "React\nTypeScript\nNode.js",
         "languages": "Español\nInglés",
         "certifications": "AWS Solution Architect\nGoogle Analytics",
-        "awards": "Empleado del mes\nGanador de hackathon"
+        "awards": "Empleado del mes\nGanador de hackathon",
+        "categoryName": "Nombre de la categoría (p. ej., Lenguajes de programación)",
+        "skills": "Habilidad 1\nHabilidad 2\nHabilidad 3"
       },
-      "categorizedSkillsNotice": "Las habilidades están categorizadas automáticamente. Usa el modo de edición para gestionar categorías."
+      "categorizedSkillsNotice": "Las habilidades están categorizadas automáticamente. Edita las categorías y habilidades abajo.",
+      "addCategory": "Agregar Categoría"
     },
     "customSections": {
       "dialogTitle": "Agregar sección personalizada",

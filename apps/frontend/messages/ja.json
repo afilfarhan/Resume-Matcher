@@ -132,9 +132,12 @@
         "technicalSkills": "React\nTypeScript\nNode.js",
         "languages": "日本語\n英語",
         "certifications": "AWS Solution Architect\nGoogle Analytics",
-        "awards": "月間MVP\nハッカソン優勝"
+        "awards": "月間MVP\nハッカソン優勝",
+        "categoryName": "カテゴリ名（例：プログラミング言語）",
+        "skills": "スキル 1\nスキル 2\nスキル 3"
       },
-      "categorizedSkillsNotice": "スキルは自動的に分類されます。編集モードでカテゴリを管理してください。"
+      "categorizedSkillsNotice": "スキルは自動的に分類されます。以下のカテゴリとスキルを編集してください。",
+      "addCategory": "カテゴリを追加"
     },
     "customSections": {
       "dialogTitle": "カスタムセクションを追加",

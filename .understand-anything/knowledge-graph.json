@@ -1,0 +1,702 @@
+﻿{
+    "tour":  [
+                 {
+                     "files":  [
+                                   "README.md",
+                                   "AGENTS.md",
+                                   "apps/backend/app/main.py",
+                                   "apps/frontend/app/(default)/page.tsx"
+                               ],
+                     "step":  1,
+                     "description":  "Start with the project structure. Resume Matcher is a monorepo with FastAPI backend and Next.js frontend. The entry points are apps/backend/app/main.py and apps/frontend/app/(default)/page.tsx.",
+                     "title":  "Project Overview"
+                 },
+                 {
+                     "files":  [
+                                   "apps/backend/app/config.py",
+                                   "apps/backend/app/database.py",
+                                   "apps/backend/app/llm.py",
+                                   "apps/backend/app/routers/"
+                               ],
+                     "step":  2,
+                     "description":  "Explore the backend structure: config.py for settings, database.py for data layer, llm.py for AI integration. The routers define HTTP endpoints while services contain business logic.",
+                     "title":  "Backend Architecture"
+                 },
+                 {
+                     "files":  [
+                                   "apps/backend/app/models.py",
+                                   "apps/backend/app/database.py"
+                               ],
+                     "step":  3,
+                     "description":  "Understand the SQLite database with SQLAlchemy. The Database facade returns plain dicts, not ORM objects. Key tables: resumes, jobs, improvements, applications, api_keys (encrypted).",
+                     "title":  "Database Layer"
+                 },
+                 {
+                     "files":  [
+                                   "apps/backend/app/llm.py",
+                                   "docs/agent/llm-integration.md"
+                               ],
+                     "step":  4,
+                     "description":  "LiteLLM provides multi-provider support (OpenAI, Anthropic, Ollama, etc.). The llm.py module handles JSON mode, retries, and provider-specific configurations.",
+                     "title":  "LLM Integration"
+                 },
+                 {
+                     "files":  [
+                                   "apps/backend/app/services/",
+                                   "apps/backend/app/prompts/"
+                               ],
+                     "step":  5,
+                     "description":  "Services contain business logic: parser.py (document parsing), improver.py (resume tailoring), refiner.py (keyword injection), cover_letter.py (cover letter generation). Prompts define LLM templates.",
+                     "title":  "Services and Prompts"
+                 },
+                 {
+                     "files":  [
+                                   "apps/frontend/app/(default)/",
+                                   "apps/frontend/components/",
+                                   "apps/frontend/lib/api/"
+                               ],
+                     "step":  6,
+                     "description":  "Next.js 16 App Router with TypeScript. Pages in app/(default)/, components in components/, API client in lib/api/. The Swiss design system is mandatory for all UI.",
+                     "title":  "Frontend Architecture"
+                 },
+                 {
+                     "files":  [
+                                   "apps/frontend/lib/api/client.ts",
+                                   "apps/frontend/lib/api/"
+                               ],
+                     "step":  7,
+                     "description":  "lib/api/client.ts provides centralized API access with 240s timeout. The client exports apiFetch, apiPost, apiPatch, apiPut, apiDelete functions. Never use raw fetch in components.",
+                     "title":  "API Client"
+                 },
+                 {
+                     "files":  [
+                                   "apps/frontend/lib/i18n/",
+                                   "apps/frontend/i18n/",
+                                   "apps/frontend/messages/"
+                               ],
+                     "step":  8,
+                     "description":  "Custom i18n system with locale parity. Two settings: uiLanguage (interface) and contentLanguage (LLM output). Supported locales: en, es, zh, ja, pt. All translation files must match en.json structurally.",
+                     "title":  "Internationalization"
+                 },
+                 {
+                     "files":  [
+                                   "apps/frontend/components/tracker/",
+                                   "apps/backend/app/routers/applications.py"
+                               ],
+                     "step":  9,
+                     "description":  "Kanban board for job applications using dnd-kit. Seven columns: saved, applied, no_response, response, interview, accepted, rejected. Supports bulk operations and manual addition.",
+                     "title":  "Tracker System"
+                 },
+                 {
+                     "files":  [
+                                   "apps/backend/app/pdf.py",
+                                   "apps/frontend/app/print/"
+                               ],
+                     "step":  10,
+                     "description":  "Headless Chromium renders frontend print pages via Playwright. The PDF flow: frontend renders /print/resumes/[id] page -\u003e Chromium captures -\u003e PDF returned to user.",
+                     "title":  "PDF Generation"
+                 }
+             ],
+    "edges":  [
+                  {
+                      "label":  "imports settings",
+                      "from":  "entry-backend",
+                      "to":  "config",
+                      "type":  "imports"
+                  },
+                  {
+                      "label":  "imports db",
+                      "from":  "entry-backend",
+                      "to":  "database",
+                      "type":  "imports"
+                  },
+                  {
+                      "label":  "imports pdf",
+                      "from":  "entry-backend",
+                      "to":  "pdf",
+                      "type":  "imports"
+                  },
+                  {
+                      "label":  "imports routers",
+                      "from":  "entry-backend",
+                      "to":  "routers",
+                      "type":  "imports"
+                  },
+                  {
+                      "label":  "encrypts keys",
+                      "from":  "config",
+                      "to":  "crypto",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "reads api_keys",
+                      "from":  "config",
+                      "to":  "database",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "defines tables",
+                      "from":  "database",
+                      "to":  "models",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "gets config",
+                      "from":  "llm",
+                      "to":  "config",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "calls LLM",
+                      "from":  "services",
+                      "to":  "llm",
+                      "type":  "calls"
+                  },
+                  {
+                      "label":  "reads/writes data",
+                      "from":  "services",
+                      "to":  "database",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "uses templates",
+                      "from":  "services",
+                      "to":  "prompts",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "validates data",
+                      "from":  "services",
+                      "to":  "schemas",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "invokes services",
+                      "from":  "routers",
+                      "to":  "services",
+                      "type":  "calls"
+                  },
+                  {
+                      "label":  "database operations",
+                      "from":  "routers",
+                      "to":  "database",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "LLM operations",
+                      "from":  "routers",
+                      "to":  "llm",
+                      "type":  "calls"
+                  },
+                  {
+                      "label":  "gets frontend URL",
+                      "from":  "pdf",
+                      "to":  "config",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "renders hero",
+                      "from":  "entry-frontend",
+                      "to":  "ui-components",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "exports resume API",
+                      "from":  "api-client",
+                      "to":  "resume",
+                      "type":  "exports"
+                  },
+                  {
+                      "label":  "exports config API",
+                      "from":  "api-client",
+                      "to":  "config",
+                      "type":  "exports"
+                  },
+                  {
+                      "label":  "exports tracker API",
+                      "from":  "api-client",
+                      "to":  "tracker",
+                      "type":  "exports"
+                  },
+                  {
+                      "label":  "exports enrichment API",
+                      "from":  "api-client",
+                      "to":  "enrichment",
+                      "type":  "exports"
+                  },
+                  {
+                      "label":  "static imports",
+                      "from":  "i18n",
+                      "to":  "messages",
+                      "type":  "imports"
+                  },
+                  {
+                      "label":  "language context",
+                      "from":  "context",
+                      "to":  "i18n",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "calls API",
+                      "from":  "tracker",
+                      "to":  "api-client",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "calls API",
+                      "from":  "resume-builder",
+                      "to":  "api-client",
+                      "type":  "uses"
+                  },
+                  {
+                      "label":  "renders templates",
+                      "from":  "resume-builder",
+                      "to":  "templates",
+                      "type":  "uses"
+                  }
+              ],
+    "layers":  [
+                   {
+                       "modules":  [
+                                       "routers",
+                                       "api-client"
+                                   ],
+                       "description":  "HTTP endpoints and FastAPI routers",
+                       "name":  "api"
+                   },
+                   {
+                       "modules":  [
+                                       "services",
+                                       "llm",
+                                       "prompts"
+                                   ],
+                       "description":  "Business logic and LLM operations",
+                       "name":  "services"
+                   },
+                   {
+                       "modules":  [
+                                       "database",
+                                       "models",
+                                       "schemas"
+                                   ],
+                       "description":  "Database layer and data models",
+                       "name":  "data"
+                   },
+                   {
+                       "modules":  [
+                                       "pdf",
+                                       "crypto",
+                                       "config"
+                                   ],
+                       "description":  "PDF rendering, encryption, and utilities",
+                       "name":  "infrastructure"
+                   },
+                   {
+                       "modules":  [
+                                       "ui-components",
+                                       "resume-builder",
+                                       "tracker",
+                                       "templates"
+                                   ],
+                       "description":  "React components and pages",
+                       "name":  "ui"
+                   },
+                   {
+                       "modules":  [
+                                       "i18n",
+                                       "context"
+                                   ],
+                       "description":  "Translation and localization",
+                       "name":  "internationalization"
+                   }
+               ],
+    "nodes":  [
+                  {
+                      "id":  "project",
+                      "label":  "Resume Matcher",
+                      "tags":  [
+                                   "monorepo",
+                                   "fastapi",
+                                   "nextjs",
+                                   "ai",
+                                   "resume"
+                               ],
+                      "type":  "project",
+                      "summary":  "Monorepo with FastAPI backend + Next.js frontend for AI-powered resume tailoring",
+                      "file":  "root"
+                  },
+                  {
+                      "id":  "backend",
+                      "label":  "Backend (FastAPI)",
+                      "tags":  [
+                                   "python",
+                                   "fastapi",
+                                   "sqlite",
+                                   "llm"
+                               ],
+                      "type":  "application",
+                      "summary":  "Python FastAPI backend with SQLite database and LiteLLM AI integration",
+                      "file":  "apps/backend"
+                  },
+                  {
+                      "id":  "frontend",
+                      "label":  "Frontend (Next.js)",
+                      "tags":  [
+                                   "react",
+                                   "nextjs",
+                                   "typescript",
+                                   "tailwind"
+                               ],
+                      "type":  "application",
+                      "summary":  "Next.js 16 App Router frontend with TypeScript and Swiss design system",
+                      "file":  "apps/frontend"
+                  },
+                  {
+                      "id":  "entry-backend",
+                      "label":  "Backend Entry Point",
+                      "tags":  [
+                                   "fastapi",
+                                   "lifespan",
+                                   "routers"
+                               ],
+                      "type":  "entry-point",
+                      "summary":  "FastAPI app initialization with lifespan management and router mounting",
+                      "functions":  [
+                                        "main",
+                                        "lifespan"
+                                    ],
+                      "file":  "apps/backend/app/main.py"
+                  },
+                  {
+                      "id":  "entry-frontend",
+                      "label":  "Frontend Entry Point",
+                      "tags":  [
+                                   "nextjs",
+                                   "page",
+                                   "hero"
+                               ],
+                      "type":  "entry-point",
+                      "summary":  "Next.js root page rendering Hero component",
+                      "functions":  [
+                                        "Home"
+                                    ],
+                      "file":  "apps/frontend/app/(default)/page.tsx"
+                  },
+                  {
+                      "id":  "config",
+                      "label":  "Configuration",
+                      "tags":  [
+                                   "config",
+                                   "settings",
+                                   "encryption"
+                               ],
+                      "type":  "module",
+                      "summary":  "Settings management with pydantic-settings and encrypted API key storage",
+                      "functions":  [
+                                        "Settings",
+                                        "load_config_file",
+                                        "save_config_file",
+                                        "get_api_keys_from_config"
+                                    ],
+                      "file":  "apps/backend/app/config.py"
+                  },
+                  {
+                      "id":  "database",
+                      "label":  "Database Layer",
+                      "tags":  [
+                                   "database",
+                                   "sqlalchemy",
+                                   "sqlite"
+                               ],
+                      "type":  "module",
+                      "summary":  "Async SQLAlchemy/SQLite facade with dual engines for async and sync operations",
+                      "functions":  [
+                                        "Database",
+                                        "db",
+                                        "create_resume",
+                                        "get_resume",
+                                        "list_resumes",
+                                        "create_job",
+                                        "create_application"
+                                    ],
+                      "file":  "apps/backend/app/database.py"
+                  },
+                  {
+                      "id":  "models",
+                      "label":  "Database Models",
+                      "tags":  [
+                                   "orm",
+                                   "models",
+                                   "sqlalchemy"
+                               ],
+                      "type":  "module",
+                      "summary":  "SQLAlchemy ORM models for resumes, jobs, improvements, applications, and api_keys",
+                      "functions":  [
+                                        "Resume",
+                                        "Job",
+                                        "Improvement",
+                                        "Application",
+                                        "ApiKey"
+                                    ],
+                      "file":  "apps/backend/app/models.py"
+                  },
+                  {
+                      "id":  "llm",
+                      "label":  "LLM Integration",
+                      "tags":  [
+                                   "llm",
+                                   "litellm",
+                                   "ai",
+                                   "openai",
+                                   "anthropic"
+                               ],
+                      "type":  "module",
+                      "summary":  "LiteLLM wrapper supporting 100+ providers with JSON mode and retry policies",
+                      "functions":  [
+                                        "get_llm_config",
+                                        "get_model_name",
+                                        "get_router",
+                                        "check_llm_health",
+                                        "complete",
+                                        "complete_json"
+                                    ],
+                      "file":  "apps/backend/app/llm.py"
+                  },
+                  {
+                      "id":  "routers",
+                      "label":  "API Routers",
+                      "tags":  [
+                                   "api",
+                                   "routers",
+                                   "fastapi"
+                               ],
+                      "type":  "module",
+                      "summary":  "HTTP endpoint definitions for health, config, resumes, jobs, applications, enrichment",
+                      "functions":  [
+                                        "health_router",
+                                        "config_router",
+                                        "resumes_router",
+                                        "applications_router",
+                                        "enrichment_router"
+                                    ],
+                      "file":  "apps/backend/app/routers/"
+                  },
+                  {
+                      "id":  "services",
+                      "label":  "Business Services",
+                      "tags":  [
+                                   "services",
+                                   "business-logic"
+                               ],
+                      "type":  "module",
+                      "summary":  "Core business logic for parsing, improving, refining, and cover letter generation",
+                      "functions":  [
+                                        "parse_document",
+                                        "parse_resume_to_json",
+                                        "extract_job_keywords",
+                                        "generate_resume_diffs",
+                                        "refine_resume",
+                                        "generate_cover_letter"
+                                    ],
+                      "file":  "apps/backend/app/services/"
+                  },
+                  {
+                      "id":  "prompts",
+                      "label":  "Prompt Templates",
+                      "tags":  [
+                                   "prompts",
+                                   "llm",
+                                   "templates"
+                               ],
+                      "type":  "module",
+                      "summary":  "LLM prompt templates for resume parsing, improvement, enrichment, and cover letters",
+                      "functions":  [
+                                        "PARSE_RESUME_PROMPT",
+                                        "IMPROVE_RESUME_PROMPTS",
+                                        "EXTRACT_KEYWORDS_PROMPT",
+                                        "DIFF_IMPROVE_PROMPT"
+                                    ],
+                      "file":  "apps/backend/app/prompts/"
+                  },
+                  {
+                      "id":  "schemas",
+                      "label":  "Pydantic Schemas",
+                      "tags":  [
+                                   "schemas",
+                                   "pydantic",
+                                   "validation"
+                               ],
+                      "type":  "module",
+                      "summary":  "Request/response models for API endpoints and data validation",
+                      "functions":  [
+                                        "ResumeData",
+                                        "ResumeUploadResponse",
+                                        "ImproveResumeRequest",
+                                        "ApplicationResponse"
+                                    ],
+                      "file":  "apps/backend/app/schemas/"
+                  },
+                  {
+                      "id":  "pdf",
+                      "label":  "PDF Generation",
+                      "tags":  [
+                                   "pdf",
+                                   "playwright",
+                                   "chromium"
+                               ],
+                      "type":  "module",
+                      "summary":  "Headless Chromium rendering of frontend print pages via Playwright",
+                      "functions":  [
+                                        "render_resume_pdf",
+                                        "init_pdf_renderer",
+                                        "close_pdf_renderer"
+                                    ],
+                      "file":  "apps/backend/app/pdf.py"
+                  },
+                  {
+                      "id":  "crypto",
+                      "label":  "Encryption",
+                      "tags":  [
+                                   "encryption",
+                                   "fernet",
+                                   "security"
+                               ],
+                      "type":  "module",
+                      "summary":  "Fernet encryption for API keys at rest",
+                      "functions":  [
+                                        "encrypt",
+                                        "decrypt"
+                                    ],
+                      "file":  "apps/backend/app/crypto.py"
+                  },
+                  {
+                      "id":  "ui-components",
+                      "label":  "UI Components",
+                      "tags":  [
+                                   "components",
+                                   "ui",
+                                   "swiss-design"
+                               ],
+                      "type":  "module",
+                      "summary":  "Hand-rolled UI components following Swiss design system",
+                      "functions":  [
+                                        "Button",
+                                        "Input",
+                                        "Dialog",
+                                        "RichTextEditor",
+                                        "Card"
+                                    ],
+                      "file":  "apps/frontend/components/ui/"
+                  },
+                  {
+                      "id":  "api-client",
+                      "label":  "API Client",
+                      "tags":  [
+                                   "api",
+                                   "client",
+                                   "fetch"
+                               ],
+                      "type":  "module",
+                      "summary":  "Centralized API client with timeout handling and error management",
+                      "functions":  [
+                                        "apiFetch",
+                                        "apiPost",
+                                        "apiPatch",
+                                        "apiPut",
+                                        "apiDelete",
+                                        "API_BASE"
+                                    ],
+                      "file":  "apps/frontend/lib/api/client.ts"
+                  },
+                  {
+                      "id":  "i18n",
+                      "label":  "Internationalization",
+                      "tags":  [
+                                   "i18n",
+                                   "translations",
+                                   "localization"
+                               ],
+                      "type":  "module",
+                      "summary":  "Custom translation system with locale parity and dot-notation lookups",
+                      "functions":  [
+                                        "useTranslations",
+                                        "translate",
+                                        "getMessages",
+                                        "applyParams"
+                                    ],
+                      "file":  "apps/frontend/lib/i18n/"
+                  },
+                  {
+                      "id":  "context",
+                      "label":  "React Contexts",
+                      "tags":  [
+                                   "context",
+                                   "react",
+                                   "state"
+                               ],
+                      "type":  "module",
+                      "summary":  "StatusCacheProvider and LanguageProvider for global state",
+                      "functions":  [
+                                        "StatusCacheProvider",
+                                        "LanguageProvider",
+                                        "useStatusCache",
+                                        "useLanguage"
+                                    ],
+                      "file":  "apps/frontend/lib/context/"
+                  },
+                  {
+                      "id":  "tracker",
+                      "label":  "Application Tracker",
+                      "tags":  [
+                                   "tracker",
+                                   "kanban",
+                                   "dnd-kit"
+                               ],
+                      "type":  "module",
+                      "summary":  "Kanban board for managing job applications with dnd-kit drag-and-drop",
+                      "functions":  [
+                                        "KanbanBoard",
+                                        "KanbanColumn",
+                                        "ApplicationCard",
+                                        "planMove"
+                                    ],
+                      "file":  "apps/frontend/components/tracker/"
+                  },
+                  {
+                      "id":  "resume-builder",
+                      "label":  "Resume Builder",
+                      "tags":  [
+                                   "builder",
+                                   "resume",
+                                   "editor"
+                               ],
+                      "type":  "module",
+                      "summary":  "WYSIWYG resume editor with template selection and AI regeneration",
+                      "functions":  [
+                                        "ResumeBuilder",
+                                        "ResumeForm",
+                                        "TemplateSelector",
+                                        "RegenerateWizard"
+                                    ],
+                      "file":  "apps/frontend/components/builder/"
+                  },
+                  {
+                      "id":  "templates",
+                      "label":  "Resume Templates",
+                      "tags":  [
+                                   "templates",
+                                   "pdf",
+                                   "design"
+                               ],
+                      "type":  "module",
+                      "summary":  "PDF templates for resume rendering (single-column, two-column, modern)",
+                      "functions":  [
+                                        "SingleColumn",
+                                        "TwoColumn",
+                                        "Modern",
+                                        "ModernTwoColumn"
+                                    ],
+                      "file":  "apps/frontend/components/resume/"
+                  }
+              ]
+}

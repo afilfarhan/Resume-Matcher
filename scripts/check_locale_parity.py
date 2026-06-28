@@ -146,7 +146,7 @@ def main(argv: list[str]) -> int:
         )
         return 1
 
-    print("locale-parity: ✓ all locale files match en.json")
+    print("locale-parity: OK all locale files match en.json")
     return 0
 
 
