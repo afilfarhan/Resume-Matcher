@@ -300,7 +300,7 @@ DEFAULT_SECTION_META: list[dict[str, Any]] = [
         "sectionType": SectionType.ITEM_LIST,
         "isDefault": True,
         "isVisible": True,
-        "order": 2,
+        "order": 5,
     },
     {
         "id": "education",
@@ -309,7 +309,7 @@ DEFAULT_SECTION_META: list[dict[str, Any]] = [
         "sectionType": SectionType.ITEM_LIST,
         "isDefault": True,
         "isVisible": True,
-        "order": 3,
+        "order": 2,
     },
     {
         "id": "personalProjects",
@@ -327,7 +327,7 @@ DEFAULT_SECTION_META: list[dict[str, Any]] = [
         "sectionType": SectionType.STRING_LIST,
         "isDefault": True,
         "isVisible": True,
-        "order": 5,
+        "order": 3,
     },
 ]
 
