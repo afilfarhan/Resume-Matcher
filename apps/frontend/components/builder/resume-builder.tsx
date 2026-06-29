@@ -301,8 +301,13 @@ const ResumeBuilderContent = () => {
           if (data.processed_resume) {
             console.log('[RESUME_BUILDER] Loaded from API, processed_resume has categorizedSkills:', 
               (data.processed_resume.additional?.categorizedSkills?.length ?? 0) > 0);
-            setResumeData(data.processed_resume as ResumeData);
-            setLastSavedData(data.processed_resume as ResumeData);
+            const resumeData = data.processed_resume as ResumeData;
+            // Apply saved template_settings if present
+            if (data.template_settings) {
+              resumeData.template_settings = data.template_settings;
+            }
+            setResumeData(resumeData);
+            setLastSavedData(resumeData);
             setLoadingState('loaded');
             return;
           }
@@ -412,8 +417,35 @@ const ResumeBuilderContent = () => {
     }
     try {
       setIsSaving(true);
-      const updated = await updateResume(resumeId, resumeData);
+      // Include template_settings in the save payload
+      const resumeDataWithSettings = {
+        ...resumeData,
+        template_settings: {
+          template: templateSettings.template,
+          pageSize: templateSettings.pageSize,
+          margins: templateSettings.margins,
+          spacing: {
+            section: String(templateSettings.spacing.section),
+            item: String(templateSettings.spacing.item),
+            lineHeight: String(templateSettings.spacing.lineHeight),
+          },
+          fontSize: {
+            base: String(templateSettings.fontSize.base),
+            headerScale: String(templateSettings.fontSize.headerScale),
+            headerFont: templateSettings.fontSize.headerFont,
+            bodyFont: templateSettings.fontSize.bodyFont,
+          },
+          compactMode: templateSettings.compactMode,
+          showContactIcons: templateSettings.showContactIcons,
+          accentColor: templateSettings.accentColor,
+        },
+      };
+      const updated = await updateResume(resumeId, resumeDataWithSettings);
       const nextData = (updated.processed_resume || resumeData) as ResumeData;
+      // Update template_settings from backend response if present
+      if (updated.template_settings) {
+        nextData.template_settings = updated.template_settings;
+      }
       setResumeData(nextData);
       setLastSavedData(nextData);
       setHasUnsavedChanges(false);

@@ -365,6 +365,12 @@ class ResumeData(BaseModel):
     sectionMeta: list[SectionMeta] = Field(default_factory=list)
     customSections: dict[str, CustomSection] = Field(default_factory=dict)
 
+    # Template settings (persisted with resume)
+    template_settings: dict[str, Any] | None = Field(
+        default=None,
+        description="Template rendering settings (template type, page size, margins, spacing, fonts, etc.)"
+    )
+
     @field_validator("summary", mode="before")
     @classmethod
     def _normalize_summary(cls, value: Any) -> str:
@@ -402,6 +408,10 @@ class ResumeFetchData(BaseModel):
     outreach_message: str | None = None
     parent_id: str | None = None  # For determining if resume is tailored
     title: str | None = None
+    template_settings: dict[str, Any] | None = Field(
+        default=None,
+        description="Template rendering settings (template type, page size, margins, spacing, fonts, etc.)"
+    )
 
 
 class ResumeFetchResponse(BaseModel):

@@ -132,6 +132,31 @@ export interface ResumeData {
   // NEW: Section metadata and custom sections
   sectionMeta?: SectionMeta[];
   customSections?: Record<string, CustomSection>;
+  // Template settings (persisted with resume)
+  template_settings?: {
+    template: string;
+    pageSize: string;
+    margins: {
+      top: number;
+      bottom: number;
+      left: number;
+      right: number;
+    };
+    spacing: {
+      section: string;
+      item: string;
+      lineHeight: string;
+    };
+    fontSize: {
+      base: string;
+      headerScale: string;
+      headerFont: string;
+      bodyFont: string;
+    };
+    compactMode: boolean;
+    showContactIcons: boolean;
+    accentColor: string;
+  };
 }
 
 interface ResumeProps {
@@ -150,14 +175,14 @@ interface ResumeProps {
  * Applies CSS custom properties from settings for consistent styling.
  *
  * Templates:
- * - swiss-single: Traditional single-column layout (default)
+ * - modern: Single-column with user-selectable accent colors (default)
+ * - swiss-single: Traditional single-column layout
  * - swiss-two-column: Two-column layout with experience sidebar
- * - modern: Single-column with user-selectable accent colors
  * - modern-two-column: Two-column layout with modern colorful accents
  */
 const Resume: React.FC<ResumeProps> = ({
   resumeData,
-  template = 'swiss-single',
+  template,
   settings,
   additionalSectionLabels,
   sectionHeadings,
@@ -171,11 +196,6 @@ const Resume: React.FC<ResumeProps> = ({
     spacing: { ...DEFAULT_TEMPLATE_SETTINGS.spacing, ...settings?.spacing },
     fontSize: { ...DEFAULT_TEMPLATE_SETTINGS.fontSize, ...settings?.fontSize },
   };
-
-  // If template is provided as prop but not in settings, use the prop
-  if (template && !settings?.template) {
-    mergedSettings.template = template;
-  }
 
   // Convert settings to CSS variables
   const cssVars = settingsToCssVars(mergedSettings);

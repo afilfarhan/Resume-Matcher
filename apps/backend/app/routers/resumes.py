@@ -1482,12 +1482,20 @@ async def update_resume_endpoint(
         else None
     )
 
+    # Extract template_settings from processed_data if present
+    template_settings = None
+    if processed_resume and processed_resume.template_settings:
+        template_settings = processed_resume.template_settings
+    elif updated.get("processed_data", {}).get("template_settings"):
+        template_settings = updated["processed_data"]["template_settings"]
+
     return ResumeFetchResponse(
         request_id=str(uuid4()),
         data=ResumeFetchData(
             resume_id=resume_id,
             raw_resume=raw_resume,
             processed_resume=processed_resume,
+            template_settings=template_settings,
         ),
     )
 

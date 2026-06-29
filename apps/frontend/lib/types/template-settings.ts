@@ -58,7 +58,7 @@ export interface TemplateSettings {
  * Default template settings
  */
 export const DEFAULT_TEMPLATE_SETTINGS: TemplateSettings = {
-  template: 'swiss-single',
+  template: 'modern',
   pageSize: 'A4',
   margins: { top: 10, bottom: 10, left: 10, right: 10 },
   spacing: { section: 3, item: 2, lineHeight: 3 },

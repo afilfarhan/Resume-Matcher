@@ -48,6 +48,31 @@ interface ProcessedResume {
     awards?: string[];
     categorizedSkills?: Array<{ name: string; skills: string[] }>;
   };
+  // Template settings (persisted with resume)
+  template_settings?: {
+    template: string;
+    pageSize: string;
+    margins: {
+      top: number;
+      bottom: number;
+      left: number;
+      right: number;
+    };
+    spacing: {
+      section: string;
+      item: string;
+      lineHeight: string;
+    };
+    fontSize: {
+      base: string;
+      headerScale: string;
+      headerFont: string;
+      bodyFont: string;
+    };
+    compactMode: boolean;
+    showContactIcons: boolean;
+    accentColor: string;
+  };
 }
 
 interface ResumeResponse {
@@ -66,6 +91,30 @@ interface ResumeResponse {
     outreach_message?: string | null;
     parent_id?: string | null; // For determining if resume is tailored
     title?: string | null;
+    template_settings?: {
+      template: string;
+      pageSize: string;
+      margins: {
+        top: number;
+        bottom: number;
+        left: number;
+        right: number;
+      };
+      spacing: {
+        section: string;
+        item: string;
+        lineHeight: string;
+      };
+      fontSize: {
+        base: string;
+        headerScale: string;
+        headerFont: string;
+        bodyFont: string;
+      };
+      compactMode: boolean;
+      showContactIcons: boolean;
+      accentColor: string;
+    };
   };
 }
 
@@ -244,7 +293,7 @@ export function getResumePdfUrl(
     params.set('showContactIcons', String(settings.showContactIcons));
     params.set('accentColor', settings.accentColor);
   } else {
-    params.set('template', 'swiss-single');
+    params.set('template', 'modern');
     params.set('pageSize', 'A4');
   }
   if (locale) {
