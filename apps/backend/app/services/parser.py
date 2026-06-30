@@ -1,5 +1,6 @@
 """Document parsing service using markitdown and LLM."""
 
+import json
 import logging
 import re
 import tempfile
@@ -14,6 +15,36 @@ from app.prompts.templates import RESUME_SCHEMA_EXAMPLE
 from app.schemas import ResumeData
 
 logger = logging.getLogger(__name__)
+
+
+async def _classify_and_add_skills(parsed_data: dict[str, Any]) -> dict[str, Any]:
+    """Add categorized skills to parsed resume data if technical skills exist.
+    
+    Args:
+        parsed_data: Resume data from LLM parsing
+        
+    Returns:
+        Resume data with categorized_skills added if conditions are met
+    """
+    try:
+        from app.services.improver import classify_skills
+        
+        technical_skills = parsed_data.get("additional", {}).get("technicalSkills", [])
+        
+        if not technical_skills:
+            return parsed_data
+        
+        # Classify skills into categories
+        categories = await classify_skills(technical_skills)
+        
+        if categories:
+            parsed_data.setdefault("additional", {})["categorizedSkills"] = categories
+            logger.info("Added %d skill categories to parsed resume", len(categories))
+        
+    except Exception as e:
+        logger.warning(f"Skill classification skipped: {e}")
+    
+    return parsed_data
 
 # Matches date ranges like "Jan 2020 - Dec 2023", "May 2021 - Present",
 # "January 2020 - Current", and single dates like "Jun 2023".
@@ -146,7 +177,8 @@ async def parse_resume_to_json(markdown_text: str) -> dict[str, Any]:
 
     After LLM parsing, patches any year-only dates with month-inclusive
     dates extracted from the raw markdown. This ensures months are never
-    lost regardless of LLM behavior.
+    lost regardless of LLM behavior. Also classifies technical skills into
+    sub-categories if 5+ skills are present.
 
     Args:
         markdown_text: Resume content in markdown format
@@ -170,6 +202,9 @@ async def parse_resume_to_json(markdown_text: str) -> dict[str, Any]:
 
     # Patch dates: restore months the LLM may have dropped
     result = restore_dates_from_markdown(result, markdown_text)
+
+    # Classify technical skills into sub-categories (5+ skills trigger)
+    result = await _classify_and_add_skills(result)
 
     # Validate against schema
     validated = ResumeData.model_validate(result)

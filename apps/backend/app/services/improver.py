@@ -987,7 +987,22 @@ async def improve_resume(
 
     # Validate against schema
     validated = ResumeData.model_validate(result)
-    return validated.model_dump()
+    result_dict = validated.model_dump()
+    
+    # Classify technical skills into categories
+    try:
+        from app.services.improver import classify_skills
+        
+        technical_skills = result_dict.get("additional", {}).get("technicalSkills", [])
+        if isinstance(technical_skills, list) and technical_skills:
+            categories = await classify_skills(technical_skills)
+            if categories:
+                result_dict.setdefault("additional", {})["categorizedSkills"] = categories
+                logger.info("Added %d skill categories to improved resume", len(categories))
+    except Exception as e:
+        logger.warning(f"Skill classification skipped in improve_resume: {e}")
+    
+    return result_dict
 
 
 def _format_entry_label(parts: list[str], fallback: str) -> str:

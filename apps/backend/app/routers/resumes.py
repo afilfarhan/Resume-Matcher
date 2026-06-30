@@ -332,6 +332,43 @@ def _preserve_original_skills(
     return result
 
 
+def _preserve_original_categorized_skills(
+    original_data: dict[str, Any] | None,
+    improved_data: dict[str, Any],
+) -> dict[str, Any]:
+    """Preserve categorized skills from original resume when tailoring.
+    
+    If the original resume has categorized skills, they should be preserved
+    and not lost during the improvement process. New skills added by the LLM
+    will be classified into categories, but existing categories should remain.
+    
+    Args:
+        original_data: Original resume data with potentially categorized skills
+        improved_data: Improved resume data
+        
+    Returns:
+        Resume data with categorized skills preserved
+    """
+    if not original_data:
+        return improved_data
+
+    result = copy.deepcopy(improved_data)
+    
+    orig_additional = original_data.get("additional", {})
+    if not isinstance(orig_additional, dict):
+        return result
+    
+    result_additional = result.setdefault("additional", {})
+    
+    # Preserve categorized skills if they exist in original
+    orig_categorized = orig_additional.get("categorizedSkills", [])
+    if isinstance(orig_categorized, list) and orig_categorized:
+        result_additional["categorizedSkills"] = copy.deepcopy(orig_categorized)
+        logger.info("Preserved %d categorized skill categories from original resume", len(orig_categorized))
+    
+    return result
+
+
 def _protect_custom_sections(
     original_data: dict[str, Any] | None,
     improved_data: dict[str, Any],
@@ -906,6 +943,7 @@ async def _improve_preview_flow(
     if original_markdown:
         improved_data = restore_dates_from_markdown(improved_data, original_markdown)
     improved_data = _preserve_original_skills(original_resume_data, improved_data)
+    improved_data = _preserve_original_categorized_skills(original_resume_data, improved_data)
     improved_data = _protect_custom_sections(original_resume_data, improved_data)
 
     # Multi-pass refinement: keyword injection, AI phrase removal, alignment validation
@@ -971,7 +1009,35 @@ async def _improve_preview_flow(
             logger.info(f"[SKILL_CLASSIFICATION] Starting classification for skills: {original_skills}")
             categorized = await classify_skills(original_skills)
             logger.info(f"[SKILL_CLASSIFICATION] Raw classification result: {categorized}")
-            if categorized:
+            
+            # Merge with preserved categories if they exist
+            preserved_categories = improved_data["additional"].get("categorizedSkills", [])
+            if isinstance(preserved_categories, list) and preserved_categories:
+                logger.info(f"[SKILL_CLASSIFICATION] Found {len(preserved_categories)} preserved categories")
+                if categorized:
+                    # Combine preserved and newly categorized
+                    # Prioritize preserved categories for their structure
+                    all_categories = preserved_categories + categorized
+                    
+                    # Remove duplicates (same skill in multiple categories)
+                    seen_skills = set()
+                    unique_categories = []
+                    for cat in all_categories:
+                        new_skills = [s for s in cat.get("skills", []) if s not in seen_skills]
+                        if new_skills:
+                            seen_skills.update(new_skills)
+                            unique_categories.append({"name": cat.get("name", "Unknown"), "skills": new_skills})
+                        elif cat.get("name") not in [c.get("name") for c in unique_categories]:
+                            # Keep category even if no skills (for structure)
+                            unique_categories.append(cat)
+                    
+                    improved_data["additional"]["categorizedSkills"] = unique_categories
+                    logger.info(f"[SKILL_CLASSIFICATION] Merged into {len(unique_categories)} total categories")
+                else:
+                    # No new categories, keep preserved ones
+                    improved_data["additional"]["categorizedSkills"] = preserved_categories
+                    logger.info(f"[SKILL_CLASSIFICATION] Kept preserved categories only")
+            elif categorized:
                 improved_data["additional"]["categorizedSkills"] = categorized
                 logger.info(f"[SKILL_CLASSIFICATION] Set categorizedSkills in improved_data")
     
