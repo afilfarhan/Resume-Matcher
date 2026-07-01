@@ -332,22 +332,22 @@ def _preserve_original_skills(
     return result
 
 
-def _preserve_original_categorized_skills(
+async def _preserve_original_categorized_skills(
     original_data: dict[str, Any] | None,
     improved_data: dict[str, Any],
 ) -> dict[str, Any]:
-    """Preserve categorized skills from original resume when tailoring.
+    """Preserve categorized skills from original resume and classify new skills when tailoring.
     
-    If the original resume has categorized skills, they should be preserved
-    and not lost during the improvement process. New skills added by the LLM
-    will be classified into categories, but existing categories should remain.
+    If the original resume has categorized skills, they should be preserved.
+    New skills added by the LLM (in flat technicalSkills) that aren't in the original
+    will be classified into categories and merged with the preserved categories.
     
     Args:
         original_data: Original resume data with potentially categorized skills
-        improved_data: Improved resume data
+        improved_data: Improved resume data (may have new skills and new categories)
         
     Returns:
-        Resume data with categorized skills preserved
+        Resume data with categorized skills preserved and new skills classified
     """
     if not original_data:
         return improved_data
@@ -360,11 +360,89 @@ def _preserve_original_categorized_skills(
     
     result_additional = result.setdefault("additional", {})
     
-    # Preserve categorized skills if they exist in original
     orig_categorized = orig_additional.get("categorizedSkills", [])
-    if isinstance(orig_categorized, list) and orig_categorized:
-        result_additional["categorizedSkills"] = copy.deepcopy(orig_categorized)
-        logger.info("Preserved %d categorized skill categories from original resume", len(orig_categorized))
+    orig_technical_skills = set(
+        s.lower() for s in orig_additional.get("technicalSkills", [])
+        if isinstance(s, str)
+    )
+    
+    # Get new skills added by LLM (in flat technicalSkills)
+    new_technical_skills = [
+        s for s in result_additional.get("technicalSkills", [])
+        if isinstance(s, str) and s.lower() not in orig_technical_skills
+    ]
+    
+    # If no new skills, just preserve original categorized skills
+    if not new_technical_skills:
+        if isinstance(orig_categorized, list) and orig_categorized:
+            result_additional["categorizedSkills"] = copy.deepcopy(orig_categorized)
+            logger.info("Preserved %d categorized skill categories from original resume", len(orig_categorized))
+        return result
+    
+    # Classify new skills into categories
+    new_categories = []
+    if new_technical_skills:
+        try:
+            new_categories = await classify_skills(new_technical_skills)
+            logger.info("Classified %d new skills into %d categories", len(new_technical_skills), len(new_categories))
+        except Exception as e:
+            logger.warning("Failed to classify new skills: %s", e)
+        
+        # If classification returned empty, add all new skills to "Additional Skills" category
+        if not new_categories:
+            new_categories = [{"name": "Additional Skills", "skills": new_technical_skills}]
+            logger.info("Added %d new skills to 'Additional Skills' fallback category", len(new_technical_skills))
+    
+    # Merge preserved categories with new categories, deduplicating skills
+    final_categories = []
+    seen_skills = set()
+    
+    # First, add preserved categories (if any)
+    if isinstance(orig_categorized, list):
+        for category in orig_categorized:
+            if not isinstance(category, dict):
+                continue
+            name = category.get("name", "").strip()
+            category_skills = category.get("skills", [])
+            if not isinstance(category_skills, list):
+                continue
+            category_skills = [s for s in category_skills if isinstance(s, str)]
+            if not name or not category_skills:
+                continue
+            
+            # Deduplicate skills
+            unique_skills = [s for s in category_skills if s.lower() not in seen_skills]
+            if unique_skills:
+                seen_skills.update(s.lower() for s in unique_skills)
+                final_categories.append({"name": name, "skills": unique_skills})
+    
+    # Then, add newly classified categories
+    for category in new_categories:
+        if not isinstance(category, dict):
+            continue
+        name = category.get("name", "").strip()
+        category_skills = category.get("skills", [])
+        if not isinstance(category_skills, list):
+            continue
+        category_skills = [s.strip() for s in category_skills if isinstance(s, str)]
+        if not name or not category_skills:
+            continue
+        
+        # Deduplicate skills
+        unique_skills = [s for s in category_skills if s.lower() not in seen_skills]
+        if unique_skills:
+            seen_skills.update(s.lower() for s in unique_skills)
+            final_categories.append({"name": name, "skills": unique_skills})
+    
+    # Always set categorizedSkills (even if empty) to ensure it's persisted
+    result_additional["categorizedSkills"] = final_categories
+    logger.info(
+        "Merged categorized skills: preserved %d categories, classified %d new skills into %d categories, final: %d categories",
+        len(orig_categorized) if isinstance(orig_categorized, list) else 0,
+        len(new_technical_skills),
+        len(new_categories),
+        len(final_categories)
+    )
     
     return result
 
@@ -943,7 +1021,7 @@ async def _improve_preview_flow(
     if original_markdown:
         improved_data = restore_dates_from_markdown(improved_data, original_markdown)
     improved_data = _preserve_original_skills(original_resume_data, improved_data)
-    improved_data = _preserve_original_categorized_skills(original_resume_data, improved_data)
+    improved_data = await _preserve_original_categorized_skills(original_resume_data, improved_data)
     improved_data = _protect_custom_sections(original_resume_data, improved_data)
 
     # Multi-pass refinement: keyword injection, AI phrase removal, alignment validation
@@ -1004,42 +1082,60 @@ async def _improve_preview_flow(
 
     # Classify technical skills into categories (after improvement, before response)
     if "additional" in improved_data and isinstance(improved_data["additional"], dict):
-        original_skills = improved_data["additional"].get("technicalSkills", [])
-        if isinstance(original_skills, list) and original_skills:
-            logger.info(f"[SKILL_CLASSIFICATION] Starting classification for skills: {original_skills}")
-            categorized = await classify_skills(original_skills)
-            logger.info(f"[SKILL_CLASSIFICATION] Raw classification result: {categorized}")
+        # Get original data for comparison (if available)
+        orig_additional = original_resume_data.get("additional", {}) if original_resume_data else {}
+        original_skills_set = set()
+        if isinstance(orig_additional, dict):
+            orig_skills = orig_additional.get("technicalSkills", [])
+            if isinstance(orig_skills, list):
+                original_skills_set = {s for s in orig_skills if isinstance(s, str)}
+        
+        # Get current (improved) skills
+        current_skills = improved_data["additional"].get("technicalSkills", [])
+        if isinstance(current_skills, list):
+            current_skills_set = {s for s in current_skills if isinstance(s, str)}
+        else:
+            current_skills_set = set()
+        
+        # Find new skills that were added by the LLM
+        new_skills = list(current_skills_set - original_skills_set)
+        
+        # Get preserved categories from original
+        preserved_categories = improved_data["additional"].get("categorizedSkills", [])
+        if isinstance(preserved_categories, list) and preserved_categories:
+            logger.info(f"[SKILL_CLASSIFICATION] Found {len(preserved_categories)} preserved categories")
+        
+        # Classify only new skills (if any)
+        new_categorized = []
+        if new_skills:
+            logger.info(f"[SKILL_CLASSIFICATION] Classifying {len(new_skills)} new skills: {new_skills}")
+            new_categorized = await classify_skills(new_skills)
+            logger.info(f"[SKILL_CLASSIFICATION] New skill classification result: {new_categorized}")
+        
+        # Merge preserved + new categories with deduplication
+        if preserved_categories or new_categorized:
+            all_categories = preserved_categories + new_categorized
             
-            # Merge with preserved categories if they exist
-            preserved_categories = improved_data["additional"].get("categorizedSkills", [])
-            if isinstance(preserved_categories, list) and preserved_categories:
-                logger.info(f"[SKILL_CLASSIFICATION] Found {len(preserved_categories)} preserved categories")
-                if categorized:
-                    # Combine preserved and newly categorized
-                    # Prioritize preserved categories for their structure
-                    all_categories = preserved_categories + categorized
-                    
-                    # Remove duplicates (same skill in multiple categories)
-                    seen_skills = set()
-                    unique_categories = []
-                    for cat in all_categories:
-                        new_skills = [s for s in cat.get("skills", []) if s not in seen_skills]
-                        if new_skills:
-                            seen_skills.update(new_skills)
-                            unique_categories.append({"name": cat.get("name", "Unknown"), "skills": new_skills})
-                        elif cat.get("name") not in [c.get("name") for c in unique_categories]:
-                            # Keep category even if no skills (for structure)
-                            unique_categories.append(cat)
-                    
-                    improved_data["additional"]["categorizedSkills"] = unique_categories
-                    logger.info(f"[SKILL_CLASSIFICATION] Merged into {len(unique_categories)} total categories")
-                else:
-                    # No new categories, keep preserved ones
-                    improved_data["additional"]["categorizedSkills"] = preserved_categories
-                    logger.info(f"[SKILL_CLASSIFICATION] Kept preserved categories only")
-            elif categorized:
-                improved_data["additional"]["categorizedSkills"] = categorized
-                logger.info(f"[SKILL_CLASSIFICATION] Set categorizedSkills in improved_data")
+            # Remove duplicates (same skill in multiple categories)
+            seen_skills = set()
+            unique_categories = []
+            for cat in all_categories:
+                if not isinstance(cat, dict):
+                    continue
+                new_skills_in_cat = [s for s in cat.get("skills", []) if isinstance(s, str) and s not in seen_skills]
+                if new_skills_in_cat:
+                    seen_skills.update(new_skills_in_cat)
+                    unique_categories.append({"name": cat.get("name", "Unknown"), "skills": new_skills_in_cat})
+                elif cat.get("name") and cat.get("name") not in [c.get("name") for c in unique_categories]:
+                    # Keep category even if no skills (for structure)
+                    unique_categories.append(cat)
+            
+            improved_data["additional"]["categorizedSkills"] = unique_categories
+            logger.info(f"[SKILL_CLASSIFICATION] Merged into {len(unique_categories)} total categories")
+        elif not preserved_categories and not new_categorized:
+            # No categories at all - clear the field
+            if "categorizedSkills" in improved_data["additional"]:
+                del improved_data["additional"]["categorizedSkills"]
     
     improved_text = json.dumps(improved_data, indent=2)
     logger.info(f"[SKILL_CLASSIFICATION] improved_text JSON includes categorizedSkills: {'categorizedSkills' in improved_data.get('additional', {})}")
