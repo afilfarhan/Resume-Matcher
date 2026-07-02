@@ -387,37 +387,16 @@ async def _preserve_original_categorized_skills(
             logger.info("Classified %d new skills into %d categories", len(new_technical_skills), len(new_categories))
         except Exception as e:
             logger.warning("Failed to classify new skills: %s", e)
-        
-        # If classification returned empty, add all new skills to "Additional Skills" category
-        if not new_categories:
-            new_categories = [{"name": "Additional Skills", "skills": new_technical_skills}]
-            logger.info("Added %d new skills to 'Additional Skills' fallback category", len(new_technical_skills))
     
-    # Merge preserved categories with new categories, deduplicating skills
+    # If classification returned empty, add all new skills to "Additional Skills" category
+    if not new_categories:
+        new_categories = [{"name": "Additional Skills", "skills": new_technical_skills}]
+        logger.info("Added %d new skills to 'Additional Skills' fallback category", len(new_technical_skills))
+    
+    # Merge preserved and new categories, deduplicating skills
     final_categories = []
     seen_skills = set()
-    
-    # First, add preserved categories (if any)
-    if isinstance(orig_categorized, list):
-        for category in orig_categorized:
-            if not isinstance(category, dict):
-                continue
-            name = category.get("name", "").strip()
-            category_skills = category.get("skills", [])
-            if not isinstance(category_skills, list):
-                continue
-            category_skills = [s for s in category_skills if isinstance(s, str)]
-            if not name or not category_skills:
-                continue
-            
-            # Deduplicate skills
-            unique_skills = [s for s in category_skills if s.lower() not in seen_skills]
-            if unique_skills:
-                seen_skills.update(s.lower() for s in unique_skills)
-                final_categories.append({"name": name, "skills": unique_skills})
-    
-    # Then, add newly classified categories
-    for category in new_categories:
+    for category in [*orig_categorized, *new_categories]:
         if not isinstance(category, dict):
             continue
         name = category.get("name", "").strip()
@@ -427,8 +406,6 @@ async def _preserve_original_categorized_skills(
         category_skills = [s.strip() for s in category_skills if isinstance(s, str)]
         if not name or not category_skills:
             continue
-        
-        # Deduplicate skills
         unique_skills = [s for s in category_skills if s.lower() not in seen_skills]
         if unique_skills:
             seen_skills.update(s.lower() for s in unique_skills)
