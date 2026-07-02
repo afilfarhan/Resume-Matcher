@@ -73,7 +73,10 @@ export default function ResumeViewerPage() {
         // Prioritize processed_resume if available (structured JSON)
         if (data.processed_resume) {
           console.log('[ResumePage] Using processed_resume:', data.processed_resume);
-          console.log('[ResumePage] processed_resume.additional:', data.processed_resume.additional);
+          console.log(
+            '[ResumePage] processed_resume.additional:',
+            data.processed_resume.additional
+          );
           setResumeData(data.processed_resume as ResumeData);
           setError(null);
         } else if (status === 'failed') {

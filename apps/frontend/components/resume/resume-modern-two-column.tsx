@@ -40,16 +40,27 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
 
   // Drop blank/whitespace-only entries so empty lines (e.g. from editing in the
   // builder) never render in the resume or PDF (issue #763).
-  
+
   // Support categorized skills (new) with fallback to flat list (legacy)
   const categorizedSkills = additional?.categorizedSkills;
-  const technicalSkills = categorizedSkills && categorizedSkills.length > 0
-    ? [] // Will be rendered via categories
-    : additional?.technicalSkills?.filter((item): item is string => typeof item === 'string' && item.trim() !== '') ?? [];
-  const languages = additional?.languages?.filter((item): item is string => typeof item === 'string' && item.trim() !== '') ?? [];
+  const technicalSkills =
+    categorizedSkills && categorizedSkills.length > 0
+      ? [] // Will be rendered via categories
+      : (additional?.technicalSkills?.filter(
+          (item): item is string => typeof item === 'string' && item.trim() !== ''
+        ) ?? []);
+  const languages =
+    additional?.languages?.filter(
+      (item): item is string => typeof item === 'string' && item.trim() !== ''
+    ) ?? [];
   const certificationsTraining =
-    additional?.certificationsTraining?.filter((item): item is string => typeof item === 'string' && item.trim() !== '') ?? [];
-  const awards = additional?.awards?.filter((item): item is string => typeof item === 'string' && item.trim() !== '') ?? [];
+    additional?.certificationsTraining?.filter(
+      (item): item is string => typeof item === 'string' && item.trim() !== ''
+    ) ?? [];
+  const awards =
+    additional?.awards?.filter(
+      (item): item is string => typeof item === 'string' && item.trim() !== ''
+    ) ?? [];
 
   console.log('[ResumeModernTwoColumn] categorizedSkills:', categorizedSkills);
   console.log('[ResumeModernTwoColumn] technicalSkills:', technicalSkills);
@@ -378,39 +389,40 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
           )}
 
           {/* Skills Section */}
-          {isSectionVisible('additional') && (technicalSkills.length > 0 || (categorizedSkills && categorizedSkills.length > 0)) && (
-            <div className={baseStyles['resume-section']}>
-              <h3
-                className={`${baseStyles['resume-section-title-sm']} text-[var(--resume-accent-primary)]`}
-              >
-                {headingFallbacks.skills}
-              </h3>
-              {categorizedSkills && categorizedSkills.length > 0 ? (
-                <div className={baseStyles['resume-stack']}>
-                  {categorizedSkills.map((category, idx) => (
-                    <div key={idx}>
-                      <strong>{category.name}:</strong>
-                      <div className="flex flex-wrap gap-1">
-                        {category.skills.map((skill, skillIdx) => (
-                          <span key={skillIdx} className={baseStyles['resume-skill-pill']}>
-                            {skill}
-                          </span>
-                        ))}
+          {isSectionVisible('additional') &&
+            (technicalSkills.length > 0 || (categorizedSkills && categorizedSkills.length > 0)) && (
+              <div className={baseStyles['resume-section']}>
+                <h3
+                  className={`${baseStyles['resume-section-title-sm']} text-[var(--resume-accent-primary)]`}
+                >
+                  {headingFallbacks.skills}
+                </h3>
+                {categorizedSkills && categorizedSkills.length > 0 ? (
+                  <div className={baseStyles['resume-stack']}>
+                    {categorizedSkills.map((category, idx) => (
+                      <div key={idx}>
+                        <strong>{category.name}:</strong>
+                        <div className="flex flex-wrap gap-1">
+                          {category.skills.map((skill, skillIdx) => (
+                            <span key={skillIdx} className={baseStyles['resume-skill-pill']}>
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex flex-wrap gap-1">
-                  {technicalSkills.map((skill, index) => (
-                    <span key={index} className={baseStyles['resume-skill-pill']}>
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-1">
+                    {technicalSkills.map((skill, index) => (
+                      <span key={index} className={baseStyles['resume-skill-pill']}>
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
           {/* Languages Section */}
           {isSectionVisible('additional') && languages.length > 0 && (

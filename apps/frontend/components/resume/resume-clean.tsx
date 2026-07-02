@@ -342,9 +342,10 @@ const AdditionalSection: React.FC<{
 
   // Support categorized skills (new) with fallback to flat list (legacy)
   const categorizedSkills = additional?.categorizedSkills;
-  const technicalSkills = categorizedSkills && categorizedSkills.length > 0
-    ? [] // Will be rendered via categories
-    : clean(additional.technicalSkills);
+  const technicalSkills =
+    categorizedSkills && categorizedSkills.length > 0
+      ? [] // Will be rendered via categories
+      : clean(additional.technicalSkills);
   const languages = clean(additional.languages);
   const certificationsTraining = clean(additional.certificationsTraining);
   const awards = clean(additional.awards);
@@ -376,15 +377,13 @@ const AdditionalSection: React.FC<{
     <div className={baseStyles['resume-section']}>
       <h3 className={styles.sectionTitle}>{displayName}</h3>
       <div className={`${baseStyles['resume-stack']} ${baseStyles['resume-text-sm']}`}>
-        {categorizedSkills && categorizedSkills.length > 0 ? (
-          categorizedSkills.map((category, idx) => (
-            <div key={idx}>
-              <strong>{category.name}:</strong> {category.skills.join(', ')}
-            </div>
-          ))
-        ) : (
-          line(mergedLabels.technicalSkills, technicalSkills)
-        )}
+        {categorizedSkills && categorizedSkills.length > 0
+          ? categorizedSkills.map((category, idx) => (
+              <div key={idx}>
+                <strong>{category.name}:</strong> {category.skills.join(', ')}
+              </div>
+            ))
+          : line(mergedLabels.technicalSkills, technicalSkills)}
         {line(mergedLabels.languages, languages)}
         {line(mergedLabels.certifications, certificationsTraining)}
         {line(mergedLabels.awards, awards)}

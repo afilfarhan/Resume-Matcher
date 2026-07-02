@@ -53,9 +53,10 @@ export const ResumeVivid: React.FC<ResumeVividProps> = ({
 
   // Support categorized skills (new) with fallback to flat list (legacy)
   const categorizedSkills = additional?.categorizedSkills;
-  const technicalSkills = categorizedSkills && categorizedSkills.length > 0 
-    ? [] // Will be rendered via categories
-    : clean(additional?.technicalSkills);
+  const technicalSkills =
+    categorizedSkills && categorizedSkills.length > 0
+      ? [] // Will be rendered via categories
+      : clean(additional?.technicalSkills);
   const languages = clean(additional?.languages);
   const certificationsTraining = clean(additional?.certificationsTraining);
   const awards = clean(additional?.awards);
@@ -324,25 +325,26 @@ export const ResumeVivid: React.FC<ResumeVividProps> = ({
 
         {/* Sidebar Column - Right */}
         <div className={styles.sidebarColumn}>
-          {isSectionVisible('additional') && (technicalSkills.length > 0 || (categorizedSkills && categorizedSkills.length > 0)) && (
-            <div className={baseStyles['resume-section']}>
-              <h3 className={styles.sectionTitleSm}>{headingFallbacks.skills}</h3>
-              {categorizedSkills && categorizedSkills.length > 0 ? (
-                <div className={baseStyles['resume-stack']}>
-                  {categorizedSkills.map((category, idx) => (
-                    <div key={idx}>
-                      <strong>{category.name}:</strong>
-                      <p className={baseStyles['resume-text-xs']}>
-                        {category.skills.join(' • ')}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className={baseStyles['resume-text-xs']}>{technicalSkills.join(' • ')}</p>
-              )}
-            </div>
-          )}
+          {isSectionVisible('additional') &&
+            (technicalSkills.length > 0 || (categorizedSkills && categorizedSkills.length > 0)) && (
+              <div className={baseStyles['resume-section']}>
+                <h3 className={styles.sectionTitleSm}>{headingFallbacks.skills}</h3>
+                {categorizedSkills && categorizedSkills.length > 0 ? (
+                  <div className={baseStyles['resume-stack']}>
+                    {categorizedSkills.map((category, idx) => (
+                      <div key={idx}>
+                        <strong>{category.name}:</strong>
+                        <p className={baseStyles['resume-text-xs']}>
+                          {category.skills.join(' • ')}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className={baseStyles['resume-text-xs']}>{technicalSkills.join(' • ')}</p>
+                )}
+              </div>
+            )}
 
           {isSectionVisible('additional') && languages.length > 0 && (
             <div className={baseStyles['resume-section']}>

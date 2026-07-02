@@ -172,7 +172,11 @@ export const PROVIDER_INFO: Record<
   deepseek: { name: 'DeepSeek', defaultModel: 'deepseek-chat', requiresKey: true },
   groq: { name: 'Groq', defaultModel: 'llama-3.3-70b-versatile', requiresKey: true },
   ollama: { name: 'Ollama (Local)', defaultModel: 'gemma3:4b', requiresKey: false },
-  nvidia: { name: 'NVIDIA', defaultModel: 'meta/llama-4-maverick-17b-128e-instruct', requiresKey: true },
+  nvidia: {
+    name: 'NVIDIA',
+    defaultModel: 'meta/llama-4-maverick-17b-128e-instruct',
+    requiresKey: true,
+  },
 };
 
 // Feature configuration types

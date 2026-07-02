@@ -13,7 +13,7 @@ interface AdditionalFormProps {
 
 export const AdditionalForm: React.FC<AdditionalFormProps> = ({ data, onChange }) => {
   const { t } = useTranslations();
-  
+
   // Debug logging to track categorizedSkills in AdditionalForm
   React.useEffect(() => {
     console.log('[ADDITIONAL_FORM] Received data:', {
@@ -35,7 +35,11 @@ export const AdditionalForm: React.FC<AdditionalFormProps> = ({ data, onChange }
   };
 
   // Handle categorized skills changes
-  const handleCategoryChange = (categoryIndex: number, field: 'name' | 'skills', value: string | string[]) => {
+  const handleCategoryChange = (
+    categoryIndex: number,
+    field: 'name' | 'skills',
+    value: string | string[]
+  ) => {
     const newData = { ...data };
     if (!newData.categorizedSkills) {
       newData.categorizedSkills = [];

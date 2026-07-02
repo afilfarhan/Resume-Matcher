@@ -366,7 +366,7 @@ const AdditionalSection: React.FC<{
   labels?: Partial<AdditionalSectionLabels>;
 }> = ({ additional, displayName = 'Skills & Awards', labels }) => {
   console.log('[ResumeModern AdditionalSection] additional prop:', additional);
-  
+
   if (!additional) {
     console.log('[ResumeModern AdditionalSection] additional is null/undefined, returning null');
     return null;
@@ -382,14 +382,23 @@ const AdditionalSection: React.FC<{
 
   // Drop blank/whitespace-only entries so empty lines (e.g. from editing in the
   // builder) never render in the resume or PDF (issue #763).
-  
+
   // Support categorized skills (new) with fallback to flat list (legacy)
-  const technicalSkills = categorizedSkills && categorizedSkills.length > 0
-    ? [] // Will be rendered via categories
-    : rawTechnicalSkills.filter((item): item is string => typeof item === 'string' && item.trim() !== '');
-  const languages = rawLanguages.filter((item): item is string => typeof item === 'string' && item.trim() !== '');
-  const certificationsTraining = rawCertificationsTraining.filter((item): item is string => typeof item === 'string' && item.trim() !== '');
-  const awards = rawAwards.filter((item): item is string => typeof item === 'string' && item.trim() !== '');
+  const technicalSkills =
+    categorizedSkills && categorizedSkills.length > 0
+      ? [] // Will be rendered via categories
+      : rawTechnicalSkills.filter(
+          (item): item is string => typeof item === 'string' && item.trim() !== ''
+        );
+  const languages = rawLanguages.filter(
+    (item): item is string => typeof item === 'string' && item.trim() !== ''
+  );
+  const certificationsTraining = rawCertificationsTraining.filter(
+    (item): item is string => typeof item === 'string' && item.trim() !== ''
+  );
+  const awards = rawAwards.filter(
+    (item): item is string => typeof item === 'string' && item.trim() !== ''
+  );
 
   const mergedLabels: AdditionalSectionLabels = {
     technicalSkills: labels?.technicalSkills ?? 'Technical Skills:',

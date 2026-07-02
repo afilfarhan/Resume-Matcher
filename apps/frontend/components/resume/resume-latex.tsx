@@ -324,7 +324,7 @@ const AdditionalSection: React.FC<{
   labels?: Partial<AdditionalSectionLabels>;
 }> = ({ additional, displayName = 'Skills & Awards', labels }) => {
   console.log('[ResumeLatex AdditionalSection] additional prop:', additional);
-  
+
   if (!additional) {
     console.log('[ResumeLatex AdditionalSection] additional is null/undefined, returning null');
     return null;
@@ -335,9 +335,10 @@ const AdditionalSection: React.FC<{
 
   // Support categorized skills (new) with fallback to flat list (legacy)
   const categorizedSkills = additional?.categorizedSkills;
-  const technicalSkills = categorizedSkills && categorizedSkills.length > 0
-    ? [] // Will be rendered via categories
-    : clean(additional.technicalSkills);
+  const technicalSkills =
+    categorizedSkills && categorizedSkills.length > 0
+      ? [] // Will be rendered via categories
+      : clean(additional.technicalSkills);
   const languages = clean(additional.languages);
   const certificationsTraining = clean(additional.certificationsTraining);
   const awards = clean(additional.awards);

@@ -183,8 +183,10 @@ export default function TailorPage() {
       // 2. Preview Resume
       const result = await previewImproveResume(resumeId, jobId, selectedPromptId);
       console.log('[TAILOR_PAGE] Received preview result:', {
-        hasCategorizedSkills: (result.data?.resume_preview?.additional?.categorizedSkills?.length ?? 0) > 0,
-        categorizedSkillsCount: result.data?.resume_preview?.additional?.categorizedSkills?.length ?? 0,
+        hasCategorizedSkills:
+          (result.data?.resume_preview?.additional?.categorizedSkills?.length ?? 0) > 0,
+        categorizedSkillsCount:
+          result.data?.resume_preview?.additional?.categorizedSkills?.length ?? 0,
         technicalSkillsCount: result.data?.resume_preview?.additional?.technicalSkills?.length ?? 0,
       });
 

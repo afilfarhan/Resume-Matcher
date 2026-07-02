@@ -299,8 +299,10 @@ const ResumeBuilderContent = () => {
           }
           // Prefer processed_resume if available
           if (data.processed_resume) {
-            console.log('[RESUME_BUILDER] Loaded from API, processed_resume has categorizedSkills:', 
-              (data.processed_resume.additional?.categorizedSkills?.length ?? 0) > 0);
+            console.log(
+              '[RESUME_BUILDER] Loaded from API, processed_resume has categorizedSkills:',
+              (data.processed_resume.additional?.categorizedSkills?.length ?? 0) > 0
+            );
             const resumeData = data.processed_resume as ResumeData;
             // Apply saved template_settings if present
             if (data.template_settings) {
@@ -315,8 +317,10 @@ const ResumeBuilderContent = () => {
           if (data.raw_resume?.content) {
             try {
               const parsed = JSON.parse(data.raw_resume.content);
-              console.log('[RESUME_BUILDER] Parsed raw content, categorizedSkills present:', 
-                (parsed.additional?.categorizedSkills?.length ?? 0) > 0);
+              console.log(
+                '[RESUME_BUILDER] Parsed raw content, categorizedSkills present:',
+                (parsed.additional?.categorizedSkills?.length ?? 0) > 0
+              );
               setResumeData(parsed);
               setLastSavedData(parsed);
               setLoadingState('loaded');

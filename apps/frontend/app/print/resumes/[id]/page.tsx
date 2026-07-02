@@ -87,15 +87,19 @@ async function fetchResumeData(id: string): Promise<ResumeData> {
     data: { processed_resume?: ResumeData; raw_resume?: { content?: string } };
   };
   if (payload.data.processed_resume) {
-    console.log('[PRINT_PAGE] Fetching resume data, categorizedSkills present:', 
-      (payload.data.processed_resume.additional?.categorizedSkills?.length ?? 0) > 0);
+    console.log(
+      '[PRINT_PAGE] Fetching resume data, categorizedSkills present:',
+      (payload.data.processed_resume.additional?.categorizedSkills?.length ?? 0) > 0
+    );
     return payload.data.processed_resume;
   }
   if (payload.data.raw_resume?.content) {
     try {
       const parsed = JSON.parse(payload.data.raw_resume.content) as ResumeData;
-      console.log('[PRINT_PAGE] Parsed raw resume JSON, categorizedSkills present:', 
-        (parsed.additional?.categorizedSkills?.length ?? 0) > 0);
+      console.log(
+        '[PRINT_PAGE] Parsed raw resume JSON, categorizedSkills present:',
+        (parsed.additional?.categorizedSkills?.length ?? 0) > 0
+      );
       return parsed;
     } catch (error) {
       // Log error for debugging instead of silently failing
