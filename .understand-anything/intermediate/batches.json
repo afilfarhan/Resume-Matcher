@@ -1,0 +1,4247 @@
+{
+  "schemaVersion": 1,
+  "algorithm": "louvain",
+  "totalFiles": 373,
+  "totalBatches": 32,
+  "exportsByPath": {
+    ".githooks/pre-push": [],
+    "apps/backend/.python-version": [],
+    "apps/backend/app/__init__.py": [],
+    "apps/backend/app/config_cache.py": [
+      "invalidate_config_cache",
+      "load_config",
+      "get_content_language"
+    ],
+    "apps/backend/app/config.py": [
+      "_read_config_json",
+      "_write_config_json",
+      "load_config_file",
+      "save_config_file",
+      "get_api_keys_from_config",
+      "save_api_keys_to_config",
+      "delete_api_key_from_config",
+      "clear_all_api_keys",
+      "migrate_legacy_keys",
+      "_get_llm_api_key_with_fallback",
+      "Settings"
+    ],
+    "apps/backend/app/crypto.py": [
+      "_secret_path",
+      "_write_secret",
+      "_load_fernet",
+      "reset_cache",
+      "encrypt",
+      "decrypt"
+    ],
+    "apps/backend/app/database.py": [
+      "_now",
+      "Database"
+    ],
+    "apps/backend/app/db_engine.py": [
+      "_apply_sqlite_pragmas",
+      "_url",
+      "make_async_engine",
+      "make_sync_engine",
+      "init_models_sync"
+    ],
+    "apps/backend/app/llm.py": [
+      "_configure_litellm_logging",
+      "_patch_nvidia_public_api_provider",
+      "LLMConfig",
+      "_normalize_api_base",
+      "_effective_api_key",
+      "_extract_text_parts",
+      "_join_text_parts",
+      "_extract_message_text",
+      "_safe_get",
+      "_extract_choice_text",
+      "_to_code_block",
+      "_scrub_secrets",
+      "resolve_api_key",
+      "get_llm_config",
+      "get_model_name",
+      "_config_fingerprint",
+      "_build_router",
+      "get_router",
+      "check_llm_health",
+      "complete",
+      "_supports_json_mode",
+      "get_safe_max_tokens",
+      "_appears_truncated",
+      "_supports_temperature",
+      "_get_retry_temperature",
+      "_calculate_timeout",
+      "_strip_thinking_tags",
+      "_extract_json",
+      "complete_json"
+    ],
+    "apps/backend/app/main.py": [
+      "_configure_application_logging",
+      "lifespan",
+      "root",
+      "main"
+    ],
+    "apps/backend/app/models.py": [
+      "_utcnow_iso",
+      "Base",
+      "Resume",
+      "Job",
+      "Improvement",
+      "Application",
+      "ApiKey"
+    ],
+    "apps/backend/app/pdf.py": [
+      "PDFRenderError",
+      "init_pdf_renderer",
+      "_resolve_pdf_format",
+      "_resolve_pdf_margins",
+      "_find_chromium_executable",
+      "_launch_browser",
+      "_render_page_to_pdf",
+      "_render_with_browser",
+      "_run_in_new_loop",
+      "_render_resume_pdf_sync",
+      "_render_resume_pdf_in_thread",
+      "_raise_playwright_error",
+      "_loop_supports_subprocess",
+      "close_pdf_renderer",
+      "render_resume_pdf"
+    ],
+    "apps/backend/app/prompts/__init__.py": [
+      "validate_prompt_placeholders"
+    ],
+    "apps/backend/app/prompts/enrichment.py": [],
+    "apps/backend/app/prompts/refinement.py": [],
+    "apps/backend/app/prompts/resume_wizard.py": [],
+    "apps/backend/app/prompts/templates.py": [
+      "get_language_name",
+      "_build_truthfulness_rules"
+    ],
+    "apps/backend/app/routers/__init__.py": [],
+    "apps/backend/app/routers/applications.py": [
+      "_group_by_status",
+      "list_applications",
+      "create_application",
+      "get_application_detail",
+      "bulk_update_applications",
+      "update_application",
+      "delete_application",
+      "bulk_delete_applications",
+      "_extract_company_role"
+    ],
+    "apps/backend/app/routers/config.py": [
+      "_get_config_path",
+      "_load_config",
+      "_save_config",
+      "_mask_api_key",
+      "_get_prompt_options",
+      "_log_llm_health_check",
+      "get_llm_config_endpoint",
+      "update_llm_config",
+      "test_llm_connection",
+      "get_feature_config",
+      "update_feature_config",
+      "get_language_config",
+      "update_language_config",
+      "get_prompt_config",
+      "update_prompt_config",
+      "get_feature_prompts",
+      "update_feature_prompts",
+      "_mask_key_short",
+      "get_api_keys_status",
+      "update_api_keys",
+      "delete_all_api_keys",
+      "delete_api_key",
+      "reset_database_endpoint"
+    ],
+    "apps/backend/app/routers/enrichment.py": [
+      "_extract_item_from_resume",
+      "analyze_resume",
+      "generate_enhancements",
+      "apply_enhancements",
+      "_regenerate_experience_or_project",
+      "_regenerate_skills",
+      "regenerate_items",
+      "apply_regenerated_items"
+    ],
+    "apps/backend/app/routers/health.py": [
+      "health_check",
+      "get_status"
+    ],
+    "apps/backend/app/routers/jobs.py": [
+      "upload_job_descriptions",
+      "get_job"
+    ],
+    "apps/backend/app/routers/resume_wizard.py": [
+      "resume_wizard_turn",
+      "finalize_resume_wizard"
+    ],
+    "apps/backend/app/routers/resumes.py": [
+      "_auto_create_tracker_application",
+      "_get_default_prompt_id",
+      "_hash_job_content",
+      "_normalize_payload",
+      "_hash_improved_data",
+      "_normalize_personal_info_value",
+      "_raise_improve_error",
+      "_get_original_resume_data",
+      "_get_original_markdown",
+      "_has_month",
+      "_restore_original_dates",
+      "_preserve_original_skills",
+      "_preserve_original_categorized_skills",
+      "_protect_custom_sections",
+      "_preserve_personal_info",
+      "_calculate_diff_from_resume",
+      "_validate_confirm_payload",
+      "_generate_auxiliary_messages",
+      "upload_resume",
+      "get_resume",
+      "list_resumes",
+      "improve_resume_preview_endpoint",
+      "_improve_preview_flow",
+      "improve_resume_confirm_endpoint",
+      "improve_resume_endpoint",
+      "update_resume_endpoint",
+      "download_resume_pdf",
+      "delete_resume",
+      "retry_processing",
+      "update_cover_letter",
+      "update_outreach_message",
+      "update_title",
+      "generate_cover_letter_endpoint",
+      "generate_outreach_endpoint",
+      "get_job_description_for_resume",
+      "download_cover_letter_pdf"
+    ],
+    "apps/backend/app/routers/resumes.py.prev": [],
+    "apps/backend/app/schemas/__init__.py": [],
+    "apps/backend/app/schemas/applications.py": [
+      "ApplicationStatus",
+      "ApplicationResponse",
+      "ApplicationDetailResponse",
+      "ApplicationListResponse",
+      "ManualApplicationCreate",
+      "ApplicationUpdate",
+      "BulkStatusUpdate",
+      "BulkDelete",
+      "ApplicationActionResponse"
+    ],
+    "apps/backend/app/schemas/enrichment.py": [
+      "EnrichmentItem",
+      "EnrichmentQuestion",
+      "AnalysisResponse",
+      "AnswerInput",
+      "EnhanceRequest",
+      "EnhancedDescription",
+      "EnhancementPreview",
+      "ApplyEnhancementsRequest",
+      "RegenerateItemInput",
+      "RegenerateRequest",
+      "RegeneratedItem",
+      "RegenerateItemError",
+      "RegenerateResponse"
+    ],
+    "apps/backend/app/schemas/models.py": [
+      "_extract_text_fragments",
+      "_coerce_text",
+      "_coerce_optional_text",
+      "_split_description_lines",
+      "_coerce_string_list",
+      "SectionType",
+      "PersonalInfo",
+      "Experience",
+      "Education",
+      "Project",
+      "SkillCategory",
+      "AdditionalInfo",
+      "SectionMeta",
+      "CustomSectionItem",
+      "CustomSection",
+      "normalize_resume_data",
+      "ResumeData",
+      "ResumeUploadResponse",
+      "RawResume",
+      "ResumeFetchData",
+      "ResumeFetchResponse",
+      "ResumeSummary",
+      "ResumeListResponse",
+      "JobUploadRequest",
+      "JobUploadResponse",
+      "ImproveResumeRequest",
+      "ImprovementSuggestion",
+      "ResumeFieldDiff",
+      "ResumeDiffSummary",
+      "RefinementStats",
+      "ImproveResumeData",
+      "ImproveResumeResponse",
+      "ImproveResumeConfirmRequest",
+      "LLMConfigRequest",
+      "LLMConfigResponse",
+      "FeatureConfigRequest",
+      "FeatureConfigResponse",
+      "LanguageConfigRequest",
+      "LanguageConfigResponse",
+      "PromptOption",
+      "PromptConfigRequest",
+      "PromptConfigResponse",
+      "FeaturePromptsRequest",
+      "FeaturePromptsResponse",
+      "ApiKeyProviderStatus",
+      "ApiKeyStatusResponse",
+      "ApiKeysUpdateRequest",
+      "ApiKeysUpdateResponse",
+      "UpdateCoverLetterRequest",
+      "UpdateOutreachMessageRequest",
+      "UpdateTitleRequest",
+      "ResetDatabaseRequest",
+      "GenerateContentResponse",
+      "HealthResponse",
+      "StatusResponse",
+      "ResumeChange",
+      "ImproveDiffResult"
+    ],
+    "apps/backend/app/schemas/refinement.py": [
+      "RefinementConfig",
+      "KeywordGapAnalysis",
+      "AlignmentViolation",
+      "AlignmentReport",
+      "RefinementStats",
+      "RefinementResult"
+    ],
+    "apps/backend/app/schemas/resume_wizard.py": [
+      "ResumeWizardQuestion",
+      "ResumeWizardProgress",
+      "ResumeWizardAnswer",
+      "ResumeWizardHistoryEntry",
+      "ResumeWizardState",
+      "ResumeWizardTurnRequest",
+      "ResumeWizardTurnResponse",
+      "ResumeWizardFinalizeRequest",
+      "ResumeWizardFinalizeResponse"
+    ],
+    "apps/backend/app/scripts/__init__.py": [],
+    "apps/backend/app/scripts/migrate_tinydb_to_sqlite.py": [
+      "_legacy_path",
+      "migrate",
+      "main"
+    ],
+    "apps/backend/app/services/__init__.py": [],
+    "apps/backend/app/services/cover_letter.py": [
+      "_resolve_feature_prompt",
+      "generate_cover_letter",
+      "generate_outreach_message",
+      "generate_resume_title"
+    ],
+    "apps/backend/app/services/improver.py": [
+      "DiffConfidence",
+      "_sanitize_user_input",
+      "_check_for_truncation",
+      "_is_path_allowed",
+      "_is_path_blocked",
+      "_resolve_path",
+      "_set_at_path",
+      "_verify_original_matches",
+      "apply_diffs",
+      "_count_description_words",
+      "verify_diff_result",
+      "generate_resume_diffs",
+      "extract_job_keywords",
+      "_has_month_in_dates",
+      "_prepare_keywords_for_prompt",
+      "_normalize_skill_key",
+      "_extract_skill_index",
+      "_skill_mentioned_in_text",
+      "_build_allowed_skill_target_keys",
+      "_extract_jd_skill_index",
+      "_skill_present_in_resume_text",
+      "verify_skill_target_plan",
+      "generate_skill_target_plan",
+      "_prepare_skill_targets_for_prompt",
+      "improve_resume",
+      "_format_entry_label",
+      "_format_experience_entry",
+      "_format_education_entry",
+      "_format_project_entry",
+      "_normalize_entry",
+      "_append_entry_changes",
+      "_normalize_string_list",
+      "_build_string_index",
+      "_extract_description_list",
+      "_append_list_changes",
+      "calculate_resume_diff",
+      "generate_improvements",
+      "classify_skills"
+    ],
+    "apps/backend/app/services/parser.py": [
+      "_classify_and_add_skills",
+      "_extract_markdown_dates",
+      "restore_dates_from_markdown",
+      "parse_document",
+      "parse_resume_to_json"
+    ],
+    "apps/backend/app/services/refiner.py": [
+      "_keyword_in_text",
+      "_normalize_skill_key",
+      "_extract_jd_skill_keys",
+      "refine_resume",
+      "analyze_keyword_gaps",
+      "remove_ai_phrases",
+      "validate_master_alignment",
+      "_prepare_job_description",
+      "_validate_resume_structure",
+      "inject_keywords",
+      "fix_alignment_violations",
+      "calculate_keyword_match",
+      "_extract_all_text",
+      "_extract_all_text_cached",
+      "_deep_copy"
+    ],
+    "apps/backend/app/services/resume_wizard.py": [
+      "section_prompt",
+      "valid_section",
+      "build_initial_wizard_state",
+      "extract_intro_name",
+      "merge_unique_skills",
+      "build_review_warnings",
+      "compute_progress",
+      "normalize_wizard_resume_data",
+      "_string_list",
+      "_next_gap_section",
+      "_merge_entries",
+      "_experience_key",
+      "_education_key",
+      "_project_key",
+      "_merge_section",
+      "_assign_entry_ids",
+      "_next_question",
+      "run_ai_turn",
+      "apply_back",
+      "apply_review"
+    ],
+    "apps/backend/data/.gitkeep": [],
+    "apps/backend/e2e_monitor/__init__.py": [],
+    "apps/backend/e2e_monitor/__main__.py": [
+      "_git_sha",
+      "_now_iso",
+      "_run_id",
+      "_jds",
+      "_say",
+      "cmd_sweep",
+      "cmd_update_baseline",
+      "main"
+    ],
+    "apps/backend/e2e_monitor/baseline.py": [
+      "diff_against_baseline",
+      "summary_to_baseline"
+    ],
+    "apps/backend/e2e_monitor/bundle.py": [
+      "Bundle"
+    ],
+    "apps/backend/e2e_monitor/collect.py": [
+      "build_flow_trace",
+      "build_summary"
+    ],
+    "apps/backend/e2e_monitor/flow.py": [
+      "score_tailoring",
+      "seed_master_db",
+      "tailor"
+    ],
+    "apps/backend/e2e_monitor/gate.py": [
+      "MonitorDisabled",
+      "_key_is_configured",
+      "ensure_enabled"
+    ],
+    "apps/backend/e2e_monitor/judge.py": [
+      "_normalize_score",
+      "judge_variation"
+    ],
+    "apps/backend/e2e_monitor/manifest.py": [
+      "build_manifest"
+    ],
+    "apps/backend/e2e_monitor/render.py": [
+      "_verdict",
+      "check_pdf_bytes",
+      "render_variation"
+    ],
+    "apps/backend/e2e_monitor/scrub.py": [
+      "scrub_text",
+      "scrub_config"
+    ],
+    "apps/backend/e2e_monitor/servers.py": [
+      "_port_is_free",
+      "Servers"
+    ],
+    "apps/backend/final_test.py": [
+      "test"
+    ],
+    "apps/backend/remove_final.py": [],
+    "apps/backend/tests/__init__.py": [],
+    "apps/backend/tests/conftest.py": [
+      "sample_resume",
+      "sample_resume_copy",
+      "sample_job_keywords",
+      "sample_job_description",
+      "master_resume",
+      "sample_changes",
+      "isolated_db"
+    ],
+    "apps/backend/tests/evals/__init__.py": [],
+    "apps/backend/tests/evals/golden/__init__.py": [],
+    "apps/backend/tests/evals/golden/cases.py": [],
+    "apps/backend/tests/evals/scorers.py": [
+      "_is_nonempty",
+      "_iter_text_fragments",
+      "flatten_resume_text",
+      "_employer_names",
+      "sections_preserved",
+      "no_fabricated_employers",
+      "jd_keywords_present",
+      "is_valid_resume",
+      "personal_info_unchanged"
+    ],
+    "apps/backend/tests/evals/test_scorers.py": [
+      "TestSectionsPreserved",
+      "TestNoFabricatedEmployers",
+      "TestJdKeywordsPresent",
+      "TestIsValidResume",
+      "TestPersonalInfoUnchanged",
+      "TestFlattenResumeText",
+      "TestGoldenCasesStructural"
+    ],
+    "apps/backend/tests/evals/test_tailoring_eval.py": [
+      "_needs_key",
+      "_build_judge_prompt",
+      "test_llm_judge_scores_good_tailoring_highly"
+    ],
+    "apps/backend/tests/integration/__init__.py": [],
+    "apps/backend/tests/integration/test_applications_api.py": [
+      "_client",
+      "_seed_card",
+      "TestListAndGroup",
+      "TestManualAdd",
+      "TestDetail",
+      "TestUpdateAndMove",
+      "TestBulkAndDelete",
+      "TestRobustnessFixes"
+    ],
+    "apps/backend/tests/integration/test_config_api.py": [
+      "client",
+      "TestLlmConfig",
+      "TestLlmTest",
+      "TestFeatureConfig",
+      "TestFeaturePrompts",
+      "TestLanguageConfig",
+      "TestResetDatabase",
+      "TestEncryptedApiKeys",
+      "TestLegacyKeyMigration"
+    ],
+    "apps/backend/tests/integration/test_health_api.py": [
+      "client",
+      "TestHealthEndpoint",
+      "TestStatusEndpoint"
+    ],
+    "apps/backend/tests/integration/test_jobs_api.py": [
+      "client",
+      "TestJobUpload",
+      "TestGetJob"
+    ],
+    "apps/backend/tests/integration/test_llm_contract.py": [
+      "_reset_router",
+      "_litellm_httpx_transport",
+      "_openai_chat_completion",
+      "_ollama_chat_response",
+      "_ollama_show_response",
+      "TestOpenAICompatibleTransport",
+      "TestOllamaTransport",
+      "TestCheckHealthTransport"
+    ],
+    "apps/backend/tests/integration/test_pdf_render.py": [
+      "_refused_url",
+      "_render_or_skip",
+      "TestResolvePdfFormat",
+      "TestResolvePdfMargins",
+      "TestRenderPageWaitStrategy",
+      "TestPlaywrightErrorMapping",
+      "TestRenderResumePdf",
+      "TestRenderResumePdfErrors"
+    ],
+    "apps/backend/tests/integration/test_pipeline_e2e.py": [
+      "_new_client",
+      "client",
+      "_upload_resume",
+      "TestPipelineCore",
+      "TestTailoringPipeline",
+      "TestConfigurableImproveTimeout"
+    ],
+    "apps/backend/tests/integration/test_regenerate_endpoints.py": [
+      "TestRegenerateSchemas",
+      "TestRegenerateEndpoints"
+    ],
+    "apps/backend/tests/integration/test_resume_api.py": [
+      "client",
+      "mock_resume_record",
+      "TestGetResume",
+      "TestListResumes",
+      "TestDeleteResume",
+      "TestUpdateTitle",
+      "TestUpdateCoverLetter",
+      "TestUpdateOutreachMessage",
+      "TestRetryProcessing"
+    ],
+    "apps/backend/tests/integration/test_resume_wizard_api.py": [
+      "test_turn_answer_runs_ai_and_returns_next_question",
+      "test_turn_review_needs_no_llm",
+      "test_turn_answer_without_answer_is_422",
+      "test_finalize_creates_ready_master_resume",
+      "test_finalize_rejects_when_master_exists",
+      "test_turn_start_returns_initial_state",
+      "test_turn_back_restores_previous_question",
+      "test_turn_skip_advances_without_modifying_resume_data",
+      "test_turn_answer_past_cap_routes_to_review_without_llm"
+    ],
+    "apps/backend/tests/integration/test_tracker_autocreate.py": [
+      "_new_client",
+      "_preview_then_confirm",
+      "TestTrackerAutoCreate"
+    ],
+    "apps/backend/tests/integration/test_upload_api.py": [
+      "client",
+      "TestUploadGuards"
+    ],
+    "apps/backend/tests/service/__init__.py": [],
+    "apps/backend/tests/service/test_improver.py": [
+      "TestExtractJobKeywords",
+      "TestGenerateResumeDiffs",
+      "TestSkillTargetPlanning",
+      "TestGenerateResumeDiffsEdgeCases",
+      "TestImproveResume"
+    ],
+    "apps/backend/tests/unit/__init__.py": [],
+    "apps/backend/tests/unit/test_apply_diffs.py": [
+      "TestApplyDiffsReplace",
+      "TestApplyDiffsAppend",
+      "TestApplyDiffsAddSkill",
+      "TestApplyDiffsReorder",
+      "TestApplyDiffsBlockedPaths",
+      "TestApplyDiffsVerificationGates",
+      "TestApplyDiffsIntegrity",
+      "TestApplyDiffsEdgeCases",
+      "TestApplyDiffsNewPaths",
+      "TestReorderSalvage"
+    ],
+    "apps/backend/tests/unit/test_check_locale_parity.py": [
+      "_write",
+      "messages_dir",
+      "test_passes_when_locale_matches",
+      "test_fails_on_missing_key",
+      "test_fails_on_leaf_vs_object_mismatch",
+      "test_fails_on_object_vs_leaf_mismatch",
+      "test_fails_on_string_vs_number_mismatch",
+      "test_fails_on_string_vs_array_mismatch",
+      "test_fails_on_malformed_json",
+      "test_extra_keys_are_non_fatal"
+    ],
+    "apps/backend/tests/unit/test_crypto.py": [
+      "isolated_secret",
+      "TestCrypto"
+    ],
+    "apps/backend/tests/unit/test_database.py": [
+      "db",
+      "TestResumeCrud",
+      "TestMasterResume",
+      "TestJobs",
+      "TestImprovements",
+      "TestApplications",
+      "TestApiKeyStore",
+      "TestStatsAndReset"
+    ],
+    "apps/backend/tests/unit/test_e2e_monitor_baseline.py": [
+      "test_diff_clean_when_within_tolerance",
+      "test_diff_flags_judge_missing_when_judge_failed",
+      "test_diff_flags_floor_breach",
+      "test_diff_flags_drop_beyond_tolerance_even_above_floor",
+      "test_diff_flags_missing_variation",
+      "test_summary_to_baseline_roundtrips_shape"
+    ],
+    "apps/backend/tests/unit/test_e2e_monitor_collect.py": [
+      "test_build_flow_trace_counts_and_orders",
+      "test_build_summary_rolls_up_scores_and_flow"
+    ],
+    "apps/backend/tests/unit/test_e2e_monitor_judge.py": [
+      "test_normalize_score_accepts_valid_ints",
+      "test_normalize_score_rejects_out_of_range_bool_and_junk",
+      "test_normalize_score_rounds_and_rejects_non_finite"
+    ],
+    "apps/backend/tests/unit/test_e2e_monitor_manifest.py": [
+      "test_bundle_creates_layout",
+      "test_build_manifest_records_provider_and_scrubs_secrets"
+    ],
+    "apps/backend/tests/unit/test_e2e_monitor_render.py": [
+      "test_verdict_true_for_real_pdf_signals",
+      "test_verdict_false_for_blank_or_broken",
+      "test_check_pdf_bytes_rejects_empty",
+      "test_check_pdf_bytes_rejects_non_pdf",
+      "test_check_pdf_bytes_reads_header_and_size"
+    ],
+    "apps/backend/tests/unit/test_e2e_monitor_scores.py": [
+      "test_score_tailoring_clean_pass",
+      "test_score_tailoring_flags_fabrication_and_identity_change"
+    ],
+    "apps/backend/tests/unit/test_e2e_monitor_scrub.py": [
+      "test_scrub_text_redacts_sk_keys",
+      "test_scrub_text_redacts_long_hex_and_jwt",
+      "test_scrub_text_redacts_google_and_bearer",
+      "test_scrub_config_redacts_key_fields_keeps_provider"
+    ],
+    "apps/backend/tests/unit/test_improve_confirm_hash.py": [
+      "_canonical",
+      "test_hash_is_stable_across_resumedata_roundtrip",
+      "test_hash_distinguishes_genuinely_different_resumes"
+    ],
+    "apps/backend/tests/unit/test_llm_providers.py": [
+      "_cfg",
+      "TestGetModelName",
+      "TestNormalizeApiBase",
+      "TestResolveApiKey",
+      "TestEffectiveApiKey",
+      "TestStripThinkingTags"
+    ],
+    "apps/backend/tests/unit/test_llm.py": [
+      "TestSupportsTemperature",
+      "TestGetRetryTemperature",
+      "TestAppearsTruncated",
+      "TestCompleteJsonFallback",
+      "TestCompleteDynamicTimeout"
+    ],
+    "apps/backend/tests/unit/test_parser.py": [
+      "TestExtractMarkdownDates",
+      "TestRestoreDatesFromMarkdown"
+    ],
+    "apps/backend/tests/unit/test_prompt_guardrails.py": [
+      "TestJdIncorporationIsDefault",
+      "TestAntiFabricationClausesPresent"
+    ],
+    "apps/backend/tests/unit/test_refiner.py": [
+      "TestRemoveAiPhrases",
+      "TestValidateMasterAlignment",
+      "TestFixAlignmentViolations",
+      "TestAnalyzeKeywordGaps",
+      "TestCalculateKeywordMatch"
+    ],
+    "apps/backend/tests/unit/test_resume_diff.py": [
+      "test_skill_add_remove_case_insensitive",
+      "test_skill_order_is_ignored",
+      "test_description_modified_count_is_strict",
+      "test_handles_malformed_lists_gracefully",
+      "test_high_risk_skill_addition",
+      "test_certification_added",
+      "test_certification_removed",
+      "test_summary_modified",
+      "test_summary_added",
+      "test_summary_removed",
+      "test_summary_unchanged",
+      "test_experience_entry_added",
+      "test_experience_entry_removed",
+      "test_experience_entry_modified",
+      "test_project_entry_added",
+      "test_education_entry_added",
+      "test_no_changes_returns_empty",
+      "test_education_description_change_is_not_duplicated",
+      "test_language_add_remove",
+      "test_language_order_is_ignored",
+      "test_award_add"
+    ],
+    "apps/backend/tests/unit/test_resume_wizard_service.py": [
+      "test_initial_state_defaults_to_intro",
+      "test_turn_request_requires_answer_for_answer_action",
+      "test_turn_request_skip_needs_no_answer",
+      "test_question_rejects_unknown_section",
+      "test_finalize_requires_non_empty_name",
+      "test_answer_rejects_empty_text",
+      "test_answer_rejects_text_over_6000_chars",
+      "test_answer_rejects_whitespace_only_text",
+      "test_build_initial_state_has_intro_question",
+      "test_extract_intro_name_from_conversational_answer",
+      "test_merge_unique_skills_dedupes_case_insensitively_and_keeps_order",
+      "test_section_prompt_falls_back_for_unknown_section",
+      "test_compute_progress_grows_with_questions_and_caps",
+      "test_review_warnings_identify_thin_resume",
+      "test_review_warnings_flag_missing_name",
+      "_state_on_section",
+      "test_ai_turn_merges_only_target_section_and_advances",
+      "test_ai_turn_does_not_let_other_sections_be_clobbered",
+      "test_ai_turn_question_cap_forces_completion",
+      "test_ai_turn_skip_does_not_modify_resume_data",
+      "test_ai_turn_intro_uses_deterministic_name_fallback",
+      "test_ai_turn_missing_next_question_falls_back_to_gap",
+      "test_apply_back_restores_previous_snapshot",
+      "test_apply_back_noop_without_history",
+      "test_apply_review_builds_warnings_without_llm",
+      "test_ai_turn_full_echo_keeps_all_experience_in_order",
+      "test_ai_turn_partial_echo_does_not_drop_prior_experience",
+      "test_ai_turn_sanitizes_user_answer_before_prompting",
+      "test_assign_entry_ids_renumbers_all_three_lists",
+      "test_ai_turn_assigns_unique_entry_ids"
+    ],
+    "apps/backend/tests/unit/test_settings_timeout.py": [
+      "TestRequestTimeoutSetting"
+    ],
+    "apps/backend/tests/unit/test_verify_diffs.py": [
+      "TestVerifyNoWarnings",
+      "TestVerifyEmptyChanges",
+      "TestVerifySectionCounts",
+      "TestVerifyIdentityFields",
+      "TestVerifyWordCount",
+      "TestVerifyInventedMetrics",
+      "TestVerifyMultipleWarnings"
+    ],
+    "apps/frontend/app/(default)/builder/page.tsx": [
+      "BuilderPage"
+    ],
+    "apps/frontend/app/(default)/dashboard/page.tsx": [
+      "DashboardPage"
+    ],
+    "apps/frontend/app/(default)/layout.tsx": [
+      "DefaultLayout"
+    ],
+    "apps/frontend/app/(default)/page.tsx": [
+      "Home"
+    ],
+    "apps/frontend/app/(default)/resume-wizard/page.tsx": [
+      "Page"
+    ],
+    "apps/frontend/app/(default)/resumes/[id]/page.tsx": [
+      "ResumeViewerPage"
+    ],
+    "apps/frontend/app/(default)/settings/page.tsx": [
+      "SettingsPage"
+    ],
+    "apps/frontend/app/(default)/tailor/page.tsx": [
+      "TailorPage"
+    ],
+    "apps/frontend/app/(default)/tracker/page.tsx": [
+      "TrackerPage"
+    ],
+    "apps/frontend/app/layout.tsx": [
+      "metadata",
+      "RootLayout"
+    ],
+    "apps/frontend/app/print/cover-letter/[id]/page.tsx": [
+      "PrintCoverLetterPage"
+    ],
+    "apps/frontend/app/print/resumes/[id]/page.tsx": [
+      "PrintResumePage"
+    ],
+    "apps/frontend/components/builder/add-section-dialog.tsx": [
+      "AddSectionDialog",
+      "AddSectionButton"
+    ],
+    "apps/frontend/components/builder/cover-letter-editor.tsx": [
+      "CoverLetterEditor"
+    ],
+    "apps/frontend/components/builder/cover-letter-preview.tsx": [
+      "CoverLetterPreview"
+    ],
+    "apps/frontend/components/builder/draggable-list-item.tsx": [
+      "DraggableListItem"
+    ],
+    "apps/frontend/components/builder/draggable-section-wrapper.tsx": [
+      "DraggableSectionWrapper"
+    ],
+    "apps/frontend/components/builder/formatting-controls.tsx": [
+      "FormattingControls"
+    ],
+    "apps/frontend/components/builder/forms/additional-form.tsx": [
+      "AdditionalForm"
+    ],
+    "apps/frontend/components/builder/forms/education-form.tsx": [
+      "EducationForm"
+    ],
+    "apps/frontend/components/builder/forms/experience-form.tsx": [
+      "ExperienceForm"
+    ],
+    "apps/frontend/components/builder/forms/generic-item-form.tsx": [
+      "GenericItemForm"
+    ],
+    "apps/frontend/components/builder/forms/generic-list-form.tsx": [
+      "GenericListForm"
+    ],
+    "apps/frontend/components/builder/forms/generic-text-form.tsx": [
+      "GenericTextForm"
+    ],
+    "apps/frontend/components/builder/forms/personal-info-form.tsx": [
+      "PersonalInfoForm"
+    ],
+    "apps/frontend/components/builder/forms/projects-form.tsx": [
+      "ProjectsForm"
+    ],
+    "apps/frontend/components/builder/forms/summary-form.tsx": [
+      "SummaryForm"
+    ],
+    "apps/frontend/components/builder/generate-prompt.tsx": [
+      "GeneratePrompt"
+    ],
+    "apps/frontend/components/builder/highlighted-resume-view.tsx": [
+      "HighlightedResumeView"
+    ],
+    "apps/frontend/components/builder/jd-comparison-view.tsx": [
+      "JDComparisonView"
+    ],
+    "apps/frontend/components/builder/jd-display.tsx": [
+      "JDDisplay"
+    ],
+    "apps/frontend/components/builder/outreach-editor.tsx": [
+      "OutreachEditor"
+    ],
+    "apps/frontend/components/builder/outreach-preview.tsx": [
+      "OutreachPreview"
+    ],
+    "apps/frontend/components/builder/regenerate-dialog.tsx": [
+      "RegenerateDialog"
+    ],
+    "apps/frontend/components/builder/regenerate-diff-preview.tsx": [
+      "RegenerateDiffPreview"
+    ],
+    "apps/frontend/components/builder/regenerate-instruction-dialog.tsx": [
+      "RegenerateInstructionDialog"
+    ],
+    "apps/frontend/components/builder/regenerate-wizard.tsx": [
+      "RegenerateWizard"
+    ],
+    "apps/frontend/components/builder/resume-builder.tsx": [
+      "ResumeBuilder"
+    ],
+    "apps/frontend/components/builder/resume-form.tsx": [
+      "ResumeForm"
+    ],
+    "apps/frontend/components/builder/section-header.tsx": [
+      "SectionHeader"
+    ],
+    "apps/frontend/components/builder/template-selector.tsx": [
+      "TemplateSelector",
+      "TemplateThumbnail"
+    ],
+    "apps/frontend/components/common/error-boundary.tsx": [
+      "ErrorBoundary",
+      "withErrorBoundary",
+      "LocalizedErrorBoundary"
+    ],
+    "apps/frontend/components/common/resume_previewer_context.tsx": [
+      "ResumePreviewProvider",
+      "useResumePreview"
+    ],
+    "apps/frontend/components/dashboard/master-resume-choice-dialog.tsx": [
+      "MasterResumeChoiceDialog"
+    ],
+    "apps/frontend/components/dashboard/resume-component.tsx": [],
+    "apps/frontend/components/dashboard/resume-upload-dialog.tsx": [
+      "ResumeUploadDialog"
+    ],
+    "apps/frontend/components/enrichment/enrichment-modal.tsx": [
+      "EnrichmentModal"
+    ],
+    "apps/frontend/components/enrichment/loading-steps.tsx": [
+      "AnalyzingStep",
+      "GeneratingStep",
+      "ApplyingStep",
+      "CompleteStep",
+      "NoImprovementsStep",
+      "ErrorStep"
+    ],
+    "apps/frontend/components/enrichment/preview-step.tsx": [
+      "PreviewStep"
+    ],
+    "apps/frontend/components/enrichment/question-step.tsx": [
+      "QuestionStep"
+    ],
+    "apps/frontend/components/home/hero.tsx": [
+      "Hero"
+    ],
+    "apps/frontend/components/home/swiss-grid.tsx": [
+      "SwissGrid"
+    ],
+    "apps/frontend/components/preview/index.ts": [
+      "PageContainer",
+      "PaginatedPreview",
+      "usePagination"
+    ],
+    "apps/frontend/components/preview/page-container.tsx": [
+      "PageContainer"
+    ],
+    "apps/frontend/components/preview/paginated-preview.tsx": [
+      "PaginatedPreview"
+    ],
+    "apps/frontend/components/preview/use-pagination.ts": [
+      "usePagination"
+    ],
+    "apps/frontend/components/resume-wizard/live-preview.tsx": [
+      "LivePreview"
+    ],
+    "apps/frontend/components/resume-wizard/question-card.tsx": [
+      "QuestionCard"
+    ],
+    "apps/frontend/components/resume-wizard/resume-wizard-page.tsx": [
+      "ResumeWizardPage"
+    ],
+    "apps/frontend/components/resume/dynamic-resume-section.tsx": [
+      "DynamicResumeSection"
+    ],
+    "apps/frontend/components/resume/index.ts": [
+      "ResumeSingleColumn",
+      "ResumeTwoColumn",
+      "ResumeModern",
+      "ResumeModernTwoColumn",
+      "ResumeLatex",
+      "ResumeClean",
+      "ResumeVivid"
+    ],
+    "apps/frontend/components/resume/resume-clean.tsx": [
+      "ResumeClean"
+    ],
+    "apps/frontend/components/resume/resume-latex.tsx": [
+      "ResumeLatex"
+    ],
+    "apps/frontend/components/resume/resume-modern-two-column.tsx": [
+      "ResumeModernTwoColumn"
+    ],
+    "apps/frontend/components/resume/resume-modern.tsx": [
+      "ResumeModern"
+    ],
+    "apps/frontend/components/resume/resume-single-column.tsx": [
+      "ResumeSingleColumn"
+    ],
+    "apps/frontend/components/resume/resume-two-column.tsx": [
+      "ResumeTwoColumn"
+    ],
+    "apps/frontend/components/resume/resume-vivid.tsx": [
+      "ResumeVivid"
+    ],
+    "apps/frontend/components/resume/safe-html.tsx": [
+      "SafeHtml"
+    ],
+    "apps/frontend/components/settings/api-key-menu.tsx": [
+      "ApiKeyMenu"
+    ],
+    "apps/frontend/components/tailor/diff-preview-modal.tsx": [
+      "DiffPreviewModal"
+    ],
+    "apps/frontend/components/tracker/application-card.tsx": [
+      "ApplicationCard"
+    ],
+    "apps/frontend/components/tracker/bulk-action-bar.tsx": [
+      "BulkActionBar"
+    ],
+    "apps/frontend/components/tracker/card-detail-modal.tsx": [
+      "CardDetailModal"
+    ],
+    "apps/frontend/components/tracker/kanban-board.tsx": [
+      "KanbanBoard"
+    ],
+    "apps/frontend/components/tracker/kanban-column.tsx": [
+      "KanbanColumn"
+    ],
+    "apps/frontend/components/tracker/manual-add-application-dialog.tsx": [
+      "ManualAddApplicationDialog"
+    ],
+    "apps/frontend/components/tracker/reorder.ts": [
+      "planMove"
+    ],
+    "apps/frontend/components/ui/button.tsx": [
+      "Button"
+    ],
+    "apps/frontend/components/ui/card.tsx": [
+      "Card",
+      "CardHeader",
+      "CardFooter",
+      "CardTitle",
+      "CardDescription",
+      "CardContent"
+    ],
+    "apps/frontend/components/ui/confirm-dialog.tsx": [
+      "ConfirmDialog"
+    ],
+    "apps/frontend/components/ui/dialog.tsx": [
+      "Dialog",
+      "DialogTrigger",
+      "DialogClose",
+      "DialogContent",
+      "DialogHeader",
+      "DialogFooter",
+      "DialogTitle",
+      "DialogDescription"
+    ],
+    "apps/frontend/components/ui/dropdown.tsx": [
+      "Dropdown"
+    ],
+    "apps/frontend/components/ui/input.tsx": [
+      "Input"
+    ],
+    "apps/frontend/components/ui/label.tsx": [
+      "Label"
+    ],
+    "apps/frontend/components/ui/link-dialog.tsx": [
+      "LinkDialog"
+    ],
+    "apps/frontend/components/ui/retro-tabs.tsx": [
+      "RetroTabs"
+    ],
+    "apps/frontend/components/ui/rich-text-editor.tsx": [
+      "RichTextEditor"
+    ],
+    "apps/frontend/components/ui/rich-text-toolbar.tsx": [
+      "RichTextToolbar"
+    ],
+    "apps/frontend/components/ui/textarea.tsx": [
+      "Textarea"
+    ],
+    "apps/frontend/components/ui/toggle-switch.tsx": [
+      "ToggleSwitch"
+    ],
+    "apps/frontend/eslint.config.mjs": [],
+    "apps/frontend/hooks/use-enrichment-wizard.ts": [
+      "useEnrichmentWizard"
+    ],
+    "apps/frontend/hooks/use-file-upload.ts": [
+      "formatBytes",
+      "useFileUpload"
+    ],
+    "apps/frontend/hooks/use-regenerate-wizard.ts": [
+      "useRegenerateWizard"
+    ],
+    "apps/frontend/i18n/config.ts": [
+      "locales",
+      "defaultLocale",
+      "localeNames",
+      "localeFlags"
+    ],
+    "apps/frontend/lib/api/client.ts": [
+      "API_URL",
+      "API_BASE",
+      "DEFAULT_TIMEOUT_MS",
+      "apiFetch",
+      "apiPost",
+      "apiPatch",
+      "apiPut",
+      "apiDelete",
+      "getUploadUrl"
+    ],
+    "apps/frontend/lib/api/config.ts": [
+      "fetchLlmConfig",
+      "fetchLlmApiKey",
+      "updateLlmConfig",
+      "updateLlmApiKey",
+      "testLlmConnection",
+      "fetchSystemStatus",
+      "PROVIDER_INFO",
+      "fetchFeatureConfig",
+      "updateFeatureConfig",
+      "fetchLanguageConfig",
+      "updateLanguageConfig",
+      "fetchPromptConfig",
+      "updatePromptConfig",
+      "FeaturePromptsError",
+      "fetchFeaturePrompts",
+      "updateFeaturePrompts",
+      "llmProviderToKeyProvider",
+      "API_KEY_PROVIDER_INFO",
+      "fetchApiKeyStatus",
+      "updateApiKeys",
+      "deleteApiKey",
+      "clearAllApiKeys",
+      "resetDatabase"
+    ],
+    "apps/frontend/lib/api/enrichment.ts": [
+      "analyzeResume",
+      "generateEnhancements",
+      "applyEnhancements",
+      "regenerateItems",
+      "applyRegeneratedItems"
+    ],
+    "apps/frontend/lib/api/index.ts": [
+      "API_URL",
+      "API_BASE",
+      "apiFetch",
+      "apiPost",
+      "apiPatch",
+      "apiPut",
+      "apiDelete",
+      "getUploadUrl",
+      "uploadJobDescriptions",
+      "improveResume",
+      "previewImproveResume",
+      "confirmImproveResume",
+      "fetchResume",
+      "fetchResumeList",
+      "updateResume",
+      "downloadResumePdf",
+      "deleteResume",
+      "ResumeListItem",
+      "createInitialResumeWizardState",
+      "finalizeResumeWizard",
+      "postResumeWizardTurn",
+      "ResumeWizardAction",
+      "ResumeWizardFinalizeResponse",
+      "ResumeWizardSection",
+      "ResumeWizardState",
+      "ResumeWizardStep",
+      "ResumeWizardTurnRequest",
+      "ResumeWizardTurnResponse",
+      "fetchLlmConfig",
+      "fetchLlmApiKey",
+      "updateLlmConfig",
+      "updateLlmApiKey",
+      "testLlmConnection",
+      "fetchSystemStatus",
+      "PROVIDER_INFO",
+      "fetchPromptConfig",
+      "updatePromptConfig",
+      "LLMProvider",
+      "LLMConfig",
+      "LLMConfigUpdate",
+      "DatabaseStats",
+      "SystemStatus",
+      "LLMHealthCheck",
+      "PromptOption",
+      "PromptConfig",
+      "PromptConfigUpdate"
+    ],
+    "apps/frontend/lib/api/resume-wizard.ts": [
+      "INTRO_QUESTION",
+      "createInitialResumeWizardState",
+      "postResumeWizardTurn",
+      "finalizeResumeWizard"
+    ],
+    "apps/frontend/lib/api/resume.ts": [
+      "uploadJobDescriptions",
+      "improveResume",
+      "previewImproveResume",
+      "confirmImproveResume",
+      "fetchResume",
+      "fetchResumeList",
+      "updateResume",
+      "getResumePdfUrl",
+      "downloadResumePdf",
+      "deleteResume",
+      "updateCoverLetter",
+      "updateOutreachMessage",
+      "renameResume",
+      "getCoverLetterPdfUrl",
+      "downloadCoverLetterPdf",
+      "generateCoverLetter",
+      "generateOutreachMessage",
+      "retryProcessing",
+      "fetchJobDescription"
+    ],
+    "apps/frontend/lib/api/tracker.ts": [
+      "APPLICATION_STATUS_ORDER",
+      "listApplications",
+      "createApplication",
+      "getApplicationDetail",
+      "updateApplication",
+      "bulkUpdateStatus",
+      "deleteApplication",
+      "bulkDeleteApplications"
+    ],
+    "apps/frontend/lib/config/version.ts": [
+      "APP_VERSION",
+      "APP_CODENAME",
+      "APP_NAME",
+      "getVersionString"
+    ],
+    "apps/frontend/lib/constants/page-dimensions.ts": [
+      "PAGE_DIMENSIONS",
+      "mmToPx",
+      "pxToMm",
+      "getContentArea",
+      "getContentAreaPx",
+      "calculatePreviewScale",
+      "getPageDimensionsPx"
+    ],
+    "apps/frontend/lib/context/language-context.tsx": [
+      "LanguageProvider",
+      "useLanguage"
+    ],
+    "apps/frontend/lib/context/status-cache.tsx": [
+      "StatusCacheProvider",
+      "useStatusCache",
+      "useIsStatusStale"
+    ],
+    "apps/frontend/lib/i18n/index.ts": [
+      "useTranslations",
+      "getMessages",
+      "translate",
+      "Messages"
+    ],
+    "apps/frontend/lib/i18n/locale.ts": [
+      "resolveLocale"
+    ],
+    "apps/frontend/lib/i18n/messages.ts": [
+      "getMessages"
+    ],
+    "apps/frontend/lib/i18n/server.ts": [
+      "translate"
+    ],
+    "apps/frontend/lib/i18n/translations.ts": [
+      "useTranslations",
+      "getMessages",
+      "translate",
+      "Messages"
+    ],
+    "apps/frontend/lib/i18n/utils.ts": [
+      "getNestedValue",
+      "applyParams"
+    ],
+    "apps/frontend/lib/types/lucide.d.ts": [],
+    "apps/frontend/lib/types/template-settings.ts": [
+      "DEFAULT_TEMPLATE_SETTINGS",
+      "PAGE_SIZE_INFO",
+      "SECTION_SPACING_MAP",
+      "ITEM_SPACING_MAP",
+      "LINE_HEIGHT_MAP",
+      "FONT_SIZE_MAP",
+      "HEADER_SCALE_MAP",
+      "SECTION_HEADER_SCALE_MAP",
+      "HEADER_FONT_MAP",
+      "BODY_FONT_MAP",
+      "ACCENT_COLOR_MAP",
+      "COMPACT_MULTIPLIER",
+      "COMPACT_LINE_HEIGHT_MULTIPLIER",
+      "settingsToCssVars",
+      "TEMPLATE_OPTIONS",
+      "TEMPLATE_FONT_PRESETS",
+      "applyTemplatePreset"
+    ],
+    "apps/frontend/lib/utils.ts": [
+      "cn",
+      "formatDateRange"
+    ],
+    "apps/frontend/lib/utils/download.ts": [
+      "downloadBlobAsFile",
+      "openUrlInNewTab",
+      "sanitizeFilename",
+      "buildResumeFilename"
+    ],
+    "apps/frontend/lib/utils/html-sanitizer.ts": [
+      "sanitizeHtml"
+    ],
+    "apps/frontend/lib/utils/keyword-matcher.ts": [
+      "extractKeywords",
+      "segmentTextByKeywords",
+      "calculateMatchStats"
+    ],
+    "apps/frontend/lib/utils/section-helpers.ts": [
+      "DEFAULT_SECTION_META",
+      "localizeDefaultSectionMeta",
+      "withLocalizedDefaultSections",
+      "getSectionMeta",
+      "getSortedSections",
+      "getAllSections",
+      "generateCustomSectionId",
+      "createCustomSection"
+    ],
+    "apps/frontend/next.config.ts": [],
+    "apps/frontend/postcss.config.mjs": [],
+    "apps/frontend/tests/additional-info-newlines.test.tsx": [],
+    "apps/frontend/tests/api-client.test.ts": [],
+    "apps/frontend/tests/api-config.test.ts": [],
+    "apps/frontend/tests/api-tracker.test.ts": [],
+    "apps/frontend/tests/dashboard-master-choice.test.tsx": [],
+    "apps/frontend/tests/diff-preview-modal.test.tsx": [],
+    "apps/frontend/tests/download-utils.test.ts": [],
+    "apps/frontend/tests/html-sanitizer.test.ts": [],
+    "apps/frontend/tests/i18n-locale-parity.test.ts": [],
+    "apps/frontend/tests/i18n-server.test.ts": [],
+    "apps/frontend/tests/i18n-utils.test.ts": [],
+    "apps/frontend/tests/keyword-matcher.test.ts": [],
+    "apps/frontend/tests/regenerate-wizard.test.tsx": [],
+    "apps/frontend/tests/resume-clean.test.tsx": [],
+    "apps/frontend/tests/resume-latex.test.tsx": [],
+    "apps/frontend/tests/resume-vivid.test.tsx": [],
+    "apps/frontend/tests/resume-wizard-api.test.ts": [],
+    "apps/frontend/tests/resume-wizard-live-preview.test.tsx": [],
+    "apps/frontend/tests/resume-wizard-page.test.tsx": [],
+    "apps/frontend/tests/resume-wizard-question-card.test.tsx": [],
+    "apps/frontend/tests/rich-text-editor-extensions.test.tsx": [],
+    "apps/frontend/tests/section-helpers.test.ts": [],
+    "apps/frontend/tests/template-registration.test.ts": [],
+    "apps/frontend/tests/tracker-reorder.test.ts": [],
+    "apps/frontend/vitest.config.ts": [],
+    "apps/frontend/vitest.setup.ts": [],
+    "scripts/check_locale_parity.py": [
+      "_node_kind",
+      "key_kinds",
+      "_load",
+      "main"
+    ]
+  },
+  "batches": [
+    {
+      "batchIndex": 1,
+      "files": [
+        {
+          "path": ".dockerignore",
+          "language": "unknown",
+          "sizeLines": 62,
+          "fileCategory": "infra"
+        },
+        {
+          "path": "docker-compose.yml",
+          "language": "yaml",
+          "sizeLines": 42,
+          "fileCategory": "infra"
+        },
+        {
+          "path": "Dockerfile",
+          "language": "dockerfile",
+          "sizeLines": 127,
+          "fileCategory": "infra"
+        }
+      ],
+      "batchImportData": {
+        ".dockerignore": [],
+        "docker-compose.yml": [],
+        "Dockerfile": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 2,
+      "files": [
+        {
+          "path": ".github/workflows/docker-publish.yml",
+          "language": "yaml",
+          "sizeLines": 66,
+          "fileCategory": "infra"
+        }
+      ],
+      "batchImportData": {
+        ".github/workflows/docker-publish.yml": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 3,
+      "files": [
+        {
+          "path": ".github/CODE_OF_CONDUCT.md",
+          "language": "markdown",
+          "sizeLines": 132,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".github/CONTRIBUTING.md",
+          "language": "markdown",
+          "sizeLines": 207,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".github/FUNDING.yml",
+          "language": "yaml",
+          "sizeLines": 2,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".github/ISSUE_TEMPLATE.md",
+          "language": "markdown",
+          "sizeLines": 41,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".github/PULL_REQUEST_TEMPLATE.md",
+          "language": "markdown",
+          "sizeLines": 50,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".github/SECURITY.md",
+          "language": "markdown",
+          "sizeLines": 9,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        ".github/CODE_OF_CONDUCT.md": [],
+        ".github/CONTRIBUTING.md": [],
+        ".github/FUNDING.yml": [],
+        ".github/ISSUE_TEMPLATE.md": [],
+        ".github/PULL_REQUEST_TEMPLATE.md": [],
+        ".github/SECURITY.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 4,
+      "files": [
+        {
+          "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+          "language": "yaml",
+          "sizeLines": 58,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".github/ISSUE_TEMPLATE/config.yml",
+          "language": "yaml",
+          "sizeLines": 14,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".github/ISSUE_TEMPLATE/custom.yml",
+          "language": "yaml",
+          "sizeLines": 11,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".github/ISSUE_TEMPLATE/feature_request.yml",
+          "language": "yaml",
+          "sizeLines": 41,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        ".github/ISSUE_TEMPLATE/bug_report.yml": [],
+        ".github/ISSUE_TEMPLATE/config.yml": [],
+        ".github/ISSUE_TEMPLATE/custom.yml": [],
+        ".github/ISSUE_TEMPLATE/feature_request.yml": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 5,
+      "files": [
+        {
+          "path": ".impeccable.md",
+          "language": "markdown",
+          "sizeLines": 133,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "README.es.md",
+          "language": "markdown",
+          "sizeLines": 264,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "README.ja.md",
+          "language": "markdown",
+          "sizeLines": 264,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "README.md",
+          "language": "markdown",
+          "sizeLines": 282,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "README.zh-CN.md",
+          "language": "markdown",
+          "sizeLines": 264,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "SETUP.es.md",
+          "language": "markdown",
+          "sizeLines": 505,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "SETUP.ja.md",
+          "language": "markdown",
+          "sizeLines": 505,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "SETUP.md",
+          "language": "markdown",
+          "sizeLines": 563,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "SETUP.zh-CN.md",
+          "language": "markdown",
+          "sizeLines": 505,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "opencode.json",
+          "language": "json",
+          "sizeLines": 12,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        ".impeccable.md": [],
+        "README.es.md": [],
+        "README.ja.md": [],
+        "README.md": [],
+        "README.zh-CN.md": [],
+        "SETUP.es.md": [],
+        "SETUP.ja.md": [],
+        "SETUP.md": [],
+        "SETUP.zh-CN.md": [],
+        "opencode.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 6,
+      "files": [
+        {
+          "path": ".understand-anything/intermediate/backend-architecture.md",
+          "language": "markdown",
+          "sizeLines": 173,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".understand-anything/intermediate/frontend-architecture.md",
+          "language": "markdown",
+          "sizeLines": 167,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".understand-anything/intermediate/project-overview.md",
+          "language": "markdown",
+          "sizeLines": 98,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        ".understand-anything/intermediate/backend-architecture.md": [],
+        ".understand-anything/intermediate/frontend-architecture.md": [],
+        ".understand-anything/intermediate/project-overview.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 7,
+      "files": [
+        {
+          "path": "apps/backend/.env.sample",
+          "language": "config",
+          "sizeLines": 42,
+          "fileCategory": "config"
+        },
+        {
+          "path": "apps/backend/CLAUDE.md",
+          "language": "markdown",
+          "sizeLines": 171,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "apps/backend/pyproject.toml",
+          "language": "toml",
+          "sizeLines": 66,
+          "fileCategory": "config"
+        },
+        {
+          "path": "apps/backend/requirements.txt",
+          "language": "txt",
+          "sizeLines": 14,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "apps/backend/.env.sample": [],
+        "apps/backend/CLAUDE.md": [],
+        "apps/backend/pyproject.toml": [],
+        "apps/backend/requirements.txt": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 8,
+      "files": [
+        {
+          "path": "apps/backend/e2e_monitor/AGENT_PLAYBOOK.md",
+          "language": "markdown",
+          "sizeLines": 38,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/README.md",
+          "language": "markdown",
+          "sizeLines": 88,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/install_skill.sh",
+          "language": "shell",
+          "sizeLines": 9,
+          "fileCategory": "script"
+        }
+      ],
+      "batchImportData": {
+        "apps/backend/e2e_monitor/AGENT_PLAYBOOK.md": [],
+        "apps/backend/e2e_monitor/README.md": [],
+        "apps/backend/e2e_monitor/install_skill.sh": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 9,
+      "files": [
+        {
+          "path": "apps/backend/e2e_monitor/fixtures/jds/backend-eng.txt",
+          "language": "txt",
+          "sizeLines": 12,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/fixtures/jds/frontend-eng.txt",
+          "language": "txt",
+          "sizeLines": 11,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/fixtures/jds/ml-eng.txt",
+          "language": "txt",
+          "sizeLines": 13,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/fixtures/jds/product-manager.txt",
+          "language": "txt",
+          "sizeLines": 15,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "apps/backend/e2e_monitor/fixtures/jds/backend-eng.txt": [],
+        "apps/backend/e2e_monitor/fixtures/jds/frontend-eng.txt": [],
+        "apps/backend/e2e_monitor/fixtures/jds/ml-eng.txt": [],
+        "apps/backend/e2e_monitor/fixtures/jds/product-manager.txt": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 10,
+      "files": [
+        {
+          "path": "apps/frontend/.env.sample",
+          "language": "config",
+          "sizeLines": 25,
+          "fileCategory": "config"
+        },
+        {
+          "path": "apps/frontend/CLAUDE.md",
+          "language": "markdown",
+          "sizeLines": 223,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "apps/frontend/package.json",
+          "language": "json",
+          "sizeLines": 52,
+          "fileCategory": "config"
+        },
+        {
+          "path": "apps/frontend/tsconfig.json",
+          "language": "json",
+          "sizeLines": 33,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "apps/frontend/.env.sample": [],
+        "apps/frontend/CLAUDE.md": [],
+        "apps/frontend/package.json": [],
+        "apps/frontend/tsconfig.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 11,
+      "files": [
+        {
+          "path": "apps/frontend/components/resume/styles/_base.module.css",
+          "language": "css",
+          "sizeLines": 329,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "apps/frontend/components/resume/styles/_tokens.css",
+          "language": "css",
+          "sizeLines": 22,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "apps/frontend/components/resume/styles/clean.module.css",
+          "language": "css",
+          "sizeLines": 99,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "apps/frontend/components/resume/styles/latex.module.css",
+          "language": "css",
+          "sizeLines": 99,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "apps/frontend/components/resume/styles/modern-two-column.module.css",
+          "language": "css",
+          "sizeLines": 100,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "apps/frontend/components/resume/styles/modern.module.css",
+          "language": "css",
+          "sizeLines": 76,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "apps/frontend/components/resume/styles/swiss-single.module.css",
+          "language": "css",
+          "sizeLines": 26,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "apps/frontend/components/resume/styles/swiss-two-column.module.css",
+          "language": "css",
+          "sizeLines": 40,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "apps/frontend/components/resume/styles/vivid.module.css",
+          "language": "css",
+          "sizeLines": 155,
+          "fileCategory": "markup"
+        }
+      ],
+      "batchImportData": {
+        "apps/frontend/components/resume/styles/_base.module.css": [],
+        "apps/frontend/components/resume/styles/_tokens.css": [],
+        "apps/frontend/components/resume/styles/clean.module.css": [],
+        "apps/frontend/components/resume/styles/latex.module.css": [],
+        "apps/frontend/components/resume/styles/modern-two-column.module.css": [],
+        "apps/frontend/components/resume/styles/modern.module.css": [],
+        "apps/frontend/components/resume/styles/swiss-single.module.css": [],
+        "apps/frontend/components/resume/styles/swiss-two-column.module.css": [],
+        "apps/frontend/components/resume/styles/vivid.module.css": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 12,
+      "files": [
+        {
+          "path": "apps/frontend/messages/en.json",
+          "language": "json",
+          "sizeLines": 1014,
+          "fileCategory": "config"
+        },
+        {
+          "path": "apps/frontend/messages/es.json",
+          "language": "json",
+          "sizeLines": 1014,
+          "fileCategory": "config"
+        },
+        {
+          "path": "apps/frontend/messages/ja.json",
+          "language": "json",
+          "sizeLines": 1014,
+          "fileCategory": "config"
+        },
+        {
+          "path": "apps/frontend/messages/pt-BR.json",
+          "language": "json",
+          "sizeLines": 1014,
+          "fileCategory": "config"
+        },
+        {
+          "path": "apps/frontend/messages/zh.json",
+          "language": "json",
+          "sizeLines": 1014,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "apps/frontend/messages/en.json": [],
+        "apps/frontend/messages/es.json": [],
+        "apps/frontend/messages/ja.json": [],
+        "apps/frontend/messages/pt-BR.json": [],
+        "apps/frontend/messages/zh.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 13,
+      "files": [
+        {
+          "path": "docs/agent/README.md",
+          "language": "markdown",
+          "sizeLines": 93,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/coding-standards.md",
+          "language": "markdown",
+          "sizeLines": 77,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/llm-integration.md",
+          "language": "markdown",
+          "sizeLines": 122,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/quickstart.md",
+          "language": "markdown",
+          "sizeLines": 66,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/scope-and-principles.md",
+          "language": "markdown",
+          "sizeLines": 46,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/testing-strategy.md",
+          "language": "markdown",
+          "sizeLines": 217,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/workflow.md",
+          "language": "markdown",
+          "sizeLines": 73,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/agent/README.md": [],
+        "docs/agent/coding-standards.md": [],
+        "docs/agent/llm-integration.md": [],
+        "docs/agent/quickstart.md": [],
+        "docs/agent/scope-and-principles.md": [],
+        "docs/agent/testing-strategy.md": [],
+        "docs/agent/workflow.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 14,
+      "files": [
+        {
+          "path": "docs/agent/apis/api-flow-maps.md",
+          "language": "markdown",
+          "sizeLines": 130,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/apis/backend-requirements.md",
+          "language": "markdown",
+          "sizeLines": 93,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/apis/front-end-apis.md",
+          "language": "markdown",
+          "sizeLines": 117,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/agent/apis/api-flow-maps.md": [],
+        "docs/agent/apis/backend-requirements.md": [],
+        "docs/agent/apis/front-end-apis.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 15,
+      "files": [
+        {
+          "path": "docs/agent/architecture/backend-architecture.md",
+          "language": "markdown",
+          "sizeLines": 188,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/architecture/backend-guide.md",
+          "language": "markdown",
+          "sizeLines": 132,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/architecture/frontend-architecture.md",
+          "language": "markdown",
+          "sizeLines": 119,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/architecture/frontend-workflow.md",
+          "language": "markdown",
+          "sizeLines": 88,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/architecture/prompt-workflow-design.md",
+          "language": "markdown",
+          "sizeLines": 503,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/agent/architecture/backend-architecture.md": [],
+        "docs/agent/architecture/backend-guide.md": [],
+        "docs/agent/architecture/frontend-architecture.md": [],
+        "docs/agent/architecture/frontend-workflow.md": [],
+        "docs/agent/architecture/prompt-workflow-design.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 16,
+      "files": [
+        {
+          "path": "docs/agent/design/pdf-template-guide.md",
+          "language": "markdown",
+          "sizeLines": 94,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/design/print-pdf-design-spec.md",
+          "language": "markdown",
+          "sizeLines": 54,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/design/resume-template-design-spec.md",
+          "language": "markdown",
+          "sizeLines": 70,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/design/template-system.md",
+          "language": "markdown",
+          "sizeLines": 125,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/agent/design/pdf-template-guide.md": [],
+        "docs/agent/design/print-pdf-design-spec.md": [],
+        "docs/agent/design/resume-template-design-spec.md": [],
+        "docs/agent/design/template-system.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 17,
+      "files": [
+        {
+          "path": "docs/agent/features/adding-resume-templates.md",
+          "language": "markdown",
+          "sizeLines": 75,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/features/application-tracker.md",
+          "language": "markdown",
+          "sizeLines": 77,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/features/custom-sections.md",
+          "language": "markdown",
+          "sizeLines": 68,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/features/enrichment.md",
+          "language": "markdown",
+          "sizeLines": 42,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/features/i18n-preparation.md",
+          "language": "markdown",
+          "sizeLines": 66,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/features/i18n.md",
+          "language": "markdown",
+          "sizeLines": 64,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/features/jd-match.md",
+          "language": "markdown",
+          "sizeLines": 39,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/features/resume-templates.md",
+          "language": "markdown",
+          "sizeLines": 71,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/agent/features/adding-resume-templates.md": [],
+        "docs/agent/features/application-tracker.md": [],
+        "docs/agent/features/custom-sections.md": [],
+        "docs/agent/features/enrichment.md": [],
+        "docs/agent/features/i18n-preparation.md": [],
+        "docs/agent/features/i18n.md": [],
+        "docs/agent/features/jd-match.md": [],
+        "docs/agent/features/resume-templates.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 18,
+      "files": [
+        {
+          "path": "docs/portable/nextjs-performance/01-waterfalls.md",
+          "language": "markdown",
+          "sizeLines": 176,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/portable/nextjs-performance/02-bundle-size.md",
+          "language": "markdown",
+          "sizeLines": 182,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/portable/nextjs-performance/03-server-actions-security.md",
+          "language": "markdown",
+          "sizeLines": 162,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/portable/nextjs-performance/04-server-side-perf.md",
+          "language": "markdown",
+          "sizeLines": 176,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/portable/nextjs-performance/README.md",
+          "language": "markdown",
+          "sizeLines": 62,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/portable/nextjs-performance/checklist.md",
+          "language": "markdown",
+          "sizeLines": 93,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/portable/nextjs-performance/01-waterfalls.md": [],
+        "docs/portable/nextjs-performance/02-bundle-size.md": [],
+        "docs/portable/nextjs-performance/03-server-actions-security.md": [],
+        "docs/portable/nextjs-performance/04-server-side-perf.md": [],
+        "docs/portable/nextjs-performance/README.md": [],
+        "docs/portable/nextjs-performance/checklist.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 19,
+      "files": [
+        {
+          "path": "docs/portable/swiss-design-system/README.md",
+          "language": "markdown",
+          "sizeLines": 54,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/portable/swiss-design-system/ai-prompt.md",
+          "language": "markdown",
+          "sizeLines": 111,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/portable/swiss-design-system/anti-patterns.md",
+          "language": "markdown",
+          "sizeLines": 93,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/portable/swiss-design-system/components.md",
+          "language": "markdown",
+          "sizeLines": 221,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/portable/swiss-design-system/layouts.md",
+          "language": "markdown",
+          "sizeLines": 144,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/portable/swiss-design-system/tokens.md",
+          "language": "markdown",
+          "sizeLines": 133,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/portable/swiss-design-system/README.md": [],
+        "docs/portable/swiss-design-system/ai-prompt.md": [],
+        "docs/portable/swiss-design-system/anti-patterns.md": [],
+        "docs/portable/swiss-design-system/components.md": [],
+        "docs/portable/swiss-design-system/layouts.md": [],
+        "docs/portable/swiss-design-system/tokens.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 20,
+      "files": [
+        {
+          "path": "docs/superpowers/plans/2026-03-23-diff-based-improvement.md",
+          "language": "markdown",
+          "sizeLines": 1392,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-04-17-dev-issues-754-751-749.md",
+          "language": "markdown",
+          "sizeLines": 1539,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-04-17-litellm-reasoning-hardening.md",
+          "language": "markdown",
+          "sizeLines": 1149,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-05-06-resume-tailor-verifier-loop.md",
+          "language": "markdown",
+          "sizeLines": 53,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-06-01-agentic-e2e-monitor.md",
+          "language": "markdown",
+          "sizeLines": 1382,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-06-03-resume-templates-latex-clean-vivid.md",
+          "language": "markdown",
+          "sizeLines": 553,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/plans/2026-06-04-resume-wizard-redesign.md",
+          "language": "markdown",
+          "sizeLines": 2600,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/superpowers/plans/2026-03-23-diff-based-improvement.md": [],
+        "docs/superpowers/plans/2026-04-17-dev-issues-754-751-749.md": [],
+        "docs/superpowers/plans/2026-04-17-litellm-reasoning-hardening.md": [],
+        "docs/superpowers/plans/2026-05-06-resume-tailor-verifier-loop.md": [],
+        "docs/superpowers/plans/2026-06-01-agentic-e2e-monitor.md": [],
+        "docs/superpowers/plans/2026-06-03-resume-templates-latex-clean-vivid.md": [],
+        "docs/superpowers/plans/2026-06-04-resume-wizard-redesign.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 21,
+      "files": [
+        {
+          "path": "docs/superpowers/specs/2026-03-23-diff-based-improvement-design.md",
+          "language": "markdown",
+          "sizeLines": 527,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-04-10-health-check-fix-design.md",
+          "language": "markdown",
+          "sizeLines": 36,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-04-17-custom-feature-prompts-design.md",
+          "language": "markdown",
+          "sizeLines": 279,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-04-17-litellm-reasoning-hardening-design.md",
+          "language": "markdown",
+          "sizeLines": 196,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-04-17-openai-compatible-provider-design.md",
+          "language": "markdown",
+          "sizeLines": 211,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-04-17-settings-error-overflow-design.md",
+          "language": "markdown",
+          "sizeLines": 83,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-06-01-agentic-e2e-monitor-design.md",
+          "language": "markdown",
+          "sizeLines": 262,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-06-03-resume-templates-latex-clean-vivid-design.md",
+          "language": "markdown",
+          "sizeLines": 153,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-06-04-resume-wizard-design.md",
+          "language": "markdown",
+          "sizeLines": 175,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/superpowers/specs/2026-06-04-resume-wizard-redesign-design.md",
+          "language": "markdown",
+          "sizeLines": 245,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/superpowers/specs/2026-03-23-diff-based-improvement-design.md": [],
+        "docs/superpowers/specs/2026-04-10-health-check-fix-design.md": [],
+        "docs/superpowers/specs/2026-04-17-custom-feature-prompts-design.md": [],
+        "docs/superpowers/specs/2026-04-17-litellm-reasoning-hardening-design.md": [],
+        "docs/superpowers/specs/2026-04-17-openai-compatible-provider-design.md": [],
+        "docs/superpowers/specs/2026-04-17-settings-error-overflow-design.md": [],
+        "docs/superpowers/specs/2026-06-01-agentic-e2e-monitor-design.md": [],
+        "docs/superpowers/specs/2026-06-03-resume-templates-latex-clean-vivid-design.md": [],
+        "docs/superpowers/specs/2026-06-04-resume-wizard-design.md": [],
+        "docs/superpowers/specs/2026-06-04-resume-wizard-redesign-design.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 22,
+      "files": [
+        {
+          "path": ".claude/CLAUDE.md",
+          "language": "markdown",
+          "sizeLines": 208,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".claude/settings.json",
+          "language": "json",
+          "sizeLines": 27,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".githooks/pre-push",
+          "language": "unknown",
+          "sizeLines": 70,
+          "fileCategory": "code"
+        },
+        {
+          "path": ".githooks/README.md",
+          "language": "markdown",
+          "sizeLines": 57,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".understand-anything/knowledge-graph.json",
+          "language": "json",
+          "sizeLines": 702,
+          "fileCategory": "config"
+        },
+        {
+          "path": "apps/backend/.python-version",
+          "language": "unknown",
+          "sizeLines": 1,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/__init__.py",
+          "language": "python",
+          "sizeLines": 3,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/config_cache.py",
+          "language": "python",
+          "sizeLines": 67,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/config.py",
+          "language": "python",
+          "sizeLines": 339,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/crypto.py",
+          "language": "python",
+          "sizeLines": 129,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/database.py",
+          "language": "python",
+          "sizeLines": 771,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/db_engine.py",
+          "language": "python",
+          "sizeLines": 64,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/llm.py",
+          "language": "python",
+          "sizeLines": 1272,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/main.py",
+          "language": "python",
+          "sizeLines": 122,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/models.py",
+          "language": "python",
+          "sizeLines": 136,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/pdf.py",
+          "language": "python",
+          "sizeLines": 338,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/prompts/__init__.py",
+          "language": "python",
+          "sizeLines": 59,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/prompts/enrichment.py",
+          "language": "python",
+          "sizeLines": 195,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/prompts/refinement.py",
+          "language": "python",
+          "sizeLines": 183,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/prompts/resume_wizard.py",
+          "language": "python",
+          "sizeLines": 52,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/prompts/templates.py",
+          "language": "python",
+          "sizeLines": 597,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/routers/__init__.py",
+          "language": "python",
+          "sizeLines": 19,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/routers/applications.py",
+          "language": "python",
+          "sizeLines": 193,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/routers/config.py",
+          "language": "python",
+          "sizeLines": 660,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/routers/enrichment.py",
+          "language": "python",
+          "sizeLines": 809,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        ".claude/CLAUDE.md": [],
+        ".claude/settings.json": [],
+        ".githooks/pre-push": [],
+        ".githooks/README.md": [],
+        ".understand-anything/knowledge-graph.json": [],
+        "apps/backend/.python-version": [],
+        "apps/backend/app/__init__.py": [],
+        "apps/backend/app/config_cache.py": [],
+        "apps/backend/app/config.py": [],
+        "apps/backend/app/crypto.py": [],
+        "apps/backend/app/database.py": [],
+        "apps/backend/app/db_engine.py": [],
+        "apps/backend/app/llm.py": [],
+        "apps/backend/app/main.py": [],
+        "apps/backend/app/models.py": [],
+        "apps/backend/app/pdf.py": [],
+        "apps/backend/app/prompts/__init__.py": [],
+        "apps/backend/app/prompts/enrichment.py": [],
+        "apps/backend/app/prompts/refinement.py": [],
+        "apps/backend/app/prompts/resume_wizard.py": [],
+        "apps/backend/app/prompts/templates.py": [],
+        "apps/backend/app/routers/__init__.py": [],
+        "apps/backend/app/routers/applications.py": [],
+        "apps/backend/app/routers/config.py": [],
+        "apps/backend/app/routers/enrichment.py": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 23,
+      "files": [
+        {
+          "path": "apps/backend/app/routers/health.py",
+          "language": "python",
+          "sizeLines": 67,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/routers/jobs.py",
+          "language": "python",
+          "sizeLines": 50,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/routers/resume_wizard.py",
+          "language": "python",
+          "sizeLines": 123,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/routers/resumes.py",
+          "language": "python",
+          "sizeLines": 2049,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/routers/resumes.py.prev",
+          "language": "prev",
+          "sizeLines": 2072,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/schemas/__init__.py",
+          "language": "python",
+          "sizeLines": 131,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/schemas/applications.py",
+          "language": "python",
+          "sizeLines": 103,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/schemas/enrichment.py",
+          "language": "python",
+          "sizeLines": 126,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/schemas/models.py",
+          "language": "python",
+          "sizeLines": 803,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/schemas/refinement.py",
+          "language": "python",
+          "sizeLines": 125,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/schemas/resume_wizard.py",
+          "language": "python",
+          "sizeLines": 115,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/scripts/__init__.py",
+          "language": "python",
+          "sizeLines": 1,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/scripts/migrate_tinydb_to_sqlite.py",
+          "language": "python",
+          "sizeLines": 141,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/services/__init__.py",
+          "language": "python",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/services/cover_letter.py",
+          "language": "python",
+          "sizeLines": 168,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/services/improver.py",
+          "language": "python",
+          "sizeLines": 1618,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/services/parser.py",
+          "language": "python",
+          "sizeLines": 211,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/services/refiner.py",
+          "language": "python",
+          "sizeLines": 702,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/app/services/resume_wizard.py",
+          "language": "python",
+          "sizeLines": 447,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/data/.gitkeep",
+          "language": "unknown",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/__init__.py",
+          "language": "python",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/__main__.py",
+          "language": "python",
+          "sizeLines": 247,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/baseline.py",
+          "language": "python",
+          "sizeLines": 77,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/baseline/baseline.json",
+          "language": "json",
+          "sizeLines": 28,
+          "fileCategory": "config"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/bundle.py",
+          "language": "python",
+          "sizeLines": 50,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "apps/backend/app/routers/health.py": [],
+        "apps/backend/app/routers/jobs.py": [],
+        "apps/backend/app/routers/resume_wizard.py": [],
+        "apps/backend/app/routers/resumes.py": [],
+        "apps/backend/app/routers/resumes.py.prev": [],
+        "apps/backend/app/schemas/__init__.py": [],
+        "apps/backend/app/schemas/applications.py": [],
+        "apps/backend/app/schemas/enrichment.py": [],
+        "apps/backend/app/schemas/models.py": [],
+        "apps/backend/app/schemas/refinement.py": [],
+        "apps/backend/app/schemas/resume_wizard.py": [],
+        "apps/backend/app/scripts/__init__.py": [],
+        "apps/backend/app/scripts/migrate_tinydb_to_sqlite.py": [],
+        "apps/backend/app/services/__init__.py": [],
+        "apps/backend/app/services/cover_letter.py": [],
+        "apps/backend/app/services/improver.py": [],
+        "apps/backend/app/services/parser.py": [],
+        "apps/backend/app/services/refiner.py": [],
+        "apps/backend/app/services/resume_wizard.py": [],
+        "apps/backend/data/.gitkeep": [],
+        "apps/backend/e2e_monitor/__init__.py": [],
+        "apps/backend/e2e_monitor/__main__.py": [],
+        "apps/backend/e2e_monitor/baseline.py": [],
+        "apps/backend/e2e_monitor/baseline/baseline.json": [],
+        "apps/backend/e2e_monitor/bundle.py": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 24,
+      "files": [
+        {
+          "path": "apps/backend/e2e_monitor/collect.py",
+          "language": "python",
+          "sizeLines": 38,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/fixtures/master.json",
+          "language": "json",
+          "sizeLines": 67,
+          "fileCategory": "config"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/flow.py",
+          "language": "python",
+          "sizeLines": 102,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/gate.py",
+          "language": "python",
+          "sizeLines": 43,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/judge.py",
+          "language": "python",
+          "sizeLines": 74,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/manifest.py",
+          "language": "python",
+          "sizeLines": 22,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/render.py",
+          "language": "python",
+          "sizeLines": 69,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/scrub.py",
+          "language": "python",
+          "sizeLines": 46,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/e2e_monitor/servers.py",
+          "language": "python",
+          "sizeLines": 133,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/final_test.py",
+          "language": "python",
+          "sizeLines": 10,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/remove_final.py",
+          "language": "python",
+          "sizeLines": 3,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/conftest.py",
+          "language": "python",
+          "sizeLines": 221,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/evals/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/evals/golden/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/evals/golden/cases.py",
+          "language": "python",
+          "sizeLines": 395,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/evals/README.md",
+          "language": "markdown",
+          "sizeLines": 95,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "apps/backend/tests/evals/scorers.py",
+          "language": "python",
+          "sizeLines": 167,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/evals/test_scorers.py",
+          "language": "python",
+          "sizeLines": 209,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/evals/test_tailoring_eval.py",
+          "language": "python",
+          "sizeLines": 100,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/integration/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/integration/test_applications_api.py",
+          "language": "python",
+          "sizeLines": 233,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/integration/test_config_api.py",
+          "language": "python",
+          "sizeLines": 516,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/integration/test_health_api.py",
+          "language": "python",
+          "sizeLines": 150,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/integration/test_jobs_api.py",
+          "language": "python",
+          "sizeLines": 85,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "apps/backend/e2e_monitor/collect.py": [],
+        "apps/backend/e2e_monitor/fixtures/master.json": [],
+        "apps/backend/e2e_monitor/flow.py": [],
+        "apps/backend/e2e_monitor/gate.py": [],
+        "apps/backend/e2e_monitor/judge.py": [],
+        "apps/backend/e2e_monitor/manifest.py": [],
+        "apps/backend/e2e_monitor/render.py": [],
+        "apps/backend/e2e_monitor/scrub.py": [],
+        "apps/backend/e2e_monitor/servers.py": [],
+        "apps/backend/final_test.py": [],
+        "apps/backend/remove_final.py": [],
+        "apps/backend/tests/__init__.py": [],
+        "apps/backend/tests/conftest.py": [],
+        "apps/backend/tests/evals/__init__.py": [],
+        "apps/backend/tests/evals/golden/__init__.py": [],
+        "apps/backend/tests/evals/golden/cases.py": [],
+        "apps/backend/tests/evals/README.md": [],
+        "apps/backend/tests/evals/scorers.py": [],
+        "apps/backend/tests/evals/test_scorers.py": [],
+        "apps/backend/tests/evals/test_tailoring_eval.py": [],
+        "apps/backend/tests/integration/__init__.py": [],
+        "apps/backend/tests/integration/test_applications_api.py": [],
+        "apps/backend/tests/integration/test_config_api.py": [],
+        "apps/backend/tests/integration/test_health_api.py": [],
+        "apps/backend/tests/integration/test_jobs_api.py": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 25,
+      "files": [
+        {
+          "path": "apps/backend/tests/integration/test_llm_contract.py",
+          "language": "python",
+          "sizeLines": 347,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/integration/test_pdf_render.py",
+          "language": "python",
+          "sizeLines": 285,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/integration/test_pipeline_e2e.py",
+          "language": "python",
+          "sizeLines": 520,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/integration/test_regenerate_endpoints.py",
+          "language": "python",
+          "sizeLines": 330,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/integration/test_resume_api.py",
+          "language": "python",
+          "sizeLines": 173,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/integration/test_resume_wizard_api.py",
+          "language": "python",
+          "sizeLines": 241,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/integration/test_tracker_autocreate.py",
+          "language": "python",
+          "sizeLines": 129,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/integration/test_upload_api.py",
+          "language": "python",
+          "sizeLines": 77,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/service/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/service/test_improver.py",
+          "language": "python",
+          "sizeLines": 362,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/__init__.py",
+          "language": "python",
+          "sizeLines": 0,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_apply_diffs.py",
+          "language": "python",
+          "sizeLines": 854,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_check_locale_parity.py",
+          "language": "python",
+          "sizeLines": 86,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_crypto.py",
+          "language": "python",
+          "sizeLines": 49,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_database.py",
+          "language": "python",
+          "sizeLines": 255,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_e2e_monitor_baseline.py",
+          "language": "python",
+          "sizeLines": 69,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_e2e_monitor_collect.py",
+          "language": "python",
+          "sizeLines": 33,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_e2e_monitor_judge.py",
+          "language": "python",
+          "sizeLines": 26,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_e2e_monitor_manifest.py",
+          "language": "python",
+          "sizeLines": 28,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_e2e_monitor_render.py",
+          "language": "python",
+          "sizeLines": 43,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_e2e_monitor_scores.py",
+          "language": "python",
+          "sizeLines": 37,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_e2e_monitor_scrub.py",
+          "language": "python",
+          "sizeLines": 42,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_improve_confirm_hash.py",
+          "language": "python",
+          "sizeLines": 52,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_llm_providers.py",
+          "language": "python",
+          "sizeLines": 195,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_llm.py",
+          "language": "python",
+          "sizeLines": 344,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "apps/backend/tests/integration/test_llm_contract.py": [],
+        "apps/backend/tests/integration/test_pdf_render.py": [],
+        "apps/backend/tests/integration/test_pipeline_e2e.py": [],
+        "apps/backend/tests/integration/test_regenerate_endpoints.py": [],
+        "apps/backend/tests/integration/test_resume_api.py": [],
+        "apps/backend/tests/integration/test_resume_wizard_api.py": [],
+        "apps/backend/tests/integration/test_tracker_autocreate.py": [],
+        "apps/backend/tests/integration/test_upload_api.py": [],
+        "apps/backend/tests/service/__init__.py": [],
+        "apps/backend/tests/service/test_improver.py": [],
+        "apps/backend/tests/unit/__init__.py": [],
+        "apps/backend/tests/unit/test_apply_diffs.py": [],
+        "apps/backend/tests/unit/test_check_locale_parity.py": [],
+        "apps/backend/tests/unit/test_crypto.py": [],
+        "apps/backend/tests/unit/test_database.py": [],
+        "apps/backend/tests/unit/test_e2e_monitor_baseline.py": [],
+        "apps/backend/tests/unit/test_e2e_monitor_collect.py": [],
+        "apps/backend/tests/unit/test_e2e_monitor_judge.py": [],
+        "apps/backend/tests/unit/test_e2e_monitor_manifest.py": [],
+        "apps/backend/tests/unit/test_e2e_monitor_render.py": [],
+        "apps/backend/tests/unit/test_e2e_monitor_scores.py": [],
+        "apps/backend/tests/unit/test_e2e_monitor_scrub.py": [],
+        "apps/backend/tests/unit/test_improve_confirm_hash.py": [],
+        "apps/backend/tests/unit/test_llm_providers.py": [],
+        "apps/backend/tests/unit/test_llm.py": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 26,
+      "files": [
+        {
+          "path": "apps/backend/tests/unit/test_parser.py",
+          "language": "python",
+          "sizeLines": 80,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_prompt_guardrails.py",
+          "language": "python",
+          "sizeLines": 42,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_refiner.py",
+          "language": "python",
+          "sizeLines": 327,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_resume_diff.py",
+          "language": "python",
+          "sizeLines": 275,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_resume_wizard_service.py",
+          "language": "python",
+          "sizeLines": 468,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_settings_timeout.py",
+          "language": "python",
+          "sizeLines": 40,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/backend/tests/unit/test_verify_diffs.py",
+          "language": "python",
+          "sizeLines": 223,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/app/(default)/builder/page.tsx",
+          "language": "typescript",
+          "sizeLines": 5,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/app/(default)/css/globals.css",
+          "language": "css",
+          "sizeLines": 273,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "apps/frontend/app/(default)/dashboard/page.tsx",
+          "language": "typescript",
+          "sizeLines": 574,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/app/(default)/layout.tsx",
+          "language": "typescript",
+          "sizeLines": 18,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/app/(default)/page.tsx",
+          "language": "typescript",
+          "sizeLines": 5,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/app/(default)/resume-wizard/page.tsx",
+          "language": "typescript",
+          "sizeLines": 5,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/app/(default)/resumes/[id]/page.tsx",
+          "language": "typescript",
+          "sizeLines": 460,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/app/(default)/settings/page.tsx",
+          "language": "typescript",
+          "sizeLines": 1461,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/app/(default)/tailor/page.tsx",
+          "language": "typescript",
+          "sizeLines": 515,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/app/(default)/tracker/page.tsx",
+          "language": "typescript",
+          "sizeLines": 36,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/app/layout.tsx",
+          "language": "typescript",
+          "sizeLines": 34,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/app/print/cover-letter/[id]/page.tsx",
+          "language": "typescript",
+          "sizeLines": 181,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/app/print/resumes/[id]/page.tsx",
+          "language": "typescript",
+          "sizeLines": 270,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/add-section-dialog.tsx",
+          "language": "typescript",
+          "sizeLines": 197,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/cover-letter-editor.tsx",
+          "language": "typescript",
+          "sizeLines": 80,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/cover-letter-preview.tsx",
+          "language": "typescript",
+          "sizeLines": 97,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/draggable-list-item.tsx",
+          "language": "typescript",
+          "sizeLines": 50,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/draggable-section-wrapper.tsx",
+          "language": "typescript",
+          "sizeLines": 58,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "apps/backend/tests/unit/test_parser.py": [],
+        "apps/backend/tests/unit/test_prompt_guardrails.py": [],
+        "apps/backend/tests/unit/test_refiner.py": [],
+        "apps/backend/tests/unit/test_resume_diff.py": [],
+        "apps/backend/tests/unit/test_resume_wizard_service.py": [],
+        "apps/backend/tests/unit/test_settings_timeout.py": [],
+        "apps/backend/tests/unit/test_verify_diffs.py": [],
+        "apps/frontend/app/(default)/builder/page.tsx": [],
+        "apps/frontend/app/(default)/css/globals.css": [],
+        "apps/frontend/app/(default)/dashboard/page.tsx": [],
+        "apps/frontend/app/(default)/layout.tsx": [],
+        "apps/frontend/app/(default)/page.tsx": [],
+        "apps/frontend/app/(default)/resume-wizard/page.tsx": [],
+        "apps/frontend/app/(default)/resumes/[id]/page.tsx": [],
+        "apps/frontend/app/(default)/settings/page.tsx": [],
+        "apps/frontend/app/(default)/tailor/page.tsx": [],
+        "apps/frontend/app/(default)/tracker/page.tsx": [],
+        "apps/frontend/app/layout.tsx": [],
+        "apps/frontend/app/print/cover-letter/[id]/page.tsx": [],
+        "apps/frontend/app/print/resumes/[id]/page.tsx": [],
+        "apps/frontend/components/builder/add-section-dialog.tsx": [],
+        "apps/frontend/components/builder/cover-letter-editor.tsx": [],
+        "apps/frontend/components/builder/cover-letter-preview.tsx": [],
+        "apps/frontend/components/builder/draggable-list-item.tsx": [],
+        "apps/frontend/components/builder/draggable-section-wrapper.tsx": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 27,
+      "files": [
+        {
+          "path": "apps/frontend/components/builder/formatting-controls.tsx",
+          "language": "typescript",
+          "sizeLines": 593,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/forms/additional-form.tsx",
+          "language": "typescript",
+          "sizeLines": 216,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/forms/education-form.tsx",
+          "language": "typescript",
+          "sizeLines": 193,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/forms/experience-form.tsx",
+          "language": "typescript",
+          "sizeLines": 281,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/forms/generic-item-form.tsx",
+          "language": "typescript",
+          "sizeLines": 279,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/forms/generic-list-form.tsx",
+          "language": "typescript",
+          "sizeLines": 65,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/forms/generic-text-form.tsx",
+          "language": "typescript",
+          "sizeLines": 52,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/forms/personal-info-form.tsx",
+          "language": "typescript",
+          "sizeLines": 155,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/forms/projects-form.tsx",
+          "language": "typescript",
+          "sizeLines": 246,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/forms/summary-form.tsx",
+          "language": "typescript",
+          "sizeLines": 43,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/generate-prompt.tsx",
+          "language": "typescript",
+          "sizeLines": 98,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/highlighted-resume-view.tsx",
+          "language": "typescript",
+          "sizeLines": 251,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/jd-comparison-view.tsx",
+          "language": "typescript",
+          "sizeLines": 112,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/jd-display.tsx",
+          "language": "typescript",
+          "sizeLines": 33,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/outreach-editor.tsx",
+          "language": "typescript",
+          "sizeLines": 105,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/outreach-preview.tsx",
+          "language": "typescript",
+          "sizeLines": 75,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/regenerate-dialog.tsx",
+          "language": "typescript",
+          "sizeLines": 277,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/regenerate-diff-preview.tsx",
+          "language": "typescript",
+          "sizeLines": 293,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/regenerate-instruction-dialog.tsx",
+          "language": "typescript",
+          "sizeLines": 168,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/regenerate-wizard.tsx",
+          "language": "typescript",
+          "sizeLines": 163,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/resume-builder.tsx",
+          "language": "typescript",
+          "sizeLines": 1070,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/resume-form.tsx",
+          "language": "typescript",
+          "sizeLines": 419,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/section-header.tsx",
+          "language": "typescript",
+          "sizeLines": 264,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/builder/template-selector.tsx",
+          "language": "typescript",
+          "sizeLines": 294,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/common/error-boundary.tsx",
+          "language": "typescript",
+          "sizeLines": 149,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "apps/frontend/components/builder/formatting-controls.tsx": [],
+        "apps/frontend/components/builder/forms/additional-form.tsx": [],
+        "apps/frontend/components/builder/forms/education-form.tsx": [],
+        "apps/frontend/components/builder/forms/experience-form.tsx": [],
+        "apps/frontend/components/builder/forms/generic-item-form.tsx": [],
+        "apps/frontend/components/builder/forms/generic-list-form.tsx": [],
+        "apps/frontend/components/builder/forms/generic-text-form.tsx": [],
+        "apps/frontend/components/builder/forms/personal-info-form.tsx": [],
+        "apps/frontend/components/builder/forms/projects-form.tsx": [],
+        "apps/frontend/components/builder/forms/summary-form.tsx": [],
+        "apps/frontend/components/builder/generate-prompt.tsx": [],
+        "apps/frontend/components/builder/highlighted-resume-view.tsx": [],
+        "apps/frontend/components/builder/jd-comparison-view.tsx": [],
+        "apps/frontend/components/builder/jd-display.tsx": [],
+        "apps/frontend/components/builder/outreach-editor.tsx": [],
+        "apps/frontend/components/builder/outreach-preview.tsx": [],
+        "apps/frontend/components/builder/regenerate-dialog.tsx": [],
+        "apps/frontend/components/builder/regenerate-diff-preview.tsx": [],
+        "apps/frontend/components/builder/regenerate-instruction-dialog.tsx": [],
+        "apps/frontend/components/builder/regenerate-wizard.tsx": [],
+        "apps/frontend/components/builder/resume-builder.tsx": [],
+        "apps/frontend/components/builder/resume-form.tsx": [],
+        "apps/frontend/components/builder/section-header.tsx": [],
+        "apps/frontend/components/builder/template-selector.tsx": [],
+        "apps/frontend/components/common/error-boundary.tsx": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 28,
+      "files": [
+        {
+          "path": "apps/frontend/components/common/resume_previewer_context.tsx",
+          "language": "typescript",
+          "sizeLines": 135,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/dashboard/master-resume-choice-dialog.tsx",
+          "language": "typescript",
+          "sizeLines": 85,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/dashboard/resume-component.tsx",
+          "language": "typescript",
+          "sizeLines": 263,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/dashboard/resume-upload-dialog.tsx",
+          "language": "typescript",
+          "sizeLines": 331,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/enrichment/enrichment-modal.tsx",
+          "language": "typescript",
+          "sizeLines": 203,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/enrichment/loading-steps.tsx",
+          "language": "typescript",
+          "sizeLines": 140,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/enrichment/preview-step.tsx",
+          "language": "typescript",
+          "sizeLines": 127,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/enrichment/question-step.tsx",
+          "language": "typescript",
+          "sizeLines": 162,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/home/hero.tsx",
+          "language": "typescript",
+          "sizeLines": 57,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/home/swiss-grid.tsx",
+          "language": "typescript",
+          "sizeLines": 78,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/preview/index.ts",
+          "language": "typescript",
+          "sizeLines": 3,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/preview/page-container.tsx",
+          "language": "typescript",
+          "sizeLines": 118,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/preview/paginated-preview.tsx",
+          "language": "typescript",
+          "sizeLines": 228,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/preview/use-pagination.ts",
+          "language": "typescript",
+          "sizeLines": 227,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/resume-wizard/live-preview.tsx",
+          "language": "typescript",
+          "sizeLines": 145,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/resume-wizard/question-card.tsx",
+          "language": "typescript",
+          "sizeLines": 174,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/resume-wizard/resume-wizard-page.tsx",
+          "language": "typescript",
+          "sizeLines": 309,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/resume/dynamic-resume-section.tsx",
+          "language": "typescript",
+          "sizeLines": 139,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/resume/index.ts",
+          "language": "typescript",
+          "sizeLines": 7,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/resume/resume-clean.tsx",
+          "language": "typescript",
+          "sizeLines": 450,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/resume/resume-latex.tsx",
+          "language": "typescript",
+          "sizeLines": 473,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/resume/resume-modern-two-column.tsx",
+          "language": "typescript",
+          "sizeLines": 487,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/resume/resume-modern.tsx",
+          "language": "typescript",
+          "sizeLines": 573,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/resume/resume-single-column.tsx",
+          "language": "typescript",
+          "sizeLines": 477,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/resume/resume-two-column.tsx",
+          "language": "typescript",
+          "sizeLines": 508,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "apps/frontend/components/common/resume_previewer_context.tsx": [],
+        "apps/frontend/components/dashboard/master-resume-choice-dialog.tsx": [],
+        "apps/frontend/components/dashboard/resume-component.tsx": [],
+        "apps/frontend/components/dashboard/resume-upload-dialog.tsx": [],
+        "apps/frontend/components/enrichment/enrichment-modal.tsx": [],
+        "apps/frontend/components/enrichment/loading-steps.tsx": [],
+        "apps/frontend/components/enrichment/preview-step.tsx": [],
+        "apps/frontend/components/enrichment/question-step.tsx": [],
+        "apps/frontend/components/home/hero.tsx": [],
+        "apps/frontend/components/home/swiss-grid.tsx": [],
+        "apps/frontend/components/preview/index.ts": [],
+        "apps/frontend/components/preview/page-container.tsx": [],
+        "apps/frontend/components/preview/paginated-preview.tsx": [],
+        "apps/frontend/components/preview/use-pagination.ts": [],
+        "apps/frontend/components/resume-wizard/live-preview.tsx": [],
+        "apps/frontend/components/resume-wizard/question-card.tsx": [],
+        "apps/frontend/components/resume-wizard/resume-wizard-page.tsx": [],
+        "apps/frontend/components/resume/dynamic-resume-section.tsx": [],
+        "apps/frontend/components/resume/index.ts": [],
+        "apps/frontend/components/resume/resume-clean.tsx": [],
+        "apps/frontend/components/resume/resume-latex.tsx": [],
+        "apps/frontend/components/resume/resume-modern-two-column.tsx": [],
+        "apps/frontend/components/resume/resume-modern.tsx": [],
+        "apps/frontend/components/resume/resume-single-column.tsx": [],
+        "apps/frontend/components/resume/resume-two-column.tsx": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 29,
+      "files": [
+        {
+          "path": "apps/frontend/components/resume/resume-vivid.tsx",
+          "language": "typescript",
+          "sizeLines": 492,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/resume/safe-html.tsx",
+          "language": "typescript",
+          "sizeLines": 49,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/settings/api-key-menu.tsx",
+          "language": "typescript",
+          "sizeLines": 152,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/tailor/diff-preview-modal.tsx",
+          "language": "typescript",
+          "sizeLines": 470,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/tracker/application-card.tsx",
+          "language": "typescript",
+          "sizeLines": 95,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/tracker/bulk-action-bar.tsx",
+          "language": "typescript",
+          "sizeLines": 71,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/tracker/card-detail-modal.tsx",
+          "language": "typescript",
+          "sizeLines": 180,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/tracker/kanban-board.tsx",
+          "language": "typescript",
+          "sizeLines": 329,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/tracker/kanban-column.tsx",
+          "language": "typescript",
+          "sizeLines": 72,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/tracker/manual-add-application-dialog.tsx",
+          "language": "typescript",
+          "sizeLines": 172,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/tracker/reorder.ts",
+          "language": "typescript",
+          "sizeLines": 84,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/button.tsx",
+          "language": "typescript",
+          "sizeLines": 185,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/card.tsx",
+          "language": "typescript",
+          "sizeLines": 79,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/confirm-dialog.tsx",
+          "language": "typescript",
+          "sizeLines": 151,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/dialog.tsx",
+          "language": "typescript",
+          "sizeLines": 235,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/dropdown.tsx",
+          "language": "typescript",
+          "sizeLines": 154,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/input.tsx",
+          "language": "typescript",
+          "sizeLines": 36,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/label.tsx",
+          "language": "typescript",
+          "sizeLines": 18,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/link-dialog.tsx",
+          "language": "typescript",
+          "sizeLines": 185,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/retro-tabs.tsx",
+          "language": "typescript",
+          "sizeLines": 66,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/rich-text-editor.tsx",
+          "language": "typescript",
+          "sizeLines": 184,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/rich-text-toolbar.tsx",
+          "language": "typescript",
+          "sizeLines": 77,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/textarea.tsx",
+          "language": "typescript",
+          "sizeLines": 22,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/components/ui/toggle-switch.tsx",
+          "language": "typescript",
+          "sizeLines": 80,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/eslint.config.mjs",
+          "language": "javascript",
+          "sizeLines": 34,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "apps/frontend/components/resume/resume-vivid.tsx": [],
+        "apps/frontend/components/resume/safe-html.tsx": [],
+        "apps/frontend/components/settings/api-key-menu.tsx": [],
+        "apps/frontend/components/tailor/diff-preview-modal.tsx": [],
+        "apps/frontend/components/tracker/application-card.tsx": [],
+        "apps/frontend/components/tracker/bulk-action-bar.tsx": [],
+        "apps/frontend/components/tracker/card-detail-modal.tsx": [],
+        "apps/frontend/components/tracker/kanban-board.tsx": [],
+        "apps/frontend/components/tracker/kanban-column.tsx": [],
+        "apps/frontend/components/tracker/manual-add-application-dialog.tsx": [],
+        "apps/frontend/components/tracker/reorder.ts": [],
+        "apps/frontend/components/ui/button.tsx": [],
+        "apps/frontend/components/ui/card.tsx": [],
+        "apps/frontend/components/ui/confirm-dialog.tsx": [],
+        "apps/frontend/components/ui/dialog.tsx": [],
+        "apps/frontend/components/ui/dropdown.tsx": [],
+        "apps/frontend/components/ui/input.tsx": [],
+        "apps/frontend/components/ui/label.tsx": [],
+        "apps/frontend/components/ui/link-dialog.tsx": [],
+        "apps/frontend/components/ui/retro-tabs.tsx": [],
+        "apps/frontend/components/ui/rich-text-editor.tsx": [],
+        "apps/frontend/components/ui/rich-text-toolbar.tsx": [],
+        "apps/frontend/components/ui/textarea.tsx": [],
+        "apps/frontend/components/ui/toggle-switch.tsx": [],
+        "apps/frontend/eslint.config.mjs": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 30,
+      "files": [
+        {
+          "path": "apps/frontend/hooks/use-enrichment-wizard.ts",
+          "language": "typescript",
+          "sizeLines": 322,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/hooks/use-file-upload.ts",
+          "language": "typescript",
+          "sizeLines": 629,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/hooks/use-regenerate-wizard.ts",
+          "language": "typescript",
+          "sizeLines": 196,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/i18n/config.ts",
+          "language": "typescript",
+          "sizeLines": 24,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/api/client.ts",
+          "language": "typescript",
+          "sizeLines": 139,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/api/config.ts",
+          "language": "typescript",
+          "sizeLines": 517,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/api/enrichment.ts",
+          "language": "typescript",
+          "sizeLines": 177,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/api/index.ts",
+          "language": "typescript",
+          "sizeLines": 67,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/api/resume-wizard.ts",
+          "language": "typescript",
+          "sizeLines": 124,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/api/resume.ts",
+          "language": "typescript",
+          "sizeLines": 428,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/api/tracker.ts",
+          "language": "typescript",
+          "sizeLines": 159,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/config/version.ts",
+          "language": "typescript",
+          "sizeLines": 5,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/constants/page-dimensions.ts",
+          "language": "typescript",
+          "sizeLines": 73,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/context/language-context.tsx",
+          "language": "typescript",
+          "sizeLines": 121,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/context/status-cache.tsx",
+          "language": "typescript",
+          "sizeLines": 251,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/i18n/index.ts",
+          "language": "typescript",
+          "sizeLines": 8,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/i18n/locale.ts",
+          "language": "typescript",
+          "sizeLines": 8,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/i18n/messages.ts",
+          "language": "typescript",
+          "sizeLines": 21,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/i18n/server.ts",
+          "language": "typescript",
+          "sizeLines": 13,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/i18n/translations.ts",
+          "language": "typescript",
+          "sizeLines": 57,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/i18n/utils.ts",
+          "language": "typescript",
+          "sizeLines": 24,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/types/lucide.d.ts",
+          "language": "typescript",
+          "sizeLines": 5,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/types/template-settings.ts",
+          "language": "typescript",
+          "sizeLines": 283,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/utils.ts",
+          "language": "typescript",
+          "sizeLines": 51,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/utils/download.ts",
+          "language": "typescript",
+          "sizeLines": 92,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "apps/frontend/hooks/use-enrichment-wizard.ts": [],
+        "apps/frontend/hooks/use-file-upload.ts": [],
+        "apps/frontend/hooks/use-regenerate-wizard.ts": [],
+        "apps/frontend/i18n/config.ts": [],
+        "apps/frontend/lib/api/client.ts": [],
+        "apps/frontend/lib/api/config.ts": [],
+        "apps/frontend/lib/api/enrichment.ts": [],
+        "apps/frontend/lib/api/index.ts": [],
+        "apps/frontend/lib/api/resume-wizard.ts": [],
+        "apps/frontend/lib/api/resume.ts": [],
+        "apps/frontend/lib/api/tracker.ts": [],
+        "apps/frontend/lib/config/version.ts": [],
+        "apps/frontend/lib/constants/page-dimensions.ts": [],
+        "apps/frontend/lib/context/language-context.tsx": [],
+        "apps/frontend/lib/context/status-cache.tsx": [],
+        "apps/frontend/lib/i18n/index.ts": [],
+        "apps/frontend/lib/i18n/locale.ts": [],
+        "apps/frontend/lib/i18n/messages.ts": [],
+        "apps/frontend/lib/i18n/server.ts": [],
+        "apps/frontend/lib/i18n/translations.ts": [],
+        "apps/frontend/lib/i18n/utils.ts": [],
+        "apps/frontend/lib/types/lucide.d.ts": [],
+        "apps/frontend/lib/types/template-settings.ts": [],
+        "apps/frontend/lib/utils.ts": [],
+        "apps/frontend/lib/utils/download.ts": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 31,
+      "files": [
+        {
+          "path": "apps/frontend/lib/utils/html-sanitizer.ts",
+          "language": "typescript",
+          "sizeLines": 27,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/utils/keyword-matcher.ts",
+          "language": "typescript",
+          "sizeLines": 285,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/lib/utils/section-helpers.ts",
+          "language": "typescript",
+          "sizeLines": 182,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/next.config.ts",
+          "language": "typescript",
+          "sizeLines": 55,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/postcss.config.mjs",
+          "language": "javascript",
+          "sizeLines": 7,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/additional-info-newlines.test.tsx",
+          "language": "typescript",
+          "sizeLines": 59,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/api-client.test.ts",
+          "language": "typescript",
+          "sizeLines": 96,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/api-config.test.ts",
+          "language": "typescript",
+          "sizeLines": 102,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/api-tracker.test.ts",
+          "language": "typescript",
+          "sizeLines": 105,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/dashboard-master-choice.test.tsx",
+          "language": "typescript",
+          "sizeLines": 34,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/diff-preview-modal.test.tsx",
+          "language": "typescript",
+          "sizeLines": 111,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/download-utils.test.ts",
+          "language": "typescript",
+          "sizeLines": 404,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/html-sanitizer.test.ts",
+          "language": "typescript",
+          "sizeLines": 47,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/i18n-locale-parity.test.ts",
+          "language": "typescript",
+          "sizeLines": 104,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/i18n-server.test.ts",
+          "language": "typescript",
+          "sizeLines": 46,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/i18n-utils.test.ts",
+          "language": "typescript",
+          "sizeLines": 85,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/keyword-matcher.test.ts",
+          "language": "typescript",
+          "sizeLines": 75,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/regenerate-wizard.test.tsx",
+          "language": "typescript",
+          "sizeLines": 153,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/resume-clean.test.tsx",
+          "language": "typescript",
+          "sizeLines": 31,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/resume-latex.test.tsx",
+          "language": "typescript",
+          "sizeLines": 37,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/resume-vivid.test.tsx",
+          "language": "typescript",
+          "sizeLines": 47,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/resume-wizard-api.test.ts",
+          "language": "typescript",
+          "sizeLines": 63,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/resume-wizard-live-preview.test.tsx",
+          "language": "typescript",
+          "sizeLines": 45,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/resume-wizard-page.test.tsx",
+          "language": "typescript",
+          "sizeLines": 295,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/resume-wizard-question-card.test.tsx",
+          "language": "typescript",
+          "sizeLines": 99,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "apps/frontend/lib/utils/html-sanitizer.ts": [],
+        "apps/frontend/lib/utils/keyword-matcher.ts": [],
+        "apps/frontend/lib/utils/section-helpers.ts": [],
+        "apps/frontend/next.config.ts": [],
+        "apps/frontend/postcss.config.mjs": [],
+        "apps/frontend/tests/additional-info-newlines.test.tsx": [],
+        "apps/frontend/tests/api-client.test.ts": [],
+        "apps/frontend/tests/api-config.test.ts": [],
+        "apps/frontend/tests/api-tracker.test.ts": [],
+        "apps/frontend/tests/dashboard-master-choice.test.tsx": [],
+        "apps/frontend/tests/diff-preview-modal.test.tsx": [],
+        "apps/frontend/tests/download-utils.test.ts": [],
+        "apps/frontend/tests/html-sanitizer.test.ts": [],
+        "apps/frontend/tests/i18n-locale-parity.test.ts": [],
+        "apps/frontend/tests/i18n-server.test.ts": [],
+        "apps/frontend/tests/i18n-utils.test.ts": [],
+        "apps/frontend/tests/keyword-matcher.test.ts": [],
+        "apps/frontend/tests/regenerate-wizard.test.tsx": [],
+        "apps/frontend/tests/resume-clean.test.tsx": [],
+        "apps/frontend/tests/resume-latex.test.tsx": [],
+        "apps/frontend/tests/resume-vivid.test.tsx": [],
+        "apps/frontend/tests/resume-wizard-api.test.ts": [],
+        "apps/frontend/tests/resume-wizard-live-preview.test.tsx": [],
+        "apps/frontend/tests/resume-wizard-page.test.tsx": [],
+        "apps/frontend/tests/resume-wizard-question-card.test.tsx": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 32,
+      "files": [
+        {
+          "path": "apps/frontend/tests/rich-text-editor-extensions.test.tsx",
+          "language": "typescript",
+          "sizeLines": 21,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/section-helpers.test.ts",
+          "language": "typescript",
+          "sizeLines": 128,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/template-registration.test.ts",
+          "language": "typescript",
+          "sizeLines": 73,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/tests/tracker-reorder.test.ts",
+          "language": "typescript",
+          "sizeLines": 87,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/vitest.config.ts",
+          "language": "typescript",
+          "sizeLines": 21,
+          "fileCategory": "code"
+        },
+        {
+          "path": "apps/frontend/vitest.setup.ts",
+          "language": "typescript",
+          "sizeLines": 7,
+          "fileCategory": "code"
+        },
+        {
+          "path": "docker/start.sh",
+          "language": "shell",
+          "sizeLines": 255,
+          "fileCategory": "script"
+        },
+        {
+          "path": "docs/agent/design/templates/swiss-single-spec.md",
+          "language": "markdown",
+          "sizeLines": 35,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/agent/design/templates/swiss-two-column-spec.md",
+          "language": "markdown",
+          "sizeLines": 36,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/portable/README.md",
+          "language": "markdown",
+          "sizeLines": 45,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "scripts/check_locale_parity.py",
+          "language": "python",
+          "sizeLines": 154,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "apps/frontend/tests/rich-text-editor-extensions.test.tsx": [],
+        "apps/frontend/tests/section-helpers.test.ts": [],
+        "apps/frontend/tests/template-registration.test.ts": [],
+        "apps/frontend/tests/tracker-reorder.test.ts": [],
+        "apps/frontend/vitest.config.ts": [],
+        "apps/frontend/vitest.setup.ts": [],
+        "docker/start.sh": [],
+        "docs/agent/design/templates/swiss-single-spec.md": [],
+        "docs/agent/design/templates/swiss-two-column-spec.md": [],
+        "docs/portable/README.md": [],
+        "scripts/check_locale_parity.py": []
+      },
+      "neighborMap": {}
+    }
+  ]
+}

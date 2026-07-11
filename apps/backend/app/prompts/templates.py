@@ -200,15 +200,12 @@ Job description:
 {job_description}"""
 
 CRITICAL_TRUTHFULNESS_RULES_TEMPLATE = """CRITICAL TRUTHFULNESS RULES - NEVER VIOLATE:
-1. DO NOT add any skill, tool, technology, or certification that is not explicitly mentioned in the original resume
-2. DO NOT invent numeric achievements (e.g., "increased by 30%") unless they exist in original
-3. DO NOT add company names, product names, or technical terms not in the original
-4. DO NOT upgrade experience level (e.g., "Junior" -> "Senior")
-5. DO NOT add languages, frameworks, or platforms the candidate hasn't used
-6. DO NOT extend employment dates or change timelines. Copy date ranges exactly as they appear, including months.
-7. {rule_7}
-8. Preserve factual accuracy - only use information provided by the candidate
-9. NEVER remove existing skills, certifications, languages, or awards. You may reorder by relevance, but every original item must remain.
+1. DO NOT invent numeric achievements (e.g., "increased by 30%") unless they exist in original
+2. DO NOT add company names,not in the original
+3. DO NOT upgrade experience level (e.g., "Junior" -> "Senior")
+4. DO NOT extend employment dates or change timelines. Copy date ranges exactly as they appear, including months.
+5. {rule_7}
+6. NEVER remove existing skills, certifications, languages, or awards. You may reorder by relevance, but every original item must remain.
 
 Violation of these rules could cause serious problems for the candidate in job interviews.
 """
@@ -228,6 +225,9 @@ CRITICAL_TRUTHFULNESS_RULES = {
     "full": _build_truthfulness_rules(
         "You may expand existing bullet points or add new ones that elaborate on existing work, but DO NOT invent entirely new responsibilities"
     ),
+    "ats": _build_truthfulness_rules(
+        "DO NOT add skills/tools/certifications the candidate has NEVER used. DO NOT invent metrics or achievements. Preserve ALL existing skills, certifications, languages, awards. Copy dates EXACTLY as they appear."
+    ),
 }
 
 IMPROVE_RESUME_PROMPT_NUDGE = """Lightly nudge this resume toward the job description. Output ONLY the JSON object, no other text.
@@ -240,8 +240,7 @@ Do NOT include personalInfo in your output - it will be preserved from the origi
 Rules:
 - Make minimal, conservative edits only where there is a clear existing match
 - Do NOT change the candidate's role, industry, or seniority level
-- Do NOT introduce new tools, technologies, or certifications not already present
-- Do NOT add new bullet points or sections
+- Do NOT introduce new  certifications not already present
 - Preserve original bullet count and ordering within each section
 - Keep proper nouns (names, company names, locations) unchanged
 - For customSections: preserve exact structure, item count, titles, subtitles, and years. If an item's description is an empty array [] in the original, keep it empty []. Do NOT generate descriptions for items that had none.
@@ -271,7 +270,7 @@ Do NOT include personalInfo in your output - it will be preserved from the origi
 Rules:
 - Strengthen alignment by weaving in relevant keywords where evidence already exists
 - You may rephrase bullet points to include keyword phrasing
-- Do NOT introduce new skills, tools, or certifications not in the resume
+- Do NOT introduce new certifications not in the resume
 - Do NOT change role, industry, or seniority level
 - For customSections: preserve exact structure, item count, titles, subtitles, and years. If an item's description is an empty array [] in the original, keep it empty []. Do NOT generate descriptions for items that had none.
 - Copy the "years" field values EXACTLY as they appear in the original resume (including any month prefixes like "Jan 2020 - Present"). Do not shorten, reformat, or drop months.
@@ -299,7 +298,6 @@ Do NOT include personalInfo in your output - it will be preserved from the origi
 
 Rules:
 - Make targeted adjustments to bullet points to align with job description phrasing. Preserve the candidate's original details and voice - adjust wording, do not rewrite entirely.
-- DO NOT invent new information
 - Preserve existing action verbs. Do not invent quantifiable achievements not in the original.
 - Keep proper nouns (names, company names, locations) unchanged
 - Translate job titles, descriptions, and skills to {output_language}
@@ -313,6 +311,41 @@ Job Description:
 {job_description}
 
 Keywords to emphasize:
+{job_keywords}
+
+Original Resume:
+{original_resume}
+
+Output in this JSON format:
+{schema}"""
+
+
+IMPROVE_RESUME_PROMPT_ATS = """MAXIMIZE ATS MATCH: Tailor this resume to score highest on ATS scans for this job description. Output ONLY the JSON object, no other text.
+
+CRITICAL ATS OPTIMIZATION RULES:
+1. MATCH EXACT JD TERMS: Use the EXACT phrases, terminology, and acronyms from the job description (e.g., if JD says "ETL pipelines", use "ETL pipelines" not "data pipelines")
+2. SKILL MIRRORING: Every skill mentioned in the JD's "required_skills" or "preferred_skills" MUST appear in the resume's technicalSkills section (reorder to prioritize JD skills first)
+3. BULLET POINT OPTIMIZATION: Each bullet should contain 2-3 JD keywords naturally integrated
+4. SECTION HEADER ALIGNMENT: Use JD section terminology (e.g., if JD says "DevOps", use "DevOps" not "Infrastructure")
+5. ACRONYM FIRST: When JD uses acronyms (AWS, SQL, REST), mention full term FIRST then acronym in parentheses: "Amazon Web Services (AWS)"
+6. VERB MATCHING: Use JD's action verbs (e.g., if JD says "spearhead", use "spearhead" not "lead")
+7. SKILL CATEGORY ALIGNMENT: If JD groups skills (e.g., "Cloud Platforms: AWS, Azure, GCP"), mirror that grouping structure
+8. EXPERIENCE LEVEL MATCH: If JD specifies "senior-level", "mid-level", "entry-level", reflect this in summary and experience descriptions
+9. CERTIFICATION PLACEMENT: Move relevant certifications to top of certifications list if JD emphasizes them
+10. MEASUREMENT LANGUAGE: If JD uses specific metrics (e.g., "scale to 1M users"), use similar metric language even if different numbers
+
+TRUTHFULNESS (NON-NEGOTIABLE):
+- DO NOT add certifications the candidate has NEVER used
+- DO NOT add company names or products not in original resume
+- Preserve ALL existing skills, certifications, languages, awards
+- Copy dates EXACTLY as they appear (including months)
+
+IMPORTANT: Generate ALL text content (summary, descriptions, skills) in {output_language}.
+
+Job Description:
+{job_description}
+
+Extracted JD Keywords:
 {job_keywords}
 
 Original Resume:
@@ -337,12 +370,18 @@ IMPROVE_PROMPT_OPTIONS = [
         "label": "Full tailor",
         "description": "Comprehensive tailoring using the job description.",
     },
+    {
+        "id": "ats",
+        "label": "ATS-optimized",
+        "description": "Maximize ATS scan score with exact JD terminology matching.",
+    },
 ]
 
 IMPROVE_RESUME_PROMPTS = {
     "nudge": IMPROVE_RESUME_PROMPT_NUDGE,
     "keywords": IMPROVE_RESUME_PROMPT_KEYWORDS,
     "full": IMPROVE_RESUME_PROMPT_FULL,
+    "ats": IMPROVE_RESUME_PROMPT_ATS,
 }
 
 DEFAULT_IMPROVE_PROMPT_ID = "keywords"
@@ -421,6 +460,7 @@ DIFF_STRATEGY_INSTRUCTIONS = {
     "nudge": "Make minimal edits. Only rephrase where there is a clear match. Do not add new bullet points.",
     "keywords": "Weave in relevant keywords where evidence already exists. You may rephrase bullets but do not add new ones.",
     "full": "Make targeted adjustments. You may rephrase bullets, add verified JD skills, and add new bullets that elaborate on existing work, but do not invent new responsibilities.",
+    "ats": "MAXIMIZE ATS SCORE: Use EXACT JD terminology. Mirror JD skill categories. Place JD-emphasized skills first. Use JD action verbs. Mention full terms then acronyms (e.g., 'Amazon Web Services (AWS)'). Every JD required skill MUST appear in technicalSkills. Do not invent new content.",
 }
 
 SKILL_TARGET_PLAN_PROMPT = """Build a concise skill target plan for tailoring this resume to the job.
@@ -463,10 +503,9 @@ SKILL_CLASSIFICATION_PROMPT = """Classify the technical skills into appropriate 
 Rules:
 1. Every skill must end up in exactly one category - no drops, no duplicates.
 2. Use conventional, resume-appropriate category names (e.g., Programming Languages, Cloud & DevOps, Databases, Frameworks, Tools, Testing).
-3. Limit to 3-6 categories maximum to avoid section sprawl.
-4. Anything that doesn't cleanly fit goes into a catch-all "Additional Skills".
-5. For small skill lists (<=4 skills), use a single category or keep flat.
-6. Output ONLY valid JSON - no prose, no explanations.
+3. Anything that doesn't cleanly fit goes into a catch-all "Additional Skills".
+4. For small skill lists (<=4 skills), use a single category or keep flat.
+5. Output ONLY valid JSON - no prose, no explanations.
 
 Example output:
 {{
@@ -486,17 +525,15 @@ DIFF_IMPROVE_PROMPT = """Given this resume and job description, output a JSON ob
 
 RULES:
 1. Only modify content; never change names, companies, dates, institutions, or degrees
-2. Do not invent metrics or achievements not supported by the original resume text
-3. Do not add new work entries, education entries, or project entries
-4. {strategy_instruction}
-5. Each change MUST include the original text (copied exactly) so it can be verified
-6. For each change, explain WHY it helps match the job description
-7. Generate all new text in {output_language}
-8. Do not use em dash characters
-9. Keep changes minimal and targeted; do not rewrite content that already aligns well
-10. Exception to rule 2: you may add a skill only if it appears in the verified skill targets below
-11. By DEFAULT, scan the summary and every work, project, and education description for content that already demonstrates a job-description keyword or skill, and reframe that text using the job description's terminology where it is not already phrased that way (per rule 9, leave content that already aligns well), while preserving the candidate's actual accomplishment. Do NOT add new work, metrics, or responsibilities; only restate existing content in the JD's language, and verify every reframe stays factually accurate.
-12. Preserve original capitalization, especially for proper nouns, technical terms (e.g., REST, API, AWS), and acronyms. Do not change the casing of words that were capitalized in the original.
+2. Do not add new work entries, education entries, or project entries
+3. {strategy_instruction}
+4. Each change MUST include the original text (copied exactly) so it can be verified
+5. For each change, explain WHY it helps match the job description
+6. Generate all new text in {output_language}
+7. Do not use em dash characters
+8. Keep changes minimal and targeted; do not rewrite content that already aligns well
+9. By DEFAULT, scan the summary and every work, project, and education description for content that already demonstrates a job-description keyword or skill, and reframe that text using the job description's terminology where it is not already phrased that way (per rule 9, leave content that already aligns well), while preserving the candidate's actual accomplishment. Do NOT add new work, metrics, or responsibilities; only restate existing content in the JD's language, and verify every reframe stays factually accurate.
+10. Preserve original capitalization, especially for proper nouns, technical terms (e.g., REST, API, AWS), and acronyms. Do not change the casing of words that were capitalized in the original.
 
 PATHS you can target:
 - "summary" — the resume summary text

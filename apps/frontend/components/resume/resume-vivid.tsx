@@ -120,12 +120,19 @@ export const ResumeVivid: React.FC<ResumeVividProps> = ({
     const href = finalHrefPrefix + value;
     const isLink =
       finalHrefPrefix.startsWith('http') ||
+      value.startsWith('http') ||
       finalHrefPrefix.startsWith('mailto:') ||
       finalHrefPrefix.startsWith('tel:');
 
     let displayText = value;
     if (isLink && (label === 'LinkedIn' || label === 'GitHub' || label === 'Website')) {
-      displayText = value.replace(/^https?:\/\//, '').replace(/^www\./, '');
+      if (label === 'Website') {
+        displayText = 'portfolio';
+      } else if (label === 'GitHub') {
+        displayText = 'github';
+      } else {
+        displayText = value.replace(/^https?:\/\//, '').replace(/^www\./, '');
+      }
     }
 
     return (
