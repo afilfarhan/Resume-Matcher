@@ -23,6 +23,8 @@ export type SpacingLevel = 1 | 2 | 3 | 4 | 5;
 export type HeaderFontFamily = 'serif' | 'sans-serif' | 'mono';
 export type BodyFontFamily = 'serif' | 'sans-serif' | 'mono';
 
+export type PersonalInfoLayout = 'single-line' | 'two-line' | 'stacked';
+
 export interface MarginSettings {
   top: number; // 5-25mm
   bottom: number;
@@ -52,6 +54,7 @@ export interface TemplateSettings {
   compactMode: boolean; // Apply tighter spacing across the board
   showContactIcons: boolean; // Show icons next to contact info
   accentColor: AccentColor; // Accent color for Modern template
+  personalInfoLayout: PersonalInfoLayout; // Layout of personal info contact items
 }
 
 /**
@@ -66,6 +69,7 @@ export const DEFAULT_TEMPLATE_SETTINGS: TemplateSettings = {
   compactMode: false,
   showContactIcons: false,
   accentColor: 'blue',
+  personalInfoLayout: 'single-line',
 };
 
 /**

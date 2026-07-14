@@ -15,6 +15,7 @@ import styles from './styles/vivid.module.css';
 interface ResumeVividProps {
   data: ResumeData;
   showContactIcons?: boolean;
+  personalInfoLayout?: 'single-line' | 'two-line' | 'stacked';
   sectionHeadings?: Partial<ResumeSectionHeadings>;
   fallbackLabels?: Partial<ResumeFallbackLabels>;
 }
@@ -33,6 +34,7 @@ interface ResumeVividProps {
 export const ResumeVivid: React.FC<ResumeVividProps> = ({
   data,
   showContactIcons = false,
+  personalInfoLayout = 'single-line',
   sectionHeadings,
   fallbackLabels,
 }) => {
@@ -173,6 +175,76 @@ export const ResumeVivid: React.FC<ResumeVividProps> = ({
     );
   };
 
+  // Render contact info based on layout
+  const renderContactInfo = () => {
+    if (!personalInfo) return null;
+
+    const contacts = [
+      { key: 'website', render: () => renderContactDetail('Website', personalInfo.website) },
+      { key: 'linkedin', render: () => renderContactDetail('LinkedIn', personalInfo.linkedin) },
+      { key: 'github', render: () => renderContactDetail('GitHub', personalInfo.github) },
+      { key: 'email', render: () => renderContactDetail('Email', personalInfo.email, 'mailto:') },
+      { key: 'phone', render: () => personalInfo.phone && renderContactDetail('Phone', personalInfo.phone, 'tel:') },
+      { key: 'info', render: () => personalInfo.info && (
+        <>
+          <span className={baseStyles['text-muted']}>,</span>
+          <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+        </>
+      )},
+      { key: 'location', render: () => personalInfo.location && renderContactDetail('Location', personalInfo.location) },
+    ].filter(c => c.render());
+
+    if (personalInfoLayout === 'stacked') {
+      return (
+        <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
+          {contacts.map((c, i) => (
+            <span key={c.key} className="w-full text-center">{c.render()}</span>
+          ))}
+        </div>
+      );
+    }
+
+    if (personalInfoLayout === 'two-line') {
+      const firstLine = contacts.filter(c => ['website', 'linkedin', 'github', 'email', 'phone'].includes(c.key));
+      const secondLine = contacts.filter(c => ['info', 'location'].includes(c.key));
+
+      return (
+        <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
+          <div className={`flex flex-wrap justify-center gap-x-4 gap-y-1 ${styles.contactRow}`}>
+            {firstLine.map((c, i) => (
+              <React.Fragment key={c.key}>
+                {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+                {c.render()}
+              </React.Fragment>
+            ))}
+          </div>
+          {secondLine.length > 0 && (
+            <div className={`flex flex-wrap justify-center gap-x-4 gap-y-1 ${styles.contactRow}`}>
+              {secondLine.map((c, i) => (
+                <React.Fragment key={c.key}>
+                  {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+                  {c.render()}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // single-line (default)
+    return (
+      <div className={`flex flex-wrap gap-x-4 gap-y-1 mt-2 ${styles.contactRow}`}>
+        {contacts.map((c, i) => (
+          <React.Fragment key={c.key}>
+            {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+            {c.render()}
+          </React.Fragment>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <>
       {/* Header */}
@@ -183,20 +255,7 @@ export const ResumeVivid: React.FC<ResumeVividProps> = ({
         </h1>
         {personalInfo?.title && <div className={styles.titleLine}>{personalInfo.title}</div>}
         {personalInfo && (
-          <div className={`flex flex-wrap gap-x-4 gap-y-1 mt-2 ${styles.contactRow}`}>
-            {renderContactDetail('Website', personalInfo.website)}
-            {renderContactDetail('LinkedIn', personalInfo.linkedin)}
-            {renderContactDetail('GitHub', personalInfo.github)}
-            {renderContactDetail('Email', personalInfo.email, 'mailto:')}
-            {renderContactDetail('Phone', personalInfo.phone, 'tel:')}
-            {personalInfo.info && (
-              <>
-                <span className={baseStyles['text-muted']}>,</span>
-                <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
-              </>
-            )}
-            {renderContactDetail('Location', personalInfo.location)}
-          </div>
+          renderContactInfo()
         )}
       </div>
 

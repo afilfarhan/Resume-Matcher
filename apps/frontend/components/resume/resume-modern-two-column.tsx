@@ -15,6 +15,7 @@ import styles from './styles/modern-two-column.module.css';
 interface ResumeModernTwoColumnProps {
   data: ResumeData;
   showContactIcons?: boolean;
+  personalInfoLayout?: 'single-line' | 'two-line' | 'stacked';
   sectionHeadings?: Partial<ResumeSectionHeadings>;
   fallbackLabels?: Partial<ResumeFallbackLabels>;
 }
@@ -33,6 +34,7 @@ interface ResumeModernTwoColumnProps {
 export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
   data,
   showContactIcons = false,
+  personalInfoLayout = 'single-line',
   sectionHeadings,
   fallbackLabels,
 }) => {
@@ -163,6 +165,76 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
     );
   };
 
+  // Render contact info based on layout
+  const renderContactInfo = () => {
+    if (!personalInfo) return null;
+
+    const contacts = [
+      { key: 'email', render: () => renderContactDetail('Email', personalInfo.email, 'mailto:') },
+      { key: 'phone', render: () => personalInfo.phone && renderContactDetail('Phone', personalInfo.phone, 'tel:') },
+      { key: 'info', render: () => personalInfo.info && (
+        <>
+          <span className={baseStyles['text-muted']}>,</span>
+          <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+        </>
+      )},
+      { key: 'location', render: () => personalInfo.location && renderContactDetail('Location', personalInfo.location) },
+      { key: 'website', render: () => personalInfo.website && renderContactDetail('Website', personalInfo.website) },
+      { key: 'linkedin', render: () => personalInfo.linkedin && renderContactDetail('LinkedIn', personalInfo.linkedin) },
+      { key: 'github', render: () => personalInfo.github && renderContactDetail('GitHub', personalInfo.github) },
+    ].filter(c => c.render());
+
+    if (personalInfoLayout === 'stacked') {
+      return (
+        <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
+          {contacts.map((c, i) => (
+            <span key={c.key} className="w-full text-center">{c.render()}</span>
+          ))}
+        </div>
+      );
+    }
+
+    if (personalInfoLayout === 'two-line') {
+      const firstLine = contacts.filter(c => ['email', 'phone', 'info'].includes(c.key));
+      const secondLine = contacts.filter(c => ['location', 'website', 'linkedin', 'github'].includes(c.key));
+
+      return (
+        <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
+          <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1`}>
+            {firstLine.map((c, i) => (
+              <React.Fragment key={c.key}>
+                {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+                {c.render()}
+              </React.Fragment>
+            ))}
+          </div>
+          {secondLine.length > 0 && (
+            <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1`}>
+              {secondLine.map((c, i) => (
+                <React.Fragment key={c.key}>
+                  {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+                  {c.render()}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // single-line (default)
+    return (
+      <div className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${baseStyles['resume-meta']}`}>
+        {contacts.map((c, i) => (
+          <React.Fragment key={c.key}>
+            {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+            {c.render()}
+          </React.Fragment>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <>
       {/* Header */}
@@ -173,22 +245,11 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
         {personalInfo?.title && (
           <div className={`${baseStyles['resume-title']} mt-1`}>{personalInfo.title}</div>
         )}
-        {personalInfo && (
-          <div className={`${baseStyles['resume-meta']} flex flex-wrap gap-x-3 gap-y-1 mt-2`}>
-            {renderContactDetail('Email', personalInfo.email, 'mailto:')}
-            {renderContactDetail('Phone', personalInfo.phone, 'tel:')}
-            {personalInfo.info && (
-              <>
-                <span className={baseStyles['text-muted']}>,</span>
-                <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
-              </>
-            )}
-            {renderContactDetail('Location', personalInfo.location)}
-            {renderContactDetail('Website', personalInfo.website)}
-            {renderContactDetail('LinkedIn', personalInfo.linkedin)}
-            {renderContactDetail('GitHub', personalInfo.github)}
-          </div>
-        )}
+{personalInfo && (
+            <div className={`${baseStyles['resume-meta']} flex flex-wrap gap-x-3 gap-y-1 mt-2`}>
+              {renderContactInfo()}
+            </div>
+          )}
       </div>
 
       {/* Two-Column Grid */}

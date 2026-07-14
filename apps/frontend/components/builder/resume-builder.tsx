@@ -442,6 +442,7 @@ const ResumeBuilderContent = () => {
           compactMode: templateSettings.compactMode,
           showContactIcons: templateSettings.showContactIcons,
           accentColor: templateSettings.accentColor,
+          personalInfoLayout: templateSettings.personalInfoLayout,
         },
       };
       const updated = await updateResume(resumeId, resumeDataWithSettings);

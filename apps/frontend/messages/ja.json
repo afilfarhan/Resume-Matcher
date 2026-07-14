@@ -420,6 +420,12 @@
       "options": "オプション",
       "compactMode": "コンパクトモード",
       "contactIcons": "連絡先アイコン",
+      "personalInfoLayout": "個人情報レイアウト",
+      "personalInfoLayoutOptions": {
+        "single-line": "1行",
+        "two-line": "2行",
+        "stacked": "縦積み"
+      },
       "effectiveOutput": "適用結果",
       "effectiveMargins": "余白（mm）：上{top} 下{bottom} 左{left} 右{right}",
       "effectiveSectionGap": "セクション間隔",

@@ -14,6 +14,7 @@ import styles from './styles/latex.module.css';
 interface ResumeLatexProps {
   data: ResumeData;
   showContactIcons?: boolean;
+  personalInfoLayout?: 'single-line' | 'two-line' | 'stacked';
   additionalSectionLabels?: Partial<AdditionalSectionLabels>;
 }
 
@@ -32,6 +33,7 @@ interface ResumeLatexProps {
 export const ResumeLatex: React.FC<ResumeLatexProps> = ({
   data,
   showContactIcons = false,
+  personalInfoLayout = 'single-line',
   additionalSectionLabels,
 }) => {
   const { personalInfo, summary, workExperience, education, personalProjects, additional } = data;
@@ -96,17 +98,67 @@ export const ResumeLatex: React.FC<ResumeLatexProps> = ({
     );
   };
 
-  // Build the contact row (phone, email, linkedin, github, website) joined by middots.
-  const contactItems = [
-    renderContactDetail('Phone', personalInfo?.phone, 'tel:'),
-    personalInfo?.info
-      ? <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
-      : null,
-    renderContactDetail('Email', personalInfo?.email, 'mailto:'),
-    renderContactDetail('LinkedIn', personalInfo?.linkedin),
-    renderContactDetail('GitHub', personalInfo?.github),
-    renderContactDetail('Website', personalInfo?.website),
-  ].filter(Boolean);
+  // Build the contact row based on layout
+  const renderContactInfo = () => {
+    const contacts = [
+      { key: 'phone', render: () => renderContactDetail('Phone', personalInfo?.phone, 'tel:') },
+      { key: 'info', render: () => personalInfo?.info && <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span> },
+      { key: 'email', render: () => renderContactDetail('Email', personalInfo?.email, 'mailto:') },
+      { key: 'linkedin', render: () => renderContactDetail('LinkedIn', personalInfo?.linkedin) },
+      { key: 'github', render: () => renderContactDetail('GitHub', personalInfo?.github) },
+      { key: 'website', render: () => renderContactDetail('Website', personalInfo?.website) },
+    ].filter(c => c.render());
+
+    if (personalInfoLayout === 'stacked') {
+      return (
+        <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
+          {contacts.map((c, i) => (
+            <span key={c.key} className="w-full text-center">{c.render()}</span>
+          ))}
+        </div>
+      );
+    }
+
+    if (personalInfoLayout === 'two-line') {
+      const firstLine = contacts.filter(c => ['phone', 'info', 'email'].includes(c.key));
+      const secondLine = contacts.filter(c => ['linkedin', 'github', 'website'].includes(c.key));
+
+      return (
+        <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
+          <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1`}>
+            {firstLine.map((c, i) => (
+              <React.Fragment key={c.key}>
+                {i > 0 && <span className={baseStyles['text-muted']}>&middot;</span>}
+                {c.render()}
+              </React.Fragment>
+            ))}
+          </div>
+          {secondLine.length > 0 && (
+            <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1`}>
+              {secondLine.map((c, i) => (
+                <React.Fragment key={c.key}>
+                  {i > 0 && <span className={baseStyles['text-muted']}>&middot;</span>}
+                  {c.render()}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // single-line (default) - joined by middots
+    return (
+      <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1 ${baseStyles['resume-meta']}`}>
+        {contacts.map((c, i) => (
+          <React.Fragment key={c.key}>
+            {i > 0 && <span className={baseStyles['text-muted']}>&middot;</span>}
+            {c.render()}
+          </React.Fragment>
+        ))}
+      </div>
+    );
+  };
 
   // Company-first entry header: bold company / bold dates, then italic role / italic location.
   const renderEntryHeader = (
@@ -302,18 +354,7 @@ export const ResumeLatex: React.FC<ResumeLatexProps> = ({
           {personalInfo.location && (
             <div className={`${styles.locationLine} mb-1`}>{personalInfo.location}</div>
           )}
-          {contactItems.length > 0 && (
-            <div
-              className={`flex flex-wrap justify-center items-center gap-x-2 gap-y-1 ${styles.contactRow}`}
-            >
-              {contactItems.map((item, index) => (
-                <React.Fragment key={index}>
-                  {index > 0 && <span className={styles.contactSep}>·</span>}
-                  {item}
-                </React.Fragment>
-              ))}
-            </div>
-          )}
+          {renderContactInfo()}
         </header>
       )}
 

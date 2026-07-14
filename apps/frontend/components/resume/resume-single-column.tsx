@@ -15,6 +15,7 @@ import styles from './styles/swiss-single.module.css';
 interface ResumeSingleColumnProps {
   data: ResumeData;
   showContactIcons?: boolean;
+  personalInfoLayout?: 'single-line' | 'two-line' | 'stacked';
   additionalSectionLabels?: Partial<AdditionalSectionLabels>;
 }
 
@@ -29,6 +30,7 @@ interface ResumeSingleColumnProps {
 export const ResumeSingleColumn: React.FC<ResumeSingleColumnProps> = ({
   data,
   showContactIcons = false,
+  personalInfoLayout = 'single-line',
   additionalSectionLabels,
 }) => {
   const { personalInfo, summary, workExperience, education, personalProjects, additional } = data;
@@ -316,47 +318,76 @@ export const ResumeSingleColumn: React.FC<ResumeSingleColumnProps> = ({
           )}
 
           {/* Contact - Own line, centered */}
-          <div
-            className={`flex flex-wrap justify-center gap-x-1 gap-y-1 ${baseStyles['resume-meta']}`}
-          >
-            {renderContactDetail('Email', personalInfo.email, 'mailto:')}
-            {personalInfo.phone && (
-              <>
-                <span className={baseStyles['text-muted']}>,</span>
-                {renderContactDetail('Phone', personalInfo.phone, 'tel:')}
-              </>
-            )}
-            {personalInfo.info && (
-              <>
-                <span className={baseStyles['text-muted']}>,</span>
-                <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
-              </>
-            )}
-            {personalInfo.location && (
-              <>
-                <span className={baseStyles['text-muted']}>,</span>
-                {renderContactDetail('Location', personalInfo.location)}
-              </>
-            )}
-            {personalInfo.website && (
-              <>
-                <span className={baseStyles['text-muted']}>,</span>
-                {renderContactDetail('Website', personalInfo.website)}
-              </>
-            )}
-            {personalInfo.linkedin && (
-              <>
-                <span className={baseStyles['text-muted']}>,</span>
-                {renderContactDetail('LinkedIn', personalInfo.linkedin)}
-              </>
-            )}
-            {personalInfo.github && (
-              <>
-                <span className={baseStyles['text-muted']}>,</span>
-                {renderContactDetail('GitHub', personalInfo.github)}
-              </>
-            )}
-          </div>
+          {personalInfo && (
+            <div className="flex flex-col items-center">
+              {(() => {
+                const contacts = [
+                  { key: 'email', render: () => renderContactDetail('Email', personalInfo.email, 'mailto:') },
+                  { key: 'phone', render: () => personalInfo.phone && renderContactDetail('Phone', personalInfo.phone, 'tel:') },
+                  { key: 'info', render: () => personalInfo.info && (
+                    <>
+                      <span className={baseStyles['text-muted']}>,</span>
+                      <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+                    </>
+                  )},
+                  { key: 'location', render: () => personalInfo.location && renderContactDetail('Location', personalInfo.location) },
+                  { key: 'website', render: () => personalInfo.website && renderContactDetail('Website', personalInfo.website) },
+                  { key: 'linkedin', render: () => personalInfo.linkedin && renderContactDetail('LinkedIn', personalInfo.linkedin) },
+                  { key: 'github', render: () => personalInfo.github && renderContactDetail('GitHub', personalInfo.github) },
+                ].filter(c => c.render());
+
+                if (personalInfoLayout === 'stacked') {
+                  return (
+                    <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
+                      {contacts.map((c, i) => (
+                        <span key={c.key} className="w-full text-center">{c.render()}</span>
+                      ))}
+                    </div>
+                  );
+                }
+
+                if (personalInfoLayout === 'two-line') {
+                  const firstLine = contacts.filter(c => ['email', 'phone', 'info'].includes(c.key));
+                  const secondLine = contacts.filter(c => ['location', 'website', 'linkedin', 'github'].includes(c.key));
+
+                  return (
+                    <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
+                      <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1`}>
+                        {firstLine.map((c, i) => (
+                          <React.Fragment key={c.key}>
+                            {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+                            {c.render()}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                      {secondLine.length > 0 && (
+                        <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1`}>
+                          {secondLine.map((c, i) => (
+                            <React.Fragment key={c.key}>
+                              {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+                              {c.render()}
+                            </React.Fragment>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                // single-line (default)
+                return (
+                  <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1 ${baseStyles['resume-meta']}`}>
+                    {contacts.map((c, i) => (
+                      <React.Fragment key={c.key}>
+                        {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+                        {c.render()}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                );
+              })()}
+            </div>
+          )}
         </header>
       )}
 

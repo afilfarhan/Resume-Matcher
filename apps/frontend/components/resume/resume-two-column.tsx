@@ -11,6 +11,7 @@ import styles from './styles/swiss-two-column.module.css';
 interface ResumeTwoColumnProps {
   data: ResumeData;
   showContactIcons?: boolean;
+  personalInfoLayout?: 'single-line' | 'two-line' | 'stacked';
   sectionHeadings?: Partial<ResumeSectionHeadings>;
 }
 
@@ -28,6 +29,7 @@ interface ResumeTwoColumnProps {
 export const ResumeTwoColumn: React.FC<ResumeTwoColumnProps> = ({
   data,
   showContactIcons = false,
+  personalInfoLayout = 'single-line',
   sectionHeadings,
 }) => {
   const { personalInfo, summary, workExperience, education, personalProjects, additional } = data;

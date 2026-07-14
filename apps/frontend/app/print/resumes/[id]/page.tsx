@@ -33,6 +33,7 @@ type PageProps = {
     compactMode?: string;
     showContactIcons?: string;
     accentColor?: string;
+    personalInfoLayout?: string;
     lang?: string;
   }>;
 };
@@ -65,6 +66,16 @@ function parseAccentColor(value: string | undefined): AccentColor {
     return value;
   }
   return DEFAULT_TEMPLATE_SETTINGS.accentColor;
+}
+
+/**
+ * Parse personal info layout
+ */
+function parsePersonalInfoLayout(value: string | undefined): 'single-line' | 'two-line' | 'stacked' {
+  if (value === 'single-line' || value === 'two-line' || value === 'stacked') {
+    return value;
+  }
+  return DEFAULT_TEMPLATE_SETTINGS.personalInfoLayout;
 }
 
 /**
@@ -244,6 +255,7 @@ export default async function PrintResumePage({ params, searchParams }: PageProp
       DEFAULT_TEMPLATE_SETTINGS.showContactIcons
     ),
     accentColor: parseAccentColor(resolvedSearchParams?.accentColor),
+    personalInfoLayout: parsePersonalInfoLayout(resolvedSearchParams?.personalInfoLayout),
   };
 
   // Note: Margins are applied by Playwright's PDF renderer (not here)

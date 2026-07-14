@@ -420,6 +420,12 @@
       "options": "选项",
       "compactMode": "紧凑模式",
       "contactIcons": "联系方式图标",
+      "personalInfoLayout": "个人信息布局",
+      "personalInfoLayoutOptions": {
+        "single-line": "单行",
+        "two-line": "两行",
+        "stacked": "堆叠"
+      },
       "effectiveOutput": "生效预览",
       "effectiveMargins": "页边距（mm）：上{top} 下{bottom} 左{left} 右{right}",
       "effectiveSectionGap": "板块间距",

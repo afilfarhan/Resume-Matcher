@@ -28,6 +28,7 @@ interface PersonalInfo {
   name?: string;
   email?: string;
   phone?: string;
+  info?: string;
   location?: string;
   linkedin?: string;
 }
@@ -138,6 +139,7 @@ export default async function PrintCoverLetterPage({ params, searchParams }: Pag
         >
           {personalInfo.email && <span>{personalInfo.email}</span>}
           {personalInfo.phone && <span>{personalInfo.phone}</span>}
+          {personalInfo.info && <span>{personalInfo.info}</span>}
           {personalInfo.location && <span>{personalInfo.location}</span>}
           {personalInfo.linkedin && <span>{personalInfo.linkedin}</span>}
         </div>

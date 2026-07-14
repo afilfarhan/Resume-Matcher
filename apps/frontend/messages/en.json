@@ -420,6 +420,12 @@
       "options": "Options",
       "compactMode": "Compact Mode",
       "contactIcons": "Contact Icons",
+      "personalInfoLayout": "Personal Info Layout",
+      "personalInfoLayoutOptions": {
+        "single-line": "Single Line",
+        "two-line": "Two Lines",
+        "stacked": "Stacked"
+      },
       "effectiveOutput": "Effective Output",
       "effectiveMargins": "Margins (mm): T{top} B{bottom} L{left} R{right}",
       "effectiveSectionGap": "Section Gap",

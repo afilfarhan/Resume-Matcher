@@ -420,6 +420,12 @@
       "options": "Opciones",
       "compactMode": "Modo compacto",
       "contactIcons": "Iconos de contacto",
+      "personalInfoLayout": "Diseño de información personal",
+      "personalInfoLayoutOptions": {
+        "single-line": "Una línea",
+        "two-line": "Dos líneas",
+        "stacked": "Apilado"
+      },
       "effectiveOutput": "Salida efectiva",
       "effectiveMargins": "Márgenes (mm): S{top} I{bottom} Izq{left} Der{right}",
       "effectiveSectionGap": "Espacio entre secciones",
