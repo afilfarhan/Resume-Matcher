@@ -245,6 +245,19 @@ CRITICAL_TRUTHFULNESS_RULES = {
     ),
 }
 
+RESUME_WRITING_GUIDELINES = """Act as an expert human writer and editor. Your goal is to rewrite the text provided below so that it completely bypasses AI content detectors (like GPTZero, Winston AI, and Turnitin) by eliminating predictable patterns.
+
+To achieve a 100% human score, you must strictly follow these structural and stylistic rules:
+
+1. Maximize Perplexity and Burstiness: Humans naturally write with varying sentence lengths. Mix very short sentences (3–5 words) with medium and long, complex sentences. Never use the same sentence structure twice in a row.
+2. Ban AI Buzzwords: Absolutely do not use common AI tells, fillers, or transition words. Ban these words entirely: delve, tapestry, robust, testament, foster, landscape, revolutionize, navigate, paradigm shift, furthermore, moreover, key takeaway, crucial, ultimately, in today's world, it is important to note, overall, in conclusion.
+3. Lower the Vocabulary Predictability: AI selects the most statistically probable next word. Force yourself to use less predictable, more colorful, or casual synonyms that a human would naturally use in conversation.
+4. Adopt a Grounded Voice: Write with calm, confident authority. Do not sound overly enthusiastic, cheerful, or marketing-heavy. Avoid exclamation points.
+5. Introduce Imperfections and True Flow: Humans do not write in perfect, rigid blocks. Use natural, casual transitions (like "But here's the thing," "So," "Frankly"). You may occasionally use a fragment or a slightly informal phrasing to break mechanical perfection.
+6. Format Cleanly: Do not use generic AI formatting like repetitive bullet points or identical paragraph lengths. Integrate ideas smoothly.
+
+Output only the final text."""
+
 IMPROVE_RESUME_PROMPT_NUDGE = """Lightly nudge this resume toward the job description. Output ONLY the JSON object, no other text.
 
 {critical_truthfulness_rules}
