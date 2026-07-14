@@ -169,39 +169,54 @@ Rules:
 - Format dates preserving the original precision. Keep months when present: "Jan 2020 - Dec 2023", "May 2021 - Present". Use "YYYY - YYYY" only when the source has no months.
 - Use snake_case for custom section keys (e.g., "volunteer_work", "publications")
 - Preserve the original section name as a descriptive key
-- Normalize date separators: "2020-2021" → "2020 - 2021", "Current"/"Ongoing" → "Present". Do NOT discard months.
+- Normalize date separators: "2020-2021" -> "2020 - 2021", "Current"/"Ongoing" -> "Present". Do NOT discard months.
 - For ambiguous dates like "3 years experience", infer approximate years from context or use "~YYYY"
 - Flag overlapping dates (concurrent roles) by preserving both, don't merge
 
 Resume to parse:
 {resume_text}"""
 
-EXTRACT_KEYWORDS_PROMPT = """Extract job requirements as JSON. Output ONLY the JSON object, no other text.
+EXTRACT_KEYWORDS_PROMPT = """Extract job requirements as JSON. Output ONLY a valid JSON object, no other text, no markdown.
 
 Example format:
 {{
   "company": "Acme Corp",
   "role": "Senior Backend Engineer",
-  "required_skills": ["Python", "AWS"],
-  "preferred_skills": ["Kubernetes"],
-  "experience_requirements": ["5+ years"],
-  "education_requirements": ["Bachelor's in CS"],
-  "key_responsibilities": ["Lead team"],
-  "keywords": ["microservices", "agile"],
+  "required_skills": ["Python", "AWS", "PostgreSQL", "Docker", "Kubernetes"],
+  "preferred_skills": ["Kafka", "Redis", "Terraform", "GraphQL"],
+  "action_verbs": ["design", "build", "optimize", "scale", "architect", "lead", "mentor", "implement", "deploy", "monitor"],
+  "experience_requirements": ["5+ years backend development", "3+ years cloud infrastructure"],
+  "education_requirements": ["Bachelor's in CS or equivalent"],
+  "key_responsibilities": ["Design scalable APIs", "Optimize database performance", "Lead code reviews", "Mentor junior engineers"],
+  "keywords": ["microservices", "distributed systems", "CI/CD", "observability", "system design", "REST", "gRPC", "event-driven architecture"],
   "experience_years": 5,
-  "seniority_level": "senior"
+  "seniority_level": "senior",
+  "tech_stack_clusters": {{
+    "languages": ["Python", "Go"],
+    "cloud": ["AWS", "GCP"],
+    "databases": ["PostgreSQL", "Redis"],
+    "infrastructure": ["Docker", "Kubernetes", "Terraform"],
+    "messaging": ["Kafka", "RabbitMQ"]
+  }},
+  "must_have_phrases": ["microservices architecture", "RESTful APIs", "distributed systems", "CI/CD pipelines", "system design"]
 }}
 
-Extract numeric years (e.g., "5+ years" → 5) and infer seniority level.
-Set "company" to the hiring company name and "role" to the job title exactly as
-written in the posting; use an empty string for either if it is not stated.
+Extract numeric years (e.g., "5+ years" -> 5) and infer seniority level.
+Set "company" to the hiring company name and "role" to the job title exactly as written; use empty string if not stated.
+
+CRITICAL FOR ATS MATCHING:
+- Extract EXACT phrases from the JD, not paraphrases
+- Include multi-word phrases: "microservices architecture", "RESTful APIs", "CI/CD pipelines"
+- Capture ALL acronyms with their full forms: "AWS (Amazon Web Services)", "CI/CD (Continuous Integration/Continuous Deployment)"
+- Group skills by category as shown in tech_stack_clusters
+- Identify "must_have_phrases" — exact phrases that appear in JD requirements and MUST appear in resume for ATS
 
 Job description:
 {job_description}"""
 
 CRITICAL_TRUTHFULNESS_RULES_TEMPLATE = """CRITICAL TRUTHFULNESS RULES - NEVER VIOLATE:
 1. DO NOT invent numeric achievements (e.g., "increased by 30%") unless they exist in original
-2. DO NOT add company names,not in the original
+2. DO NOT add company names not in the original
 3. DO NOT upgrade experience level (e.g., "Junior" -> "Senior")
 4. DO NOT extend employment dates or change timelines. Copy date ranges exactly as they appear, including months.
 5. {rule_7}
@@ -240,7 +255,7 @@ Do NOT include personalInfo in your output - it will be preserved from the origi
 Rules:
 - Make minimal, conservative edits only where there is a clear existing match
 - Do NOT change the candidate's role, industry, or seniority level
-- Do NOT introduce new  certifications not already present
+- Do NOT introduce new certifications not already present
 - Preserve original bullet count and ordering within each section
 - Keep proper nouns (names, company names, locations) unchanged
 - For customSections: preserve exact structure, item count, titles, subtitles, and years. If an item's description is an empty array [] in the original, keep it empty []. Do NOT generate descriptions for items that had none.
@@ -463,17 +478,19 @@ DIFF_STRATEGY_INSTRUCTIONS = {
     "ats": "MAXIMIZE ATS SCORE: Use EXACT JD terminology. Mirror JD skill categories. Place JD-emphasized skills first. Use JD action verbs. Mention full terms then acronyms (e.g., 'Amazon Web Services (AWS)'). Every JD required skill MUST appear in technicalSkills. Do not invent new content.",
 }
 
-SKILL_TARGET_PLAN_PROMPT = """Build a concise skill target plan for tailoring this resume to the job.
+SKILL_TARGET_PLAN_PROMPT = """Build a concise skill target plan for tailoring this resume to the job. Focus on MAXIMUM ATS match.
 
 Return ONLY a JSON object. Do not rewrite the resume.
 
-Rules:
-1. Prefer required and preferred JD skills.
-2. Include existing resume skills that are highly relevant to the JD.
-3. You may include JD skills that are missing from the resume skills list.
-4. Do not include skills unrelated to the JD.
-5. Do not include certifications.
-6. Generate reasons in {output_language}.
+RULES:
+1. Prioritize JD required_skills first (these MUST appear for ATS pass)
+2. Then JD preferred_skills (high value for ranking)
+3. Include existing resume skills that match JD keywords/phrases exactly
+4. Include JD tech_stack_clusters skills by category
+5. Include must_have_phrases from JD
+6. Do NOT include skills unrelated to the JD
+7. Do NOT include certifications (handled separately)
+8. Generate reasons in {output_language}
 
 Existing resume skills:
 {existing_skills}
@@ -491,11 +508,13 @@ Output this exact JSON format:
 {{
   "target_skills": [
     {{
-      "skill": "skill name",
-      "reason": "why this skill should be emphasized"
+      "skill": "exact skill/phrase from JD",
+      "reason": "required by JD / preferred by JD / matches existing experience / appears in JD tech stack cluster",
+      "source": "required|preferred|cluster|phrase|existing",
+      "category": "languages|cloud|databases|infrastructure|messaging|frameworks|tools|other"
     }}
   ],
-  "strategy_notes": "brief notes for the next editing pass"
+  "strategy_notes": "brief notes for the next editing pass: which JD categories to mirror, which phrases must appear in technicalSkills, which action verbs to adopt"
 }}"""
 
 SKILL_CLASSIFICATION_PROMPT = """Classify the technical skills into appropriate sub-categories for a professional resume.
@@ -521,7 +540,7 @@ Skills to classify:
 
 Output JSON only:"""
 
-DIFF_IMPROVE_PROMPT = """Given this resume and job description, output a JSON object with targeted changes to better align the resume with the job.
+DIFF_IMPROVE_PROMPT = """Given this resume and job description, output a JSON object with targeted changes to MAXIMIZE ATS MATCH SCORE.
 
 RULES:
 1. Only modify content; never change names, companies, dates, institutions, or degrees
@@ -532,20 +551,30 @@ RULES:
 6. Generate all new text in {output_language}
 7. Do not use em dash characters
 8. Keep changes minimal and targeted; do not rewrite content that already aligns well
-9. By DEFAULT, scan the summary and every work, project, and education description for content that already demonstrates a job-description keyword or skill, and reframe that text using the job description's terminology where it is not already phrased that way (per rule 9, leave content that already aligns well), while preserving the candidate's actual accomplishment. Do NOT add new work, metrics, or responsibilities; only restate existing content in the JD's language, and verify every reframe stays factually accurate.
+9. By DEFAULT, scan the summary and every work, project, and education description for content that already demonstrates a job-description keyword or skill, and reframe that text using the job description's EXACT terminology where it is not already phrased that way (per rule 9, leave content that already aligns well), while preserving the candidate's actual accomplishment. Do NOT add new work, metrics, or responsibilities; only restate existing content in the JD's EXACT language, and verify every reframe stays factually accurate.
 10. Preserve original capitalization, especially for proper nouns, technical terms (e.g., REST, API, AWS), and acronyms. Do not change the casing of words that were capitalized in the original.
 
+ATS OPTIMIZATION RULES (apply to ALL changes):
+- EXACT PHRASE MATCHING: Use JD's exact multi-word phrases (e.g., "microservices architecture", "CI/CD pipelines", "RESTful APIs") -- not synonyms
+- ACRONYM + FULL FORM: When JD uses acronyms, include BOTH: "Amazon Web Services (AWS)", "Continuous Integration/Continuous Deployment (CI/CD)"
+- SKILL CATEGORY MIRRORING: Mirror JD's tech_stack_clusters structure in technicalSkills ordering
+- ACTION VERB ADOPTION: Use JD's action_verbs verbatim in bullet points
+- MUST-HAVE PHRASES: Every must_have_phrase from JD MUST appear in resume (summary, bullets, or skills)
+- REQUIRED SKILLS COVERAGE: Every required_skill MUST appear in technicalSkills (reorder to top)
+- KEYWORD DENSITY: Target 2-3 JD keywords per bullet point naturally integrated
+- PRESERVE EXISTING SENIORITY: Do NOT add seniority terms (senior, lead, principal, junior, entry-level) unless they already exist in the original resume summary. Match the candidate's actual experience level.
+
 PATHS you can target:
-- "summary" — the resume summary text
-- "workExperience[i].description[j]" — a specific bullet (i = entry index, j = bullet index)
-- "workExperience[i].description" — append a new bullet (action: "append")
-- "personalProjects[i].description[j]" — a specific project bullet
-- "personalProjects[i].description" — append a new project bullet (action: "append")
-- "education[i].description" — the education entry's description text (replace only; it is a single string, not a list)
-- "additional.technicalSkills" — reorder the skills list (action: "reorder") or add one verified skill (action: "add_skill")
-- "additional.languages" — reorder the languages list (action: "reorder")
-- "additional.certificationsTraining" — reorder the certifications list (action: "reorder")
-- "additional.awards" — reorder the awards list (action: "reorder")
+- "summary" -- the resume summary text
+- "workExperience[i].description[j]" -- a specific bullet (i = entry index, j = bullet index)
+- "workExperience[i].description" -- append a new bullet (action: "append")
+- "personalProjects[i].description[j]" -- a specific project bullet
+- "personalProjects[i].description" -- append a new project bullet (action: "append")
+- "education[i].description" -- the education entry's description text (replace only; it is a single string, not a list)
+- "additional.technicalSkills" -- reorder the skills list (action: "reorder") or add one verified skill (action: "add_skill")
+- "additional.languages" -- reorder the languages list (action: "reorder")
+- "additional.certificationsTraining" -- reorder the certifications list (action: "reorder")
+- "additional.awards" -- reorder the awards list (action: "reorder")
 
 Do NOT target: personalInfo, dates/years, company names, education degree/institution/years, customSections.
 
@@ -568,30 +597,113 @@ Output this exact JSON format, nothing else:
       "path": "workExperience[0].description[1]",
       "action": "replace",
       "original": "the exact original text at this path",
-      "value": "the improved text",
-      "reason": "why this change helps"
+      "value": "the improved text with EXACT JD phrases, acronyms+full forms, action verbs",
+      "reason": "why this change helps ATS match: exact phrase X, action verb Y, skill Z"
     }},
     {{
       "path": "summary",
       "action": "replace",
       "original": "the current summary text",
-      "value": "the improved summary",
-      "reason": "why this change helps"
+      "value": "the improved summary with JD must-have phrases, key skills",
+      "reason": "why this change helps ATS match"
     }},
     {{
       "path": "additional.technicalSkills",
       "action": "reorder",
       "original": null,
-      "value": ["most relevant skill first", "then next", "..."],
-      "reason": "reordered to prioritize JD-relevant skills"
+      "value": ["JD required skill 1", "JD required skill 2", "JD preferred skill 1", "existing relevant skill", "..."],
+      "reason": "reordered to prioritize ALL JD required skills first, then preferred, then existing -- mirrors JD tech_stack_clusters"
     }},
     {{
       "path": "additional.technicalSkills",
       "action": "add_skill",
       "original": null,
-      "value": "verified skill target missing from the skills list",
-      "reason": "added verified JD skill for review"
+      "value": "verified JD required skill missing from the skills list",
+      "reason": "added JD required skill for ATS coverage -- verified via skill target plan"
     }}
   ],
-  "strategy_notes": "brief summary of the tailoring approach"
+  "strategy_notes": "ATS strategy: which JD categories mirrored, which must-have phrases placed where, which action verbs adopted, technicalSkills ordering rationale"
+}}"""
+
+# ============================================
+# DEDICATED ATS-MAXIMIZING DIFF PROMPT (for 'ats' strategy)
+# ============================================
+
+DIFF_IMPROVE_PROMPT_ATS = """Given this resume and job description, output a JSON object with MAXIMUM ATS-optimized changes. This prompt prioritizes ATS scan score above all else while maintaining truthfulness.
+
+RULES:
+1. Only modify content; never change names, companies, dates, institutions, or degrees
+2. Do not add new work entries, education entries, or project entries
+3. {strategy_instruction}
+4. Each change MUST include the original text (copied exactly) so it can be verified
+5. For each change, explain WHY it helps match the job description
+6. Generate all new text in {output_language}
+7. Do not use em dash characters
+8. AGGRESSIVE ATS OPTIMIZATION -- this is the PRIMARY goal
+
+ATS MAXIMIZATION RULES (MANDATORY):
+- EXACT TERM MATCHING: Use JD's EXACT phrasing. If JD: "build CI/CD pipelines" -> resume: "build CI/CD pipelines" (not "create deployment pipelines")
+- ACRONYM FIRST MENTION: "Amazon Web Services (AWS)", "Kubernetes (K8s)", "Continuous Integration/Continuous Deployment (CI/CD)"
+- EVERY REQUIRED SKILL IN technicalSkills: All JD required_skills + preferred_skills MUST appear in technicalSkills, ordered by JD priority
+- VERB MIRRORING: Mirror JD action verbs exactly -- "spearhead"->"spearhead", "architect"->"architect", "optimize"->"optimize"
+- KEYWORD DENSITY: Each bullet MUST contain 2-3 JD keywords/phrases naturally
+- SECTION HEADER ALIGNMENT: If JD mentions "DevOps Engineering", rename/rephrase to match
+- METRIC STYLE MATCHING: If JD says "reduced latency by 40%", use "% improvement" language
+- SKILL CATEGORY MIRRORING: If JD groups "Cloud: AWS, GCP, Azure", ensure technicalSkills reflects similar grouping
+- NO FABRICATION: Only reframe existing content; never invent metrics, tools, or responsibilities
+
+PATHS you can target (PRIORITY ORDER):
+1. "summary" -- MUST include top 5 JD keywords
+2. "additional.technicalSkills" -- reorder + add_skill for EVERY missing JD required/preferred skill
+3. "workExperience[i].description[j]" -- reframe EVERY bullet to include JD terminology
+4. "personalProjects[i].description[j]" -- same aggressive reframe
+5. "education[i].description" -- add relevant coursework/keywords if applicable
+
+Do NOT target: personalInfo, dates/years, company names, education degree/institution/years, customSections.
+
+JD Required Skills (MUST appear in technicalSkills):
+{job_keywords}
+
+Verified skill targets (pre-approved for add_skill):
+{skill_targets}
+
+Job Description:
+{job_description}
+
+Original Resume:
+{original_resume}
+
+Output this exact JSON format, nothing else:
+{{
+  "changes": [
+    {{
+      "path": "summary",
+      "action": "replace",
+      "original": "the current summary text",
+      "value": "ATS-optimized summary with top 5 JD keywords and exact JD phrasing",
+      "reason": "summary is the highest-weight ATS field; must contain exact JD terminology"
+    }},
+    {{
+      "path": "additional.technicalSkills",
+      "action": "reorder",
+      "original": null,
+      "value": ["JD required skill 1", "JD required skill 2", "JD preferred skill 1", "existing relevant skill 1", "..."],
+      "reason": "technicalSkills is primary ATS keyword field; ordered by JD priority"
+    }},
+    {{
+      "path": "additional.technicalSkills",
+      "action": "add_skill",
+      "original": null,
+      "value": "missing JD required skill",
+      "reason": "every JD required skill must appear for ATS match"
+    }},
+    {{
+      "path": "workExperience[0].description[0]",
+      "action": "replace",
+      "original": "original bullet text",
+      "value": "reframed bullet with 2-3 exact JD keywords, JD verbs, acronym expansion",
+      "reason": "each bullet must contain JD terminology for keyword density"
+    }}
+  ],
+  "strategy_notes": "ATS-maximizing strategy: exact term matching, acronym expansion, skill mirroring, verb mirroring, keyword density 2-3 per bullet"
 }}"""

@@ -145,6 +145,13 @@ CRITICAL RULES:
 5. Do not use em-dashes (—) or their variants (---, --)
 6. Make keyword incorporation the DEFAULT across all content sections, not an optional enhancement
 
+ATS OPTIMIZATION RULES:
+- EXACT PHRASE MATCHING: Use JD's exact multi-word phrases — if JD says "ETL pipelines", use "ETL pipelines" not "data pipelines"
+- ACRONYM + FULL FORM: First mention includes both — "Amazon Web Services (AWS)", "Continuous Integration/Continuous Deployment (CI/CD)"
+- VERB MIRRORING: Adopt JD's action_verbs verbatim in bullet points
+- SKILL CATEGORY MIRRORING: Mirror JD's tech_stack_clusters structure when reordering technicalSkills
+- KEYWORD DENSITY: Target 2-3 JD keywords per bullet point naturally integrated
+
 Keywords to inject (only if supported by master resume):
 {keywords_to_inject}
 
@@ -168,6 +175,13 @@ REMOVE or REPLACE:
 - Em-dashes (use commas or semicolons instead)
 - Overly formal language: "utilized" -> "used", "endeavored" -> "worked"
 - Generic filler: "in order to" -> "to"
+
+ATS VERIFICATION:
+- Confirm all JD required_skills appear in technicalSkills (reorder if needed)
+- Confirm JD must_have_phrases appear in summary, bullets, or skills
+- Confirm JD action_verbs are used in bullet points
+- Confirm acronym + full form pattern used (e.g., "Amazon Web Services (AWS)")
+- Verify technicalSkills mirrors JD tech_stack_clusters category structure
 
 VERIFY:
 - All skills exist in the master resume

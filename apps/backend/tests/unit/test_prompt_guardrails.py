@@ -9,8 +9,12 @@ Two invariants this locks:
    ONLY guard. If a future edit drops them, this test fails loudly.
 """
 
-from app.prompts.templates import COVER_LETTER_PROMPT, DIFF_IMPROVE_PROMPT
-from app.prompts.refinement import KEYWORD_INJECTION_PROMPT
+from app.prompts import (
+    COVER_LETTER_PROMPT,
+    DIFF_IMPROVE_PROMPT,
+    DIFF_IMPROVE_PROMPT_ATS,
+    KEYWORD_INJECTION_PROMPT,
+)
 
 
 class TestJdIncorporationIsDefault:
@@ -28,13 +32,18 @@ class TestJdIncorporationIsDefault:
 
 class TestAntiFabricationClausesPresent:
     def test_diff_prompt_keeps_no_invented_work_clauses(self):
-        # rule 11's reframe permission must ship WITH its anti-fabrication clause
+        # rule 9's reframe permission must ship WITH its anti-fabrication clause
         assert "Do NOT add new work, metrics, or responsibilities" in DIFF_IMPROVE_PROMPT
-        # rule 2 must remain
-        assert "Do not invent metrics or achievements not supported by the original resume" in DIFF_IMPROVE_PROMPT
+        # rule 2 must remain (fabrication prohibition)
+        assert "only restate existing content" in DIFF_IMPROVE_PROMPT.lower()
+
+    def test_ats_diff_prompt_keeps_no_fabrication_clauses(self):
+        # ATS prompt has explicit NO FABRICATION clause
+        assert "NO FABRICATION" in DIFF_IMPROVE_PROMPT_ATS
+        assert "never invent metrics, tools, or responsibilities" in DIFF_IMPROVE_PROMPT_ATS.lower()
 
     def test_keyword_injection_keeps_no_invent_clauses(self):
-        assert "do not invent new content, metrics, or work history" in KEYWORD_INJECTION_PROMPT
+        assert "do not invent new content, metrics, or work history" in KEYWORD_INJECTION_PROMPT.lower()
         assert "Do NOT add skills, technologies, or certifications not in the master resume" in KEYWORD_INJECTION_PROMPT
 
     def test_cover_letter_keeps_no_invent_clauses(self):

@@ -13,6 +13,7 @@ from app.prompts import (
     CRITICAL_TRUTHFULNESS_RULES,
     DEFAULT_IMPROVE_PROMPT_ID,
     DIFF_IMPROVE_PROMPT,
+    DIFF_IMPROVE_PROMPT_ATS,
     DIFF_STRATEGY_INSTRUCTIONS,
     EXTRACT_KEYWORDS_PROMPT,
     IMPROVE_RESUME_PROMPTS,
@@ -555,14 +556,25 @@ async def generate_resume_diffs(
     else:
         resume_input = original_resume
 
-    prompt = DIFF_IMPROVE_PROMPT.format(
-        strategy_instruction=strategy_instruction,
-        output_language=output_language,
-        job_keywords=keywords_str,
-        skill_targets=_prepare_skill_targets_for_prompt(skill_targets),
-        job_description=sanitized_jd,
-        original_resume=resume_input,
-    )
+    # Use dedicated ATS-optimized prompt for maximum ATS match, else standard diff prompt
+    if selected_id == "ats":
+        prompt = DIFF_IMPROVE_PROMPT_ATS.format(
+            strategy_instruction=strategy_instruction,
+            output_language=output_language,
+            job_keywords=keywords_str,
+            skill_targets=_prepare_skill_targets_for_prompt(skill_targets),
+            job_description=sanitized_jd,
+            original_resume=resume_input,
+        )
+    else:
+        prompt = DIFF_IMPROVE_PROMPT.format(
+            strategy_instruction=strategy_instruction,
+            output_language=output_language,
+            job_keywords=keywords_str,
+            skill_targets=_prepare_skill_targets_for_prompt(skill_targets),
+            job_description=sanitized_jd,
+            original_resume=resume_input,
+        )
 
     result = await complete_json(
         prompt=prompt,
@@ -657,8 +669,8 @@ def _has_month_in_dates(data: dict[str, Any]) -> bool:
 def _prepare_keywords_for_prompt(job_keywords: dict[str, Any]) -> str:
     """Format job keywords as a focused, readable list for the LLM prompt.
 
-    Extracts only actionable fields (skills and keywords) and drops
-    informational fields that add noise without helping the LLM tailor.
+    Extracts actionable fields (skills, keywords, action verbs, clusters, must-have phrases)
+    and drops informational fields that add noise without helping the LLM tailor.
     """
     sections: list[str] = []
 
@@ -676,6 +688,23 @@ def _prepare_keywords_for_prompt(job_keywords: dict[str, Any]) -> str:
     keywords = job_keywords.get("keywords", [])
     if keywords:
         sections.append("Additional keywords to weave in naturally:\n- " + "\n- ".join(str(k) for k in keywords))
+
+    action_verbs = job_keywords.get("action_verbs", [])
+    if action_verbs:
+        sections.append("JD action verbs to adopt in bullet points:\n- " + "\n- ".join(str(v) for v in action_verbs))
+
+    tech_clusters = job_keywords.get("tech_stack_clusters", {})
+    if tech_clusters:
+        cluster_lines = []
+        for category, skills in tech_clusters.items():
+            if isinstance(skills, list) and skills:
+                cluster_lines.append(f"  {category}: {', '.join(str(s) for s in skills)}")
+        if cluster_lines:
+            sections.append("JD tech stack clusters (mirror this structure in technicalSkills):\n" + "\n".join(cluster_lines))
+
+    must_have = job_keywords.get("must_have_phrases", [])
+    if must_have:
+        sections.append("MUST-HAVE phrases (exact JD phrases that MUST appear in resume):\n- " + "\n- ".join(str(p) for p in must_have))
 
     return "\n\n".join(sections) if sections else "No specific keywords extracted."
 

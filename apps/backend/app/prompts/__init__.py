@@ -1,9 +1,11 @@
 """LLM prompt templates."""
 
 from app.prompts.templates import (
+    COVER_LETTER_PROMPT,
     CRITICAL_TRUTHFULNESS_RULES,
     DEFAULT_IMPROVE_PROMPT_ID,
     DIFF_IMPROVE_PROMPT,
+    DIFF_IMPROVE_PROMPT_ATS,
     DIFF_STRATEGY_INSTRUCTIONS,
     EXTRACT_KEYWORDS_PROMPT,
     GENERATE_TITLE_PROMPT,
@@ -15,6 +17,7 @@ from app.prompts.templates import (
     SKILL_TARGET_PLAN_PROMPT,
     get_language_name,
 )
+from app.prompts.refinement import KEYWORD_INJECTION_PROMPT
 
 # Placeholders every user-supplied cover-letter / outreach prompt must contain.
 # These correspond to the ``.format()`` keys used by the services in
@@ -49,10 +52,13 @@ __all__ = [
     "DEFAULT_IMPROVE_PROMPT_ID",
     "CRITICAL_TRUTHFULNESS_RULES",
     "DIFF_IMPROVE_PROMPT",
+    "DIFF_IMPROVE_PROMPT_ATS",
     "DIFF_STRATEGY_INSTRUCTIONS",
     "SKILL_TARGET_PLAN_PROMPT",
     "SKILL_CLASSIFICATION_PROMPT",
     "GENERATE_TITLE_PROMPT",
+    "COVER_LETTER_PROMPT",
+    "KEYWORD_INJECTION_PROMPT",
     "REQUIRED_FEATURE_PROMPT_PLACEHOLDERS",
     "validate_prompt_placeholders",
     "get_language_name",
