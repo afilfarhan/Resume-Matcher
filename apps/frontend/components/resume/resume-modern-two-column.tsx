@@ -177,6 +177,12 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
           <div className={`${baseStyles['resume-meta']} flex flex-wrap gap-x-3 gap-y-1 mt-2`}>
             {renderContactDetail('Email', personalInfo.email, 'mailto:')}
             {renderContactDetail('Phone', personalInfo.phone, 'tel:')}
+            {personalInfo.info && (
+              <>
+                <span className={baseStyles['text-muted']}>,</span>
+                <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+              </>
+            )}
             {renderContactDetail('Location', personalInfo.location)}
             {renderContactDetail('Website', personalInfo.website)}
             {renderContactDetail('LinkedIn', personalInfo.linkedin)}

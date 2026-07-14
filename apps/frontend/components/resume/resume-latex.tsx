@@ -99,6 +99,9 @@ export const ResumeLatex: React.FC<ResumeLatexProps> = ({
   // Build the contact row (phone, email, linkedin, github, website) joined by middots.
   const contactItems = [
     renderContactDetail('Phone', personalInfo?.phone, 'tel:'),
+    personalInfo?.info
+      ? <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+      : null,
     renderContactDetail('Email', personalInfo?.email, 'mailto:'),
     renderContactDetail('LinkedIn', personalInfo?.linkedin),
     renderContactDetail('GitHub', personalInfo?.github),

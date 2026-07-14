@@ -3,6 +3,7 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { PersonalInfo } from '@/components/dashboard/resume-component';
 import { useTranslations } from '@/lib/i18n';
 
@@ -87,6 +88,22 @@ export const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({ data, onChan
             onChange={(e) => handleChange('phone', e.target.value)}
             placeholder={t('builder.personalInfoForm.placeholders.phone')}
             className="rounded-none border-black focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-blue-700 bg-transparent"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label
+            htmlFor="info"
+            className="font-mono text-xs uppercase tracking-wider text-steel-grey"
+          >
+            {t('resume.personalInfo.info')}
+          </Label>
+          <Textarea
+            id="info"
+            value={data.info || ''}
+            onChange={(e) => handleChange('info', e.target.value)}
+            placeholder={t('builder.personalInfoForm.placeholders.info')}
+            rows={3}
+            className="rounded-none border-black focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-blue-700 bg-transparent resize-none"
           />
         </div>
         <div className="space-y-2">

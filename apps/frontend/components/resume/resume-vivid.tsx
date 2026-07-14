@@ -189,6 +189,12 @@ export const ResumeVivid: React.FC<ResumeVividProps> = ({
             {renderContactDetail('GitHub', personalInfo.github)}
             {renderContactDetail('Email', personalInfo.email, 'mailto:')}
             {renderContactDetail('Phone', personalInfo.phone, 'tel:')}
+            {personalInfo.info && (
+              <>
+                <span className={baseStyles['text-muted']}>,</span>
+                <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+              </>
+            )}
             {renderContactDetail('Location', personalInfo.location)}
           </div>
         )}

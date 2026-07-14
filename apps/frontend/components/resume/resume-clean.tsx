@@ -109,6 +109,9 @@ export const ResumeClean: React.FC<ResumeCleanProps> = ({
   const contactItems = [
     renderContactDetail('Location', personalInfo?.location),
     renderContactDetail('Phone', personalInfo?.phone, 'tel:'),
+    personalInfo?.info
+      ? <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+      : null,
     renderContactDetail('Email', personalInfo?.email, 'mailto:'),
     renderContactDetail('LinkedIn', personalInfo?.linkedin),
     renderContactDetail('GitHub', personalInfo?.github),

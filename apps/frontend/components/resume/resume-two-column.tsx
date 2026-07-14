@@ -190,6 +190,12 @@ export const ResumeTwoColumn: React.FC<ResumeTwoColumnProps> = ({
                 {renderContactDetail('Phone', personalInfo.phone, 'tel:')}
               </>
             )}
+            {personalInfo.info && (
+              <>
+                <span className={baseStyles['text-muted']}>,</span>
+                <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+              </>
+            )}
             {personalInfo.location && (
               <>
                 <span className={baseStyles['text-muted']}>,</span>

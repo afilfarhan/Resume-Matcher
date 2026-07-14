@@ -9,6 +9,7 @@ export interface CoverLetterPersonalInfo {
   title?: string;
   email?: string;
   phone?: string;
+  info?: string;
   location?: string;
   website?: string;
   linkedin?: string;
@@ -66,6 +67,7 @@ export function CoverLetterPreview({
           <div className="mt-2 font-mono text-xs text-ink-soft flex flex-wrap gap-x-4 gap-y-1">
             {personalInfo.email && <span>{personalInfo.email}</span>}
             {personalInfo.phone && <span>{personalInfo.phone}</span>}
+            {personalInfo.info && <span>{personalInfo.info}</span>}
             {personalInfo.location && <span>{personalInfo.location}</span>}
             {personalInfo.linkedin && <span>{personalInfo.linkedin}</span>}
           </div>
