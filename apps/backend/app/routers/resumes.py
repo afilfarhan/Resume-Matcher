@@ -986,13 +986,6 @@ async def _improve_preview_flow(
             original_resume_data=original_resume_data,
         )
 
-    # Safety nets (defense in depth — should rarely activate with diff-based flow)
-    improved_data, preserve_warnings = _preserve_personal_info(
-        original_resume_data,
-        improved_data,
-    )
-    response_warnings.extend(preserve_warnings)
-
     improved_data = _restore_original_dates(original_resume_data, improved_data)
     original_markdown = _get_original_markdown(resume)
     if original_markdown:
@@ -1056,6 +1049,13 @@ async def _improve_preview_flow(
         logger.warning("Refinement failed, using unrefined result: %s", e)
         if refinement_attempted:
             response_warnings.append(f"Refinement failed: {str(e)}")
+
+    # Safety net: preserve personal info after all modifications (including refinement)
+    improved_data, preserve_warnings = _preserve_personal_info(
+        original_resume_data,
+        improved_data,
+    )
+    response_warnings.extend(preserve_warnings)
 
     # Classify technical skills into categories (after improvement, before response)
     if "additional" in improved_data and isinstance(improved_data["additional"], dict):
@@ -1200,10 +1200,18 @@ async def improve_resume_confirm_endpoint(
         improved_data = request.improved_data.model_dump()
         logger.info(f"[SKILL_CLASSIFICATION] Confirm endpoint received categorizedSkills: {'categorizedSkills' in improved_data.get('additional', {})}")
         improved_text = json.dumps(improved_data, indent=2)
+
+        # Preserve personal info from original BEFORE validation and hash check
+        original_resume_data = _get_original_resume_data(resume)
+        improved_data, preserve_warnings = _preserve_personal_info(
+            original_resume_data,
+            improved_data,
+        )
+
         # NOTE: This endpoint relies on preview-hash validation to ensure the payload matches a prior preview.
         # Stronger guarantees would require server-side preview storage or re-running the improvement.
         try:
-            _validate_confirm_payload(_get_original_resume_data(resume), improved_data)
+            _validate_confirm_payload(original_resume_data, improved_data)
         except ValueError as e:
             logger.warning("Resume confirm rejected: %s", e)
             raise HTTPException(
@@ -1404,13 +1412,6 @@ async def improve_resume_endpoint(
                 prompt_id=prompt_id,
                 original_resume_data=original_resume_data,
             )
-
-        # Safety nets (defense in depth)
-        improved_data, preserve_warnings = _preserve_personal_info(
-            original_resume_data,
-            improved_data,
-        )
-        response_warnings.extend(preserve_warnings)
 
         improved_data = _restore_original_dates(original_resume_data, improved_data)
         original_markdown = _get_original_markdown(resume)

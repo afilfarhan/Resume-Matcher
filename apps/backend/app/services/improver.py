@@ -17,6 +17,7 @@ from app.prompts import (
     DIFF_STRATEGY_INSTRUCTIONS,
     EXTRACT_KEYWORDS_PROMPT,
     IMPROVE_RESUME_PROMPTS,
+    RESUME_WRITING_GUIDELINES,
     SKILL_CLASSIFICATION_PROMPT,
     SKILL_TARGET_PLAN_PROMPT,
     get_language_name,
@@ -565,6 +566,7 @@ async def generate_resume_diffs(
             skill_targets=_prepare_skill_targets_for_prompt(skill_targets),
             job_description=sanitized_jd,
             original_resume=resume_input,
+            resume_writing_guidelines=RESUME_WRITING_GUIDELINES,
         )
     else:
         prompt = DIFF_IMPROVE_PROMPT.format(
@@ -574,6 +576,7 @@ async def generate_resume_diffs(
             skill_targets=_prepare_skill_targets_for_prompt(skill_targets),
             job_description=sanitized_jd,
             original_resume=resume_input,
+            resume_writing_guidelines=RESUME_WRITING_GUIDELINES,
         )
 
     result = await complete_json(
@@ -884,6 +887,7 @@ async def generate_skill_target_plan(
         job_keywords=_prepare_keywords_for_prompt(job_keywords),
         job_description=sanitized_jd,
         original_resume=json.dumps(original_resume_data, ensure_ascii=False),
+        resume_writing_guidelines=RESUME_WRITING_GUIDELINES,
     )
 
     result = await complete_json(
@@ -1003,6 +1007,7 @@ async def improve_resume(
         schema=IMPROVE_SCHEMA_EXAMPLE,
         output_language=output_language,
         critical_truthfulness_rules=truthfulness_rules,
+        resume_writing_guidelines=RESUME_WRITING_GUIDELINES,
     )
 
     result = await complete_json(

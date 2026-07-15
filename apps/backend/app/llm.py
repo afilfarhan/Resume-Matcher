@@ -408,11 +408,11 @@ def resolve_api_key(stored: dict, provider: str) -> str:
     directly.
     """
     api_key = stored.get("api_key", "")
+    config_provider = _PROVIDER_KEY_MAP.get(provider, provider)
     if not api_key:
         api_keys = stored.get("api_keys", {})
         if not isinstance(api_keys, dict):
             api_keys = {}
-        config_provider = _PROVIDER_KEY_MAP.get(provider, provider)
         env_default = (
             ""
             if provider in _PROVIDERS_WITHOUT_ENV_KEY_FALLBACK

@@ -245,22 +245,39 @@ CRITICAL_TRUTHFULNESS_RULES = {
     ),
 }
 
-RESUME_WRITING_GUIDELINES = """Act as an expert human writer and editor. Your goal is to rewrite the text provided below so that it completely bypasses AI content detectors (like GPTZero, Winston AI, and Turnitin) by eliminating predictable patterns.
+RESUME_WRITING_GUIDELINES = """You are an expert resume writer and executive career coach. 
+I need you to write/rewrite my resume accomplishments so they read as authentic, 
+human-written, and entirely bypass AI content detectors. Follow these strict professional guidelines:
 
-To achieve a 100% human score, you must strictly follow these structural and stylistic rules:
+Vary Sentence and Bullet Length (Burstiness): Do not make every bullet point the same length. Mix short, high-impact statements (e.g., 'Led a team of five.') with longer, detail-rich sentences that explain the scope of a project.
 
-1. Maximize Perplexity and Burstiness: Humans naturally write with varying sentence lengths. Mix very short sentences (3–5 words) with medium and long, complex sentences. Never use the same sentence structure twice in a row.
-2. Ban AI Buzzwords: Absolutely do not use common AI tells, fillers, or transition words. Ban these words entirely: delve, tapestry, robust, testament, foster, landscape, revolutionize, navigate, paradigm shift, furthermore, moreover, key takeaway, crucial, ultimately, in today's world, it is important to note, overall, in conclusion.
-3. Lower the Vocabulary Predictability: AI selects the most statistically probable next word. Force yourself to use less predictable, more colorful, or casual synonyms that a human would naturally use in conversation.
-4. Adopt a Grounded Voice: Write with calm, confident authority. Do not sound overly enthusiastic, cheerful, or marketing-heavy. Avoid exclamation points.
-5. Introduce Imperfections and True Flow: Humans do not write in perfect, rigid blocks. Use natural, casual transitions (like "But here's the thing," "So," "Frankly"). You may occasionally use a fragment or a slightly informal phrasing to break mechanical perfection.
-6. Format Cleanly: Do not use generic AI formatting like repetitive bullet points or identical paragraph lengths. Integrate ideas smoothly.
+Eliminate AI Resumese: Completely avoid robotic AI buzzwords and clichés such as 'Spearheaded', 'Delved', 'Testament to', 'In conclusion', 'Leveraged', 'Fostered', or 'Synergy'.
+
+Use the X-Y-Z Formula: Write accomplishments using Google's X-Y-Z format: 'Accomplished [X] as measured by [Y], by doing [Z].' This guarantees the text relies on unique, unpredictable data points rather than generic AI phrasing.
+
+Natural Industry Phrasing: Use concrete industry terminology, acronyms, and tools naturally. AI tends to over-explain terms, whereas humans just state the tool (e.g., write 'managed CI/CD pipelines' instead of 'utilized continuous integration and continuous deployment methodologies').
+
+Asymmetric Structure: Avoid starting every single bullet point with the exact same grammatical tense or structure. Mix action-oriented results with contextual problem-solving phrasing.
+
+AVOID GENERIC SUMMARY OPENERS: Do NOT start summaries with clichés like 'Results-driven', 'Results-oriented', 'Motivated', 'Dedicated', 'Accomplished', 'Seasoned', 'Dynamic', 'Proactive', 'Self-starter', 'Highly skilled', or 'Passionate'. Start with specific role, years of experience, and core expertise instead.
+
+SUMMARY WRITING RULES (CRITICAL):
+- Write a 2-4 sentence professional summary, not a wall of text
+- Sentence 1: Your target role + years of experience + core expertise (e.g., "Senior Backend Engineer with 7+ years building scalable distributed systems in Python and Go")
+- Sentence 2: Key technical strengths that match the JD (e.g., "Deep expertise in microservices architecture, AWS cloud infrastructure, and PostgreSQL optimization")
+- Sentence 3 (optional): One standout achievement or domain specialty (e.g., "Reduced API latency by 40% through async processing redesign; published contributor to CNCF projects")
+- Sentence 4 (optional): Certifications or leadership scope if relevant (e.g., "AWS Solutions Architect certified; mentored 5 engineers across 3 teams")
+- NATURALLY weave in 3-5 exact JD keywords/phrases across these sentences — do NOT keyword stuff
+- Use the JD's exact terminology where it matches your actual experience (e.g., if JD says "CI/CD pipelines", use that phrase)
+- Never invent metrics, companies, or responsibilities not in your original resume
 
 Output only the final text."""
 
 IMPROVE_RESUME_PROMPT_NUDGE = """Lightly nudge this resume toward the job description. Output ONLY the JSON object, no other text.
 
 {critical_truthfulness_rules}
+
+{resume_writing_guidelines}
 
 IMPORTANT: Generate ALL text content (summary, descriptions, skills) in {output_language}.
 Do NOT include personalInfo in your output - it will be preserved from the original resume.
@@ -292,6 +309,8 @@ IMPROVE_RESUME_PROMPT_KEYWORDS = """Enhance this resume with relevant keywords f
 
 {critical_truthfulness_rules}
 
+{resume_writing_guidelines}
+
 IMPORTANT: Generate ALL text content (summary, descriptions, skills) in {output_language}.
 Do NOT include personalInfo in your output - it will be preserved from the original resume.
 
@@ -320,6 +339,8 @@ Output in this JSON format:
 IMPROVE_RESUME_PROMPT_FULL = """Tailor this resume for the job. Output ONLY the JSON object, no other text.
 
 {critical_truthfulness_rules}
+
+{resume_writing_guidelines}
 
 IMPORTANT: Generate ALL text content (summary, descriptions, skills) in {output_language}.
 Do NOT include personalInfo in your output - it will be preserved from the original resume.
@@ -367,6 +388,10 @@ TRUTHFULNESS (NON-NEGOTIABLE):
 - DO NOT add company names or products not in original resume
 - Preserve ALL existing skills, certifications, languages, awards
 - Copy dates EXACTLY as they appear (including months)
+
+{critical_truthfulness_rules}
+
+{resume_writing_guidelines}
 
 IMPORTANT: Generate ALL text content (summary, descriptions, skills) in {output_language}.
 
@@ -505,6 +530,8 @@ RULES:
 7. Do NOT include certifications (handled separately)
 8. Generate reasons in {output_language}
 
+{resume_writing_guidelines}
+
 Existing resume skills:
 {existing_skills}
 
@@ -577,6 +604,15 @@ ATS OPTIMIZATION RULES (apply to ALL changes):
 - KEYWORD DENSITY: Target 2-3 JD keywords per bullet point naturally integrated
 - PRESERVE EXISTING SENIORITY: Do NOT add seniority terms (senior, lead, principal, junior, entry-level) unless they already exist in the original resume summary. Match the candidate's actual experience level.
 
+SUMMARY-SPECIFIC RULES (CRITICAL):
+- The summary is the highest-weight ATS field. It MUST contain the top 5 JD keywords/phrases naturally woven into a 2-4 sentence narrative
+- Sentence 1: Target role + years experience + core expertise (e.g., "Senior Backend Engineer with 7+ years building scalable distributed systems in Python and Go")
+- Sentence 2: Key technical strengths matching the JD (e.g., "Deep expertise in microservices architecture, AWS cloud infrastructure, and PostgreSQL optimization")
+- Sentence 3 (optional): One standout achievement or domain specialty
+- Sentence 4 (optional): Certifications or leadership scope if relevant
+- Use the JD's exact terminology where it matches your actual experience — do NOT keyword stuff
+- Avoid generic openers: "Results-driven", "Motivated", "Dedicated", "Seasoned", "Dynamic", "Proactive", "Self-starter", "Highly skilled", "Passionate"
+
 PATHS you can target:
 - "summary" -- the resume summary text
 - "workExperience[i].description[j]" -- a specific bullet (i = entry index, j = bullet index)
@@ -603,28 +639,23 @@ Job Description:
 Original Resume:
 {original_resume}
 
+{resume_writing_guidelines}
+
 Output this exact JSON format, nothing else:
 {{
   "changes": [
     {{
-      "path": "workExperience[0].description[1]",
-      "action": "replace",
-      "original": "the exact original text at this path",
-      "value": "the improved text with EXACT JD phrases, acronyms+full forms, action verbs",
-      "reason": "why this change helps ATS match: exact phrase X, action verb Y, skill Z"
-    }},
-    {{
       "path": "summary",
       "action": "replace",
       "original": "the current summary text",
-      "value": "the improved summary with JD must-have phrases, key skills",
-      "reason": "why this change helps ATS match"
+      "value": "ATS-optimized summary with top 5 JD keywords and exact JD phrasing",
+      "reason": "summary is the highest-weight ATS field; must contain exact JD terminology naturally woven into 2-4 sentence narrative"
     }},
     {{
       "path": "additional.technicalSkills",
       "action": "reorder",
       "original": null,
-      "value": ["JD required skill 1", "JD required skill 2", "JD preferred skill 1", "existing relevant skill", "..."],
+      "value": ["JD required skill 1", "JD required skill 2", "JD preferred skill 1", "existing relevant skill 1", "..."],
       "reason": "reordered to prioritize ALL JD required skills first, then preferred, then existing -- mirrors JD tech_stack_clusters"
     }},
     {{
@@ -633,6 +664,13 @@ Output this exact JSON format, nothing else:
       "original": null,
       "value": "verified JD required skill missing from the skills list",
       "reason": "added JD required skill for ATS coverage -- verified via skill target plan"
+    }},
+    {{
+      "path": "workExperience[0].description[0]",
+      "action": "replace",
+      "original": "original bullet text",
+      "value": "reframed bullet with 2-3 exact JD keywords, JD verbs, acronym expansion",
+      "reason": "each bullet must contain JD terminology for keyword density"
     }}
   ],
   "strategy_notes": "ATS strategy: which JD categories mirrored, which must-have phrases placed where, which action verbs adopted, technicalSkills ordering rationale"
@@ -665,8 +703,17 @@ ATS MAXIMIZATION RULES (MANDATORY):
 - SKILL CATEGORY MIRRORING: If JD groups "Cloud: AWS, GCP, Azure", ensure technicalSkills reflects similar grouping
 - NO FABRICATION: Only reframe existing content; never invent metrics, tools, or responsibilities
 
+SUMMARY-SPECIFIC RULES (CRITICAL for ATS):
+- The summary is the highest-weight ATS field. It MUST contain top 5 JD keywords/phrases woven naturally into a 2-4 sentence professional narrative
+- Sentence 1: Target role + years experience + core expertise (e.g., "Senior Backend Engineer with 7+ years building scalable distributed systems in Python and Go")
+- Sentence 2: Key technical strengths matching the JD — inject the most critical missing JD keywords here
+- Sentence 3 (optional): One standout achievement or domain specialty with metrics from original resume
+- Sentence 4 (optional): Certifications or leadership scope if relevant
+- Use the JD's exact terminology where it matches actual experience — do NOT keyword stuff
+- Avoid generic openers: "Results-driven", "Motivated", "Dedicated", "Seasoned", "Dynamic", "Proactive", "Self-starter", "Highly skilled", "Passionate"
+
 PATHS you can target (PRIORITY ORDER):
-1. "summary" -- MUST include top 5 JD keywords
+1. "summary" -- MUST include top 5 JD keywords woven naturally
 2. "additional.technicalSkills" -- reorder + add_skill for EVERY missing JD required/preferred skill
 3. "workExperience[i].description[j]" -- reframe EVERY bullet to include JD terminology
 4. "personalProjects[i].description[j]" -- same aggressive reframe
@@ -686,6 +733,8 @@ Job Description:
 Original Resume:
 {original_resume}
 
+{resume_writing_guidelines}
+
 Output this exact JSON format, nothing else:
 {{
   "changes": [
@@ -693,8 +742,8 @@ Output this exact JSON format, nothing else:
       "path": "summary",
       "action": "replace",
       "original": "the current summary text",
-      "value": "ATS-optimized summary with top 5 JD keywords and exact JD phrasing",
-      "reason": "summary is the highest-weight ATS field; must contain exact JD terminology"
+      "value": "ATS-optimized summary with top 5 JD keywords woven into 2-4 sentence narrative: target role + years exp + core expertise. Key technical strengths matching JD. Standout achievement. Certifications/leadership if relevant.",
+      "reason": "summary is the highest-weight ATS field; must contain exact JD terminology naturally woven into professional narrative"
     }},
     {{
       "path": "additional.technicalSkills",
@@ -718,5 +767,5 @@ Output this exact JSON format, nothing else:
       "reason": "each bullet must contain JD terminology for keyword density"
     }}
   ],
-  "strategy_notes": "ATS-maximizing strategy: exact term matching, acronym expansion, skill mirroring, verb mirroring, keyword density 2-3 per bullet"
+  "strategy_notes": "ATS-maximizing strategy: exact term matching, acronym expansion, skill mirroring, verb mirroring, keyword density 2-3 per bullet, summary narrative with top 5 JD keywords"
 }}"""

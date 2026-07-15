@@ -152,6 +152,14 @@ ATS OPTIMIZATION RULES:
 - SKILL CATEGORY MIRRORING: Mirror JD's tech_stack_clusters structure when reordering technicalSkills
 - KEYWORD DENSITY: Target 2-3 JD keywords per bullet point naturally integrated
 
+SUMMARY-SPECIFIC RULES (CRITICAL for keyword injection):
+- The summary is the highest-weight ATS field. Weave top 3-5 missing JD keywords/phrases into it naturally
+- Sentence 1: Target role + years experience + core expertise (e.g., "Senior Backend Engineer with 7+ years building scalable distributed systems in Python and Go")
+- Sentence 2: Key technical strengths matching the JD — this is where to inject the most critical missing keywords
+- Sentence 3 (optional): One standout achievement or domain specialty
+- Use the JD's exact terminology where it matches your actual experience — do NOT keyword stuff
+- Avoid generic openers: "Results-driven", "Motivated", "Dedicated", "Seasoned", "Dynamic", "Proactive", "Self-starter", "Highly skilled", "Passionate"
+
 Keywords to inject (only if supported by master resume):
 {keywords_to_inject}
 
