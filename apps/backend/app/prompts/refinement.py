@@ -47,6 +47,15 @@ AI_PHRASE_BLACKLIST: set[str] = {
     "low-hanging fruit",
     "touch base",
     "value-add",
+    # Generic summary openers (AI resumese clichés)
+    "result driven",
+    "results driven",
+    "result-driven",
+    "results-driven",
+    "results oriented",
+    "result oriented",
+    "results-oriented",
+    "result-oriented",
     # Filler phrases
     "in order to",
     "for the purpose of",
@@ -127,6 +136,15 @@ AI_PHRASE_REPLACEMENTS: dict[str, str] = {
     "due to the fact that": "because",
     "in the event that": "if",
     "in light of the fact that": "since",
+    # Generic summary openers - remove entirely
+    "result driven": "",
+    "results driven": "",
+    "result-driven": "",
+    "results-driven": "",
+    "results oriented": "",
+    "result oriented": "",
+    "results-oriented": "",
+    "result-oriented": "",
     # Punctuation replacements
     "\u2014": ", ",  # Em-dash to comma
     "---": ", ",
