@@ -28,6 +28,8 @@
     "apply": "Aplicar",
     "selectOption": "Selecciona una opción...",
     "unknown": "Desconocido",
+    "enabled": "Activado",
+    "disabled": "Desactivado",
     "keysCleared": "Claves API borradas con éxito",
     "databaseReset": "Base de datos restablecida con éxito",
     "popupBlocked": "Se bloqueó la ventana emergente. Permite las ventanas emergentes o abre manualmente esta URL: {url}"
@@ -420,6 +422,7 @@
       "options": "Opciones",
       "compactMode": "Modo compacto",
       "contactIcons": "Iconos de contacto",
+      "hyperlinks": "Hipervínculos",
       "personalInfoLayout": "Diseño de información personal",
       "personalInfoLayoutOptions": {
         "single-line": "Una línea",
@@ -432,9 +435,10 @@
       "effectiveItemGap": "Espacio entre elementos",
       "effectiveLineHeight": "Interlineado",
       "effectiveBaseFont": "Fuente base",
-      "effectiveHeaderScale": "Escala de encabezados",
+"effectiveHeaderScale": "Escala de encabezados",
       "effectiveHeaderFont": "Fuente de encabezados",
       "effectiveBodyFont": "Fuente del cuerpo",
+      "effectiveHyperlinks": "Hipervínculos",
       "compactHint": "El modo compacto reduce el espaciado y el interlineado. Los márgenes y la fuente base se mantienen.",
       "resetDefaults": "Restablecer valores"
     },

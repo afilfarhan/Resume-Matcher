@@ -14,6 +14,7 @@ import styles from './styles/latex.module.css';
 interface ResumeLatexProps {
   data: ResumeData;
   showContactIcons?: boolean;
+  showHyperlinks?: boolean;
   personalInfoLayout?: 'single-line' | 'two-line' | 'stacked';
   additionalSectionLabels?: Partial<AdditionalSectionLabels>;
 }
@@ -33,6 +34,7 @@ interface ResumeLatexProps {
 export const ResumeLatex: React.FC<ResumeLatexProps> = ({
   data,
   showContactIcons = false,
+  showHyperlinks = false,
   personalInfoLayout = 'single-line',
   additionalSectionLabels,
 }) => {
@@ -82,7 +84,7 @@ export const ResumeLatex: React.FC<ResumeLatexProps> = ({
     return (
       <span className="inline-flex items-center gap-1">
         {showContactIcons && contactIcons[label]}
-        {isLink ? (
+        {isLink && showHyperlinks ? (
           <a
             href={href}
             target="_blank"

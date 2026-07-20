@@ -11,6 +11,7 @@ import styles from './styles/swiss-two-column.module.css';
 interface ResumeTwoColumnProps {
   data: ResumeData;
   showContactIcons?: boolean;
+  showHyperlinks?: boolean;
   personalInfoLayout?: 'single-line' | 'two-line' | 'stacked';
   sectionHeadings?: Partial<ResumeSectionHeadings>;
 }
@@ -29,6 +30,7 @@ interface ResumeTwoColumnProps {
 export const ResumeTwoColumn: React.FC<ResumeTwoColumnProps> = ({
   data,
   showContactIcons = false,
+  showHyperlinks = false,
   personalInfoLayout = 'single-line',
   sectionHeadings,
 }) => {
@@ -141,7 +143,7 @@ export const ResumeTwoColumn: React.FC<ResumeTwoColumnProps> = ({
     return (
       <span className="inline-flex items-center gap-1">
         {showContactIcons && contactIcons[label]}
-        {isLink ? (
+        {isLink && showHyperlinks ? (
           <a
             href={href}
             target="_blank"

@@ -28,6 +28,8 @@
     "apply": "適用",
     "selectOption": "選択してください...",
     "unknown": "不明",
+    "enabled": "有効",
+    "disabled": "無効",
     "keysCleared": "APIキーが正常にクリアされました",
     "databaseReset": "データベースが正常にリセットされました",
     "popupBlocked": "ポップアップがブロックされました。ポップアップを許可するか、次のURLを手動で開いてください: {url}"
@@ -420,6 +422,7 @@
       "options": "オプション",
       "compactMode": "コンパクトモード",
       "contactIcons": "連絡先アイコン",
+      "hyperlinks": "ハイパーリンク",
       "personalInfoLayout": "個人情報レイアウト",
       "personalInfoLayoutOptions": {
         "single-line": "1行",
@@ -432,9 +435,10 @@
       "effectiveItemGap": "項目間隔",
       "effectiveLineHeight": "行間",
       "effectiveBaseFont": "本文フォント",
-      "effectiveHeaderScale": "見出しスケール",
+"effectiveHeaderScale": "見出しスケール",
       "effectiveHeaderFont": "見出しフォント",
       "effectiveBodyFont": "本文フォント",
+      "effectiveHyperlinks": "ハイパーリンク",
       "compactHint": "コンパクトモードでは間隔と行間が詰まります。余白と本文フォントサイズは維持されます。",
       "resetDefaults": "デフォルトに戻す"
     },

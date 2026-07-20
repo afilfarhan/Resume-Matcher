@@ -15,6 +15,7 @@ import styles from './styles/modern-two-column.module.css';
 interface ResumeModernTwoColumnProps {
   data: ResumeData;
   showContactIcons?: boolean;
+  showHyperlinks?: boolean;
   personalInfoLayout?: 'single-line' | 'two-line' | 'stacked';
   sectionHeadings?: Partial<ResumeSectionHeadings>;
   fallbackLabels?: Partial<ResumeFallbackLabels>;
@@ -34,6 +35,7 @@ interface ResumeModernTwoColumnProps {
 export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
   data,
   showContactIcons = false,
+  showHyperlinks = false,
   personalInfoLayout = 'single-line',
   sectionHeadings,
   fallbackLabels,
@@ -149,7 +151,7 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
     return (
       <span className="inline-flex items-center gap-1">
         {showContactIcons && contactIcons[label]}
-        {isLink ? (
+        {isLink && showHyperlinks ? (
           <a
             href={href}
             target="_blank"

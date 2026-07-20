@@ -15,6 +15,7 @@ import styles from './styles/vivid.module.css';
 interface ResumeVividProps {
   data: ResumeData;
   showContactIcons?: boolean;
+  showHyperlinks?: boolean;
   personalInfoLayout?: 'single-line' | 'two-line' | 'stacked';
   sectionHeadings?: Partial<ResumeSectionHeadings>;
   fallbackLabels?: Partial<ResumeFallbackLabels>;
@@ -34,6 +35,7 @@ interface ResumeVividProps {
 export const ResumeVivid: React.FC<ResumeVividProps> = ({
   data,
   showContactIcons = false,
+  showHyperlinks = false,
   personalInfoLayout = 'single-line',
   sectionHeadings,
   fallbackLabels,
@@ -140,7 +142,7 @@ export const ResumeVivid: React.FC<ResumeVividProps> = ({
     return (
       <span className={styles.contactChip}>
         {showContactIcons && <span className={styles.iconCircle}>{contactIcons[label]}</span>}
-        {isLink ? (
+        {isLink && showHyperlinks ? (
           <a
             href={href}
             target="_blank"

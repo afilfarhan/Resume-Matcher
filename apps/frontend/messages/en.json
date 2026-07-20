@@ -28,6 +28,8 @@
     "apply": "Apply",
     "selectOption": "Select an option...",
     "unknown": "Unknown",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
     "keysCleared": "API keys cleared successfully",
     "databaseReset": "Database reset successfully",
     "popupBlocked": "Popup blocked. Please allow popups or open this URL manually: {url}"
@@ -420,6 +422,7 @@
       "options": "Options",
       "compactMode": "Compact Mode",
       "contactIcons": "Contact Icons",
+      "hyperlinks": "Hyperlinks",
       "personalInfoLayout": "Personal Info Layout",
       "personalInfoLayoutOptions": {
         "single-line": "Single Line",
@@ -435,6 +438,7 @@
       "effectiveHeaderScale": "Header Scale",
       "effectiveHeaderFont": "Header Font",
       "effectiveBodyFont": "Body Font",
+      "effectiveHyperlinks": "Hyperlinks",
       "compactHint": "Compact mode tightens spacing and line height. Margins and base font size stay literal.",
       "resetDefaults": "Reset to Defaults"
     },

@@ -53,6 +53,7 @@ export interface TemplateSettings {
   fontSize: FontSizeSettings;
   compactMode: boolean; // Apply tighter spacing across the board
   showContactIcons: boolean; // Show icons next to contact info
+  showHyperlinks: boolean; // Show contact info as clickable hyperlinks
   accentColor: AccentColor; // Accent color for Modern template
   personalInfoLayout: PersonalInfoLayout; // Layout of personal info contact items
 }
@@ -68,8 +69,9 @@ export const DEFAULT_TEMPLATE_SETTINGS: TemplateSettings = {
   fontSize: { base: 3, headerScale: 3, headerFont: 'serif', bodyFont: 'sans-serif' },
   compactMode: false,
   showContactIcons: true,
+  showHyperlinks: false,
   accentColor: 'blue',
-  personalInfoLayout: 'two-line',
+  personalInfoLayout: 'single-line',
 };
 
 /**

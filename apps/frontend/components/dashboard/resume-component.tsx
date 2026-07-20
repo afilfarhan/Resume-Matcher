@@ -210,6 +210,7 @@ const Resume: React.FC<ResumeProps> = ({
         <ResumeSingleColumn
           data={resumeData}
           showContactIcons={mergedSettings.showContactIcons}
+          showHyperlinks={mergedSettings.showHyperlinks}
           personalInfoLayout={mergedSettings.personalInfoLayout}
           additionalSectionLabels={additionalSectionLabels}
         />
@@ -218,6 +219,7 @@ const Resume: React.FC<ResumeProps> = ({
         <ResumeTwoColumn
           data={resumeData}
           showContactIcons={mergedSettings.showContactIcons}
+          showHyperlinks={mergedSettings.showHyperlinks}
           personalInfoLayout={mergedSettings.personalInfoLayout}
           sectionHeadings={sectionHeadings}
         />
@@ -226,6 +228,7 @@ const Resume: React.FC<ResumeProps> = ({
         <ResumeModern
           data={resumeData}
           showContactIcons={mergedSettings.showContactIcons}
+          showHyperlinks={mergedSettings.showHyperlinks}
           personalInfoLayout={mergedSettings.personalInfoLayout}
           additionalSectionLabels={additionalSectionLabels}
         />
@@ -234,6 +237,7 @@ const Resume: React.FC<ResumeProps> = ({
         <ResumeModernTwoColumn
           data={resumeData}
           showContactIcons={mergedSettings.showContactIcons}
+          showHyperlinks={mergedSettings.showHyperlinks}
           personalInfoLayout={mergedSettings.personalInfoLayout}
           sectionHeadings={sectionHeadings}
           fallbackLabels={fallbackLabels}
@@ -243,6 +247,7 @@ const Resume: React.FC<ResumeProps> = ({
         <ResumeLatex
           data={resumeData}
           showContactIcons={mergedSettings.showContactIcons}
+          showHyperlinks={mergedSettings.showHyperlinks}
           personalInfoLayout={mergedSettings.personalInfoLayout}
           additionalSectionLabels={additionalSectionLabels}
         />
@@ -251,6 +256,7 @@ const Resume: React.FC<ResumeProps> = ({
         <ResumeClean
           data={resumeData}
           showContactIcons={mergedSettings.showContactIcons}
+          showHyperlinks={mergedSettings.showHyperlinks}
           personalInfoLayout={mergedSettings.personalInfoLayout}
           additionalSectionLabels={additionalSectionLabels}
         />
@@ -259,6 +265,7 @@ const Resume: React.FC<ResumeProps> = ({
         <ResumeVivid
           data={resumeData}
           showContactIcons={mergedSettings.showContactIcons}
+          showHyperlinks={mergedSettings.showHyperlinks}
           personalInfoLayout={mergedSettings.personalInfoLayout}
           sectionHeadings={sectionHeadings}
           fallbackLabels={fallbackLabels}

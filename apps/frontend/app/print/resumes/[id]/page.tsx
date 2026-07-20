@@ -32,6 +32,7 @@ type PageProps = {
     bodyFont?: string;
     compactMode?: string;
     showContactIcons?: string;
+    showHyperlinks?: string;
     accentColor?: string;
     personalInfoLayout?: string;
     lang?: string;
@@ -253,6 +254,10 @@ export default async function PrintResumePage({ params, searchParams }: PageProp
     showContactIcons: parseBoolean(
       resolvedSearchParams?.showContactIcons,
       DEFAULT_TEMPLATE_SETTINGS.showContactIcons
+    ),
+    showHyperlinks: parseBoolean(
+      resolvedSearchParams?.showHyperlinks,
+      DEFAULT_TEMPLATE_SETTINGS.showHyperlinks
     ),
     accentColor: parseAccentColor(resolvedSearchParams?.accentColor),
     personalInfoLayout: parsePersonalInfoLayout(resolvedSearchParams?.personalInfoLayout),

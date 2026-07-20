@@ -113,6 +113,10 @@ export const FormattingControls: React.FC<FormattingControlsProps> = ({ settings
     onChange({ ...settings, showContactIcons: !settings.showContactIcons });
   };
 
+  const handleShowHyperlinksToggle = () => {
+    onChange({ ...settings, showHyperlinks: !settings.showHyperlinks });
+  };
+
   const handlePersonalInfoLayoutChange = (layout: PersonalInfoLayout) => {
     onChange({ ...settings, personalInfoLayout: layout });
   };
@@ -460,6 +464,29 @@ export const FormattingControls: React.FC<FormattingControlsProps> = ({ settings
                 </span>
               </label>
 
+              {/* Show Hyperlinks Toggle */}
+              <label className="flex items-center gap-3 cursor-pointer">
+                <button
+                  onClick={handleShowHyperlinksToggle}
+                  className={`relative w-10 h-5 border-2 transition-all ${
+                    settings.showHyperlinks
+                      ? 'bg-blue-700 border-blue-700'
+                      : 'bg-white border-steel-grey'
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 w-3.5 h-3.5 bg-white border transition-all ${
+                      settings.showHyperlinks
+                        ? 'left-5 border-blue-700'
+                        : 'left-0.5 border-steel-grey'
+                    }`}
+                  />
+                </button>
+                <span className="font-mono text-xs text-ink-soft">
+                  {t('builder.formatting.hyperlinks')}
+                </span>
+              </label>
+
               {/* Personal Info Layout Toggle */}
               <div className="pt-4">
                 <span className="font-mono text-xs text-ink-soft mb-2 block">
@@ -525,6 +552,12 @@ export const FormattingControls: React.FC<FormattingControlsProps> = ({ settings
                 <div>
                   {t('builder.formatting.effectiveBodyFont')}:{' '}
                   {getFontLabel(settings.fontSize.bodyFont)}
+                </div>
+                <div>
+                  {t('builder.formatting.effectiveHyperlinks')}:{' '}
+                  {settings.showHyperlinks
+                    ? t('common.enabled')
+                    : t('common.disabled')}
                 </div>
               </div>
               {settings.compactMode && (

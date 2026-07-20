@@ -15,6 +15,7 @@ import styles from './styles/swiss-single.module.css';
 interface ResumeSingleColumnProps {
   data: ResumeData;
   showContactIcons?: boolean;
+  showHyperlinks?: boolean;
   personalInfoLayout?: 'single-line' | 'two-line' | 'stacked';
   additionalSectionLabels?: Partial<AdditionalSectionLabels>;
 }
@@ -30,6 +31,7 @@ interface ResumeSingleColumnProps {
 export const ResumeSingleColumn: React.FC<ResumeSingleColumnProps> = ({
   data,
   showContactIcons = false,
+  showHyperlinks = false,
   personalInfoLayout = 'single-line',
   additionalSectionLabels,
 }) => {
@@ -82,7 +84,7 @@ export const ResumeSingleColumn: React.FC<ResumeSingleColumnProps> = ({
     return (
       <span className="inline-flex items-center gap-1">
         {showContactIcons && contactIcons[label]}
-        {isLink ? (
+        {isLink && showHyperlinks ? (
           <a
             href={href}
             target="_blank"

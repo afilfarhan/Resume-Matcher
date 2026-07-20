@@ -28,6 +28,8 @@
     "apply": "应用",
     "selectOption": "请选择...",
     "unknown": "未知",
+    "enabled": "已启用",
+    "disabled": "已禁用",
     "keysCleared": "API密钥已成功清除",
     "databaseReset": "数据库已成功重置",
     "popupBlocked": "弹窗被阻止。请允许弹窗或手动打开此链接：{url}"
@@ -420,6 +422,7 @@
       "options": "选项",
       "compactMode": "紧凑模式",
       "contactIcons": "联系方式图标",
+      "hyperlinks": "超链接",
       "personalInfoLayout": "个人信息布局",
       "personalInfoLayoutOptions": {
         "single-line": "单行",
@@ -435,6 +438,7 @@
       "effectiveHeaderScale": "标题缩放",
       "effectiveHeaderFont": "标题字体",
       "effectiveBodyFont": "正文字体",
+      "effectiveHyperlinks": "超链接",
       "compactHint": "紧凑模式会收紧间距与行高；页边距与正文字号保持不变。",
       "resetDefaults": "恢复默认设置"
     },

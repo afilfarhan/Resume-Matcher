@@ -28,6 +28,8 @@
     "apply": "Aplicar",
     "selectOption": "Selecione uma opção...",
     "unknown": "Desconhecido",
+    "enabled": "Ativado",
+    "disabled": "Desativado",
     "keysCleared": "Chaves de API removidas com sucesso",
     "databaseReset": "Banco de dados redefinido com sucesso",
     "popupBlocked": "Popup bloqueado. Por favor, permita popups ou abra esta URL manualmente: {url}"
@@ -420,6 +422,7 @@
       "options": "Opções",
       "compactMode": "Modo Compacto",
       "contactIcons": "Ícones de Contato",
+      "hyperlinks": "Hiperlinks",
       "personalInfoLayout": "Layout de Informações Pessoais",
       "personalInfoLayoutOptions": {
         "single-line": "Linha Única",
@@ -435,6 +438,7 @@
       "effectiveHeaderScale": "Escala do Cabeçalho",
       "effectiveHeaderFont": "Fonte do Cabeçalho",
       "effectiveBodyFont": "Fonte do Corpo",
+      "effectiveHyperlinks": "Hiperlinks",
       "compactHint": "O modo compacto reduz espaçamento e altura da linha. Margens e tamanho de fonte base permanecem literais.",
       "resetDefaults": "Restaurar Padrões"
     },

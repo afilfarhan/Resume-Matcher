@@ -14,6 +14,7 @@ import styles from './styles/modern.module.css';
 interface ResumeModernProps {
   data: ResumeData;
   showContactIcons?: boolean;
+  showHyperlinks?: boolean;
   personalInfoLayout?: 'single-line' | 'two-line' | 'stacked';
   additionalSectionLabels?: Partial<AdditionalSectionLabels>;
 }
@@ -30,6 +31,7 @@ interface ResumeModernProps {
 export const ResumeModern: React.FC<ResumeModernProps> = ({
   data,
   showContactIcons = false,
+  showHyperlinks = false,
   personalInfoLayout = 'single-line',
   additionalSectionLabels,
 }) => {
@@ -82,7 +84,7 @@ export const ResumeModern: React.FC<ResumeModernProps> = ({
     return (
       <span className="inline-flex items-center gap-1">
         {showContactIcons && contactIcons[label]}
-        {isLink ? (
+        {isLink && showHyperlinks ? (
           <a
             href={href}
             target="_blank"

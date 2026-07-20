@@ -14,6 +14,7 @@ import styles from './styles/clean.module.css';
 interface ResumeCleanProps {
   data: ResumeData;
   showContactIcons?: boolean;
+  showHyperlinks?: boolean;
   personalInfoLayout?: 'single-line' | 'two-line' | 'stacked';
   additionalSectionLabels?: Partial<AdditionalSectionLabels>;
 }
@@ -33,6 +34,7 @@ interface ResumeCleanProps {
 export const ResumeClean: React.FC<ResumeCleanProps> = ({
   data,
   showContactIcons = false,
+  showHyperlinks = false,
   personalInfoLayout = 'single-line',
   additionalSectionLabels,
 }) => {
@@ -92,7 +94,7 @@ export const ResumeClean: React.FC<ResumeCleanProps> = ({
     return (
       <span className="inline-flex items-center gap-1">
         {showContactIcons && contactIcons[label]}
-        {isLink ? (
+        {isLink && showHyperlinks ? (
           <a
             href={href}
             target="_blank"
