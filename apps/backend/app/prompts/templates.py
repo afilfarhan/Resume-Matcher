@@ -90,7 +90,7 @@ RESUME_SCHEMA_EXAMPLE = """{
 
 # Schema for improve prompts - excludes personalInfo (preserved from original)
 IMPROVE_SCHEMA_EXAMPLE = """{
-  "summary": "Experienced software engineer with 5+ years...",
+  "summary": "Senior Backend Engineer with 7+ years building scalable distributed systems in Python and Go. Deep expertise in microservices architecture, AWS cloud infrastructure, and PostgreSQL optimization. Reduced API latency by 40% through async processing redesign; published contributor to CNCF projects. AWS Solutions Architect certified; mentored 5 engineers across 3 teams.",
   "workExperience": [
     {
       "id": 1,
@@ -99,8 +99,9 @@ IMPROVE_SCHEMA_EXAMPLE = """{
       "location": "San Francisco, CA",
       "years": "Jan 2020 - Present",
       "description": [
-        "Led development of microservices architecture",
-        "Improved system performance by 40%"
+        "Led development of microservices architecture serving 10M+ daily requests",
+        "Improved system performance by 40% through async processing redesign",
+        "Mentored 5 engineers; established code review and CI/CD standards"
       ]
     }
   ],
@@ -110,7 +111,7 @@ IMPROVE_SCHEMA_EXAMPLE = """{
       "institution": "University of California",
       "degree": "B.S. Computer Science",
       "years": "2014 - 2018",
-      "description": "Graduated with honors"
+      "description": "Graduated with honors; published research on distributed consensus"
     }
   ],
   "personalProjects": [
@@ -120,16 +121,16 @@ IMPROVE_SCHEMA_EXAMPLE = """{
       "role": "Creator & Maintainer",
       "years": "Mar 2021 - Present",
       "description": [
-        "Built CLI tool with 1000+ GitHub stars",
-        "Used by 50+ companies worldwide"
+        "Built CLI tool with 1000+ GitHub stars for Kubernetes resource management",
+        "Used by 50+ companies worldwide for cluster automation"
       ]
     }
   ],
   "additional": {
-    "technicalSkills": ["Python", "JavaScript", "AWS", "Docker"],
+    "technicalSkills": ["Python", "JavaScript", "AWS", "Docker", "Kubernetes", "PostgreSQL", "Redis"],
     "languages": ["English (Native)", "Spanish (Conversational)"],
-    "certificationsTraining": ["AWS Solutions Architect"],
-    "awards": ["Employee of the Year 2022"]
+    "certificationsTraining": ["AWS Solutions Architect Associate", "CKAD: Certified Kubernetes Application Developer"],
+    "awards": ["Employee of the Year 2022", "CNCF Top Contributor 2023"]
   },
   "customSections": {
     "publications": {
@@ -137,16 +138,16 @@ IMPROVE_SCHEMA_EXAMPLE = """{
       "items": [
         {
           "id": 1,
-          "title": "Paper Title",
-          "subtitle": "Journal Name",
+          "title": "Efficient Consensus in Geo-Distributed Systems",
+          "subtitle": "ACM Symposium on Cloud Computing",
           "years": "Jun 2023",
-          "description": ["Brief description of the publication"]
+          "description": ["Presented novel approach reducing cross-region latency by 35%"]
         }
       ]
     },
     "volunteer_work": {
       "sectionType": "text",
-      "text": "Description of volunteer activities..."
+      "text": "Mentor for Google Summer of Code 2022-2023; organized local Python meetup with 200+ members"
     }
   }
 }"""

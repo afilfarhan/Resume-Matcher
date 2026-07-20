@@ -193,10 +193,7 @@ export const ResumeTwoColumn: React.FC<ResumeTwoColumnProps> = ({
               </>
             )}
             {personalInfo.info && (
-              <>
-                <span className={baseStyles['text-muted']}>,</span>
-                <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
-              </>
+              <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
             )}
             {personalInfo.location && (
               <>
