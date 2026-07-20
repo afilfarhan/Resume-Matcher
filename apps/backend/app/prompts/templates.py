@@ -374,21 +374,28 @@ IMPROVE_RESUME_PROMPT_ATS = """MAXIMIZE ATS MATCH: Tailor this resume to score h
 
 CRITICAL ATS OPTIMIZATION RULES:
 1. MATCH EXACT JD TERMS: Use the EXACT phrases, terminology, and acronyms from the job description (e.g., if JD says "ETL pipelines", use "ETL pipelines" not "data pipelines")
-2. SKILL MIRRORING: Every skill mentioned in the JD's "required_skills" or "preferred_skills" MUST appear in the resume's technicalSkills section (reorder to prioritize JD skills first)
-3. BULLET POINT OPTIMIZATION: Each bullet should contain 2-3 JD keywords naturally integrated
+2. SKILL MIRRORING: Every skill mentioned in the JD's "required_skills" or "preferred_skills" MUST appear in the resume's technicalSkills section (reorder to prioritize JD skills first). ADD any missing JD skills that are reasonably related to the candidate's existing experience.
+3. BULLET POINT OPTIMIZATION: Each bullet should contain 2-3 JD keywords naturally integrated. REWRITE bullets to maximize keyword density while staying truthful to actual experience.
 4. SECTION HEADER ALIGNMENT: Use JD section terminology (e.g., if JD says "DevOps", use "DevOps" not "Infrastructure")
 5. ACRONYM FIRST: When JD uses acronyms (AWS, SQL, REST), mention full term FIRST then acronym in parentheses: "Amazon Web Services (AWS)"
 6. VERB MATCHING: Use JD's action verbs (e.g., if JD says "spearhead", use "spearhead" not "lead")
-7. SKILL CATEGORY ALIGNMENT: If JD groups skills (e.g., "Cloud Platforms: AWS, Azure, GCP"), mirror that grouping structure
+7. SKILL CATEGORY ALIGNMENT: If JD groups skills (e.g., "Cloud Platforms: AWS, Azure, GCP"), mirror that grouping structure in categorizedSkills
 8. EXPERIENCE LEVEL MATCH: If JD specifies "senior-level", "mid-level", "entry-level", reflect this in summary and experience descriptions
 9. CERTIFICATION PLACEMENT: Move relevant certifications to top of certifications list if JD emphasizes them
 10. MEASUREMENT LANGUAGE: If JD uses specific metrics (e.g., "scale to 1M users"), use similar metric language even if different numbers
+11. PERSONAL INFO - JOB TITLE: You MAY update the personalInfo.title field to match the JD's target role title (e.g., if JD is for "Senior DevOps Engineer" and current title is "DevOps Engineer", change to "Senior DevOps Engineer"). Do NOT change any other personalInfo fields (name, email, phone, location, etc.)
+12. PROJECT BULLET OPTIMIZATION: You MAY REWRITE personalProjects bullet descriptions to maximize JD keyword matches. For each project, integrate relevant JD keywords (technologies, methodologies, domains) that align with the actual project work. Every relevant JD keyword that matches the candidate's actual project experience MUST appear in project descriptions at least once.
+13. KEYWORD SATURATION: Maximize keyword density across summary, workExperience descriptions, project descriptions, and skills sections. Every relevant JD keyword that matches the candidate's actual experience MUST appear at least once.
+14. PRUNE IRRELEVANT CONTENT: You MAY REMOVE items that are clearly irrelevant to the target role. Before removing, DOUBLE-CHECK: if the item demonstrates transferable skills, relevant tools/technologies, or achievements that could resonate with the JD — KEEP it. Only remove content that has NO plausible connection to the target role (e.g., unrelated hobbies, obsolete technologies not mentioned in JD, roles from completely different industries with zero skill overlap). When in doubt, KEEP. Prioritize space for JD-relevant content.
 
 TRUTHFULNESS (NON-NEGOTIABLE):
 - DO NOT add certifications the candidate has NEVER used
 - DO NOT add company names or products not in original resume
-- Preserve ALL existing skills, certifications, languages, awards
+- You can remove or add the existing skills, but preserve all the existing certifications, languages, awards (add to them, don't remove)
 - Copy dates EXACTLY as they appear (including months)
+- Only personalInfo.title may be changed; all other personalInfo fields are frozen
+- Project names, roles, and years must be preserved — only DESCRIPTION bullets may be rewritten for keyword alignment
+- When pruning (Rule 14), never remove items that show relevant tools, technologies, methodologies, or transferable achievements
 
 {critical_truthfulness_rules}
 
