@@ -74,3 +74,13 @@
     print-color-adjust: exact !important;
   }
 }
+
+/* Summary text - remove browser default margins, use design system spacing */
+.summary-text {
+  margin: 0;
+  font-family: var(--body-font);
+  line-height: var(--line-height);
+  text-align: left;
+  word-spacing: normal;
+  hyphens: auto;
+}

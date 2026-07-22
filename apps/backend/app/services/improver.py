@@ -117,6 +117,141 @@ _BLOCKED_FIELD_NAMES = frozenset({
 
 _METRIC_RE = re.compile(r"\d+%|\d+x|\$\d+")
 
+_YEARS_RE = re.compile(r"\b(\d+)\+?\s*years?\b", re.IGNORECASE)
+
+
+def _calculate_actual_years_experience(resume_data: dict[str, Any]) -> int | None:
+    """Calculate actual total years of experience from workExperience dates.
+    
+    Parses years from workExperience entries (e.g., "Jan 2020 - Present", "2018 - 2021")
+    and computes the span from earliest start to latest end (or Present).
+    
+    Returns None if unable to parse any dates.
+    """
+    from datetime import datetime
+    
+    work_exp = resume_data.get("workExperience", [])
+    if not work_exp:
+        return None
+    
+    month_map = {
+        "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
+        "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12,
+        "january": 1, "february": 2, "march": 3, "april": 4, "june": 6,
+        "july": 7, "august": 8, "september": 9, "october": 10, "november": 11, "december": 12,
+    }
+    
+    earliest_start = None
+    latest_end = None
+    current_year = datetime.now().year
+    
+    for entry in work_exp:
+        years_str = entry.get("years", "")
+        if not years_str:
+            continue
+        
+        # Parse formats like "Jan 2020 - Present", "2018 - 2021", "May 2019 - Dec 2022"
+        parts = years_str.split("-")
+        if len(parts) != 2:
+            continue
+            
+        start_str = parts[0].strip()
+        end_str = parts[1].strip()
+        
+        # Parse start
+        start_year = None
+        start_tokens = start_str.split()
+        for token in start_tokens:
+            if token.isdigit() and len(token) == 4:
+                start_year = int(token)
+                break
+            token_lower = token.lower().rstrip(".")
+            if token_lower in month_map and len(start_tokens) > 1:
+                # Check next token for year
+                idx = start_tokens.index(token)
+                if idx + 1 < len(start_tokens) and start_tokens[idx + 1].isdigit() and len(start_tokens[idx + 1]) == 4:
+                    start_year = int(start_tokens[idx + 1])
+                    break
+        
+        # Parse end
+        end_year = None
+        if end_str.lower() in ("present", "current", "ongoing"):
+            end_year = current_year
+        else:
+            end_tokens = end_str.split()
+            for token in end_tokens:
+                if token.isdigit() and len(token) == 4:
+                    end_year = int(token)
+                    break
+                token_lower = token.lower().rstrip(".")
+                if token_lower in month_map and len(end_tokens) > 1:
+                    idx = end_tokens.index(token)
+                    if idx + 1 < len(end_tokens) and end_tokens[idx + 1].isdigit() and len(end_tokens[idx + 1]) == 4:
+                        end_year = int(end_tokens[idx + 1])
+                        break
+        
+        if start_year:
+            if earliest_start is None or start_year < earliest_start:
+                earliest_start = start_year
+        if end_year:
+            if latest_end is None or end_year > latest_end:
+                latest_end = end_year
+    
+    if earliest_start and latest_end:
+        return max(0, latest_end - earliest_start)
+    return None
+
+
+def _validate_summary_years_and_metrics(
+    new_summary: str,
+    original_summary: str,
+    original_resume_data: dict[str, Any]
+) -> list[str]:
+    """Validate that summary doesn't invent years or metrics.
+    
+    Returns list of warning messages.
+    """
+    warnings = []
+    
+    # 1. Check for invented years of experience
+    actual_years = _calculate_actual_years_experience(original_resume_data)
+    if actual_years is not None:
+        # Extract years mentioned in new summary
+        new_years_matches = _YEARS_RE.findall(new_summary)
+        if new_years_matches:
+            for match in new_years_matches:
+                claimed_years = int(match)
+                # Allow small tolerance (±1 year) for rounding, but flag significant inflation
+                if claimed_years > actual_years + 1:
+                    warnings.append(
+                        f"Summary claims {claimed_years} years experience but resume shows ~{actual_years} years "
+                        f"(earliest start to latest end in workExperience). Do not inflate years."
+                    )
+    
+    # 2. Check for invented metrics in summary (%, $, numbers like "X users", "scale to Y")
+    new_metrics = set(_METRIC_RE.findall(new_summary))
+    original_metrics = set(_METRIC_RE.findall(original_summary))
+    # Also catch patterns like "X users", "scale to Y", "team of Z", "managed N"
+    additional_metric_patterns = [
+        r"\b\d+\s*(?:users?|customers?|clients?|requests?|transactions?)\b",
+        r"\bteam\s+of\s+\d+\b",
+        r"\bmanaged\s+\d+\b",
+        r"\bscaled?\s+to\s+\d+\b",
+        r"\b\d+\s*(?:million|k|K)\b",
+    ]
+    for pattern in additional_metric_patterns:
+        new_metrics.update(re.findall(pattern, new_summary, re.IGNORECASE))
+        original_metrics.update(re.findall(pattern, original_summary, re.IGNORECASE))
+    
+    invented_metrics = new_metrics - original_metrics
+    if invented_metrics:
+        warnings.append(
+            f"Summary contains metrics not in original: {', '.join(invented_metrics)}. "
+            f"Only use metrics that exist in the original resume."
+        )
+    
+    return warnings
+
 
 def _is_path_allowed(path: str) -> bool:
     """Check if a path is in the allowed whitelist."""
@@ -502,6 +637,20 @@ def verify_diff_result(
                     f"Possible invented metric in {change.path}: "
                     f"{', '.join(invented)} (not in original)"
                 )
+
+    # Check 6: Summary validation — catch invented years and metrics in summary
+    summary_change = next(
+        (c for c in applied_changes if c.path == "summary" and c.action == "replace" and isinstance(c.value, str)),
+        None
+    )
+    if summary_change:
+        original_summary = original.get("summary", "") or ""
+        summary_warnings = _validate_summary_years_and_metrics(
+            new_summary=summary_change.value,
+            original_summary=original_summary,
+            original_resume_data=original,
+        )
+        warnings.extend(summary_warnings)
 
     return warnings
 
@@ -1521,36 +1670,47 @@ def calculate_resume_diff(
     return summary, changes
 
 
-def generate_improvements(job_keywords: dict[str, Any]) -> list[dict[str, Any]]:
-    """Generate improvement suggestions based on job keywords.
+def generate_improvements(
+    job_keywords: dict[str, Any],
+    applied_changes: list[ResumeChange] | None = None,
+) -> list[dict[str, Any]]:
+    """Generate improvement suggestions based on actual applied changes.
 
     Args:
-        job_keywords: Extracted job keywords
+        job_keywords: Extracted job keywords (used as fallback)
+        applied_changes: List of ResumeChange objects that were actually applied
 
     Returns:
-        List of improvement suggestions
+        List of improvement suggestions reflecting actual changes
     """
     improvements = []
 
-    # Generate suggestions based on required skills
-    required_skills = job_keywords.get("required_skills", [])
-    for skill in required_skills[:3]:  # Top 3 required skills
-        improvements.append(
-            {
-                "suggestion": f"Emphasized '{skill}' to match job requirements",
-                "lineNumber": None,
-            }
-        )
+    # If we have actual applied changes, generate suggestions from them
+    if applied_changes:
+        for change in applied_changes:
+            suggestion = _change_to_suggestion(change)
+            if suggestion:
+                improvements.append(suggestion)
 
-    # Generate suggestions based on key responsibilities
-    responsibilities = job_keywords.get("key_responsibilities", [])
-    for resp in responsibilities[:2]:  # Top 2 responsibilities
-        improvements.append(
-            {
-                "suggestion": f"Aligned experience with: {resp}",
-                "lineNumber": None,
-            }
-        )
+    # Fallback: generate from job keywords if no changes or no suggestions generated
+    if not improvements:
+        required_skills = job_keywords.get("required_skills", [])
+        for skill in required_skills[:3]:
+            improvements.append(
+                {
+                    "suggestion": f"Emphasized '{skill}' to match job requirements",
+                    "lineNumber": None,
+                }
+            )
+
+        responsibilities = job_keywords.get("key_responsibilities", [])
+        for resp in responsibilities[:2]:
+            improvements.append(
+                {
+                    "suggestion": f"Aligned experience with: {resp}",
+                    "lineNumber": None,
+                }
+            )
 
     # Default improvement if none generated
     if not improvements:
@@ -1562,6 +1722,45 @@ def generate_improvements(job_keywords: dict[str, Any]) -> list[dict[str, Any]]:
         )
 
     return improvements
+
+
+def _change_to_suggestion(change: ResumeChange) -> dict[str, Any] | None:
+    """Convert a ResumeChange to a user-facing improvement suggestion."""
+    path = change.path
+    action = change.action
+    reason = change.reason
+
+    # Extract section name from path
+    section = path.split("[")[0] if "[" in path else path
+
+    section_labels = {
+        "workExperience": "Work experience",
+        "personalProjects": "Projects",
+        "education": "Education",
+        "additional": "Skills",
+        "certifications": "Certifications",
+        "languages": "Languages",
+        "awards": "Awards",
+        "customSections": "Custom section",
+    }
+
+    label = section_labels.get(section, section)
+
+    if action == "replace":
+        suggestion = f"Updated {label} to better match job requirements"
+    elif action == "append":
+        suggestion = f"Added new bullet to {label}"
+    elif action == "reorder":
+        suggestion = f"Reordered {label} to prioritize relevant skills"
+    elif action == "add_skill":
+        suggestion = f"Added skill: {change.value}"
+    else:
+        suggestion = f"Modified {label}"
+
+    if reason:
+        suggestion += f" — {reason}"
+
+    return {"suggestion": suggestion, "lineNumber": None}
 
 
 async def classify_skills(skills: list[str]) -> list[dict[str, Any]]:

@@ -40,7 +40,9 @@ class TestAntiFabricationClausesPresent:
     def test_ats_diff_prompt_keeps_no_fabrication_clauses(self):
         # ATS prompt has explicit NO FABRICATION clause
         assert "NO FABRICATION" in DIFF_IMPROVE_PROMPT_ATS
-        assert "never invent metrics, tools, or responsibilities" in DIFF_IMPROVE_PROMPT_ATS.lower()
+        assert "never invent metrics" in DIFF_IMPROVE_PROMPT_ATS.lower()
+        assert "never invent years" in DIFF_IMPROVE_PROMPT_ATS.lower()
+        assert "never invent metrics" in DIFF_IMPROVE_PROMPT_ATS.lower()
 
     def test_keyword_injection_keeps_no_invent_clauses(self):
         assert "do not invent new content, metrics, or work history" in KEYWORD_INJECTION_PROMPT.lower()

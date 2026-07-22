@@ -180,7 +180,7 @@ export const ResumeModern: React.FC<ResumeModernProps> = ({
         return (
           <div key={section.id} className={baseStyles['resume-section']}>
             <h3 className={styles['section-title-accent']}>{section.displayName}</h3>
-            <p className={`text-justify ${baseStyles['resume-text']}`}>{summary}</p>
+            <p className={styles['summary-text']}>{summary}</p>
           </div>
         );
 

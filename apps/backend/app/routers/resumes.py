@@ -45,6 +45,7 @@ from app.schemas import (
 from app.services.parser import parse_document, parse_resume_to_json, restore_dates_from_markdown
 from app.services.improver import (
     MONTH_PATTERN,
+    ResumeChange,
     apply_diffs,
     classify_skills,
     extract_job_keywords,
@@ -1145,7 +1146,10 @@ async def _improve_preview_flow(
     )
     if diff_error:
         response_warnings.append(f"Could not calculate changes: {diff_error}")
-    improvements = generate_improvements(job_keywords)
+    
+    # Capture applied_changes for improvement suggestions
+    applied_for_suggestions = applied_changes if 'applied_changes' in locals() else None
+    improvements = generate_improvements(job_keywords, applied_for_suggestions)
 
     request_id = str(uuid4())
     return ImproveResumeResponse(
