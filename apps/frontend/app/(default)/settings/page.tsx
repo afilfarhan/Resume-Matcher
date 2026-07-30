@@ -201,6 +201,16 @@ export default function SettingsPage() {
         label: t('tailor.promptOptions.full.label'),
         description: t('tailor.promptOptions.full.description'),
       },
+      {
+        id: 'ats',
+        label: t('tailor.promptOptions.ats.label'),
+        description: t('tailor.promptOptions.ats.description'),
+      },
+      {
+        id: 'complete',
+        label: t('tailor.promptOptions.complete.label'),
+        description: t('tailor.promptOptions.complete.description'),
+      },
     ],
     [t]
   );
@@ -217,6 +227,14 @@ export default function SettingsPage() {
       full: {
         label: t('tailor.promptOptions.full.label'),
         description: t('tailor.promptOptions.full.description'),
+      },
+      ats: {
+        label: t('tailor.promptOptions.ats.label'),
+        description: t('tailor.promptOptions.ats.description'),
+      },
+      complete: {
+        label: t('tailor.promptOptions.complete.label'),
+        description: t('tailor.promptOptions.complete.description'),
       },
     }),
     [t]

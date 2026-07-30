@@ -9,7 +9,10 @@ class RefinementConfig(BaseModel):
     enable_keyword_injection: bool = True
     enable_ai_phrase_removal: bool = True
     enable_master_alignment_check: bool = True
-    max_refinement_passes: int = Field(default=2, ge=1, le=5)
+    enable_keyword_density_optimization: bool = False  # MAXIMUM mode
+    enable_ats_feedback_loop: bool = False  # MAXIMUM mode
+    max_refinement_passes: int = Field(default=2, ge=1, le=10)
+    max_ats_iterations: int = Field(default=3, ge=1, le=5)
 
 
 class KeywordGapAnalysis(BaseModel):

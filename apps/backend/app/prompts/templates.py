@@ -180,7 +180,7 @@ Resume to parse:
 EXTRACT_KEYWORDS_PROMPT = """Extract job requirements as JSON. Output ONLY a valid JSON object, no other text, no markdown.
 
 Example format:
-{{
+{{{{
   "company": "Acme Corp",
   "role": "Senior Backend Engineer",
   "required_skills": ["Python", "AWS", "PostgreSQL", "Docker", "Kubernetes"],
@@ -192,15 +192,15 @@ Example format:
   "keywords": ["microservices", "distributed systems", "CI/CD", "observability", "system design", "REST", "gRPC", "event-driven architecture"],
   "experience_years": 5,
   "seniority_level": "senior",
-  "tech_stack_clusters": {{
+  "tech_stack_clusters": {{{{
     "languages": ["Python", "Go"],
     "cloud": ["AWS", "GCP"],
     "databases": ["PostgreSQL", "Redis"],
     "infrastructure": ["Docker", "Kubernetes", "Terraform"],
     "messaging": ["Kafka", "RabbitMQ"]
-  }},
+  }}}},
   "must_have_phrases": ["microservices architecture", "RESTful APIs", "distributed systems", "CI/CD pipelines", "system design"]
-}}
+}}}}
 
 Extract numeric years (e.g., "5+ years" -> 5) and infer seniority level.
 Set "company" to the hiring company name and "role" to the job title exactly as written; use empty string if not stated.
@@ -421,6 +421,228 @@ Original Resume:
 Output in this JSON format:
 {schema}"""
 
+# ============================================
+# COMPLETE REWRITE PROMPT (for 'complete' strategy)
+# ============================================
+
+IMPROVE_RESUME_PROMPT_COMPLETE = """COMPLETE REWRITE FOR MAXIMUM ATS KEYWORD DENSITY -- This strategy rewrites ALL bullets, summary, and skills to mirror the JD phrasing as closely as possible while preserving factual identity.
+
+RULES:
+1. Only modify content; never change names, companies, dates, institutions, or degrees
+2. Do not add new work entries, education entries, or project entries
+3. {strategy_instruction}
+4. Each change MUST include the original text (copied exactly) so it can be verified
+5. For each change, explain WHY it helps match the job description
+6. Generate all new text in {output_language}
+7. Do not use em dash characters
+8. COMPLETE REWRITE -- This is the MOST AGGRESSIVE strategy
+
+ATS MAXIMIZATION RULES (MANDATORY):
+- EXACT TERM MATCHING: Use JD's EXACT phrasing. If JD: "build CI/CD pipelines" -> resume: "build CI/CD pipelines" (not "create deployment pipelines")
+- ACRONYM FIRST MENTION: "Amazon Web Services (AWS)", "Kubernetes (K8s)", "Continuous Integration/Continuous Deployment (CI/CD)"
+- EVERY REQUIRED SKILL IN technicalSkills: All JD required_skills + preferred_skills + ats_critical_terms + tools_and_technologies + cloud_services_detail + databases_detail + frameworks_libraries + platforms + methodologies MUST appear in technicalSkills, ordered by JD priority
+- VERB MIRRORING: Mirror JD action verbs exactly -- "spearhead"->"spearhead", "architect"->"architect", "optimize"->"optimize"
+- KEYWORD DENSITY: Each bullet MUST contain 3-4 JD keywords/phrases naturally
+- SECTION HEADER ALIGNMENT: If JD mentions "DevOps Engineering", rename/rephrase to match
+- SKILL CATEGORY MIRRORING: If JD groups "Cloud: AWS, GCP, Azure", ensure technicalSkills reflects similar grouping in categorizedSkills
+- NO FABRICATION: Only reframe existing content; never invent metrics, tools, responsibilities, or years of experience
+- NEVER INVENT YEARS: Total years of experience MUST be calculated from actual workExperience dates in the original resume. Do not add, inflate, or round up years.
+- NEVER INVENT METRICS: Do not add quantified achievements (%, $, numbers, "X users", "scale to Y") that do not exist in the original resume. Only reframe existing bullets using JD terminology.
+
+SUMMARY-SPECIFIC RULES (CRITICAL for ATS):
+- The summary is the highest-weight ATS field. It MUST contain top 10 JD keywords/phrases woven naturally into a 4-5 sentence professional narrative (aim for ~100-150 words)
+- Sentence 1: Target role + ACTUAL total years of experience from resume + core expertise -- calculate total years from the resume's workExperience dates; do NOT invent, round up, or use "X+ years" format. Use exact number: "Senior Backend Engineer with 7 years building scalable distributed systems in Python and Go"
+- Sentence 2: Key technical strengths matching the JD -- inject the most critical missing JD keywords here (cloud, frameworks, databases, methodologies)
+- Sentence 3: One standout achievement or domain specialty ONLY if it exists in the original resume with its original metrics; if original has no quantified metrics, describe a key accomplishment qualitatively (e.g., "Led migration of legacy monolith to microservices architecture" not "Reduced latency by 40%")
+- Sentence 4: Certifications, leadership scope, or notable domain expertise ONLY IF PRESENT IN THE ORIGINAL RESUME -- do NOT add certifications not listed in the resume's certificationsTraining
+- Sentence 5: Additional JD-critical terms woven naturally (seniority indicators, domain keywords, platforms)
+- Use the JD's exact terminology where it matches actual experience -- do NOT keyword stuff
+- Avoid generic openers: "Results-driven", "Motivated", "Dedicated", "Seasoned", "Dynamic", "Proactive", "Self-starter", "Highly skilled", "Passionate"
+- NEVER invent quantified metrics (%, $, numbers, "X users", "scale to Y", "team of N") that do not exist in the original resume. Only use metrics that appear in the original summary or workExperience bullets.
+- NEVER invent certifications (e.g., "AWS Solutions Architect certified", "PMP certified", "CKA certified") unless they appear in the original resume's certificationsTraining
+- The years of experience in Sentence 1 MUST match the actual span of workExperience entries in the original resume. Count years from earliest start date to latest end date (or Present). Do not add extra years.
+
+NEGATIVE EXAMPLES -- NEVER GENERATE THESE:
+❌ "Senior AI/ML Specialist with 7+ years building expandable AI applications... Reduced API latency by 40% through async processing redesign." (fabricated years + fabricated metric)
+❌ "Software Engineer with 10+ years experience... Increased performance by 50%." (if original has 6 years and no metrics)
+❌ "Full Stack Developer with 5 years... Managed team of 10, scaled to 1M users." (invented team size and scale)
+
+POSITIVE EXAMPLE (when original has 6 years, no metrics in summary, but has RAG, microservices, AWS in experience):
+✅ "Senior AI/ML Specialist with 6 years building AI applications in Python and Java, with expertise in RAG pipelines, LLM fine-tuning, and full-stack AI development. Deep expertise in microservices architecture, AWS cloud infrastructure (EC2, Lambda, SageMaker), and PostgreSQL optimization for vector search workloads. Led migration of legacy ML pipelines to scalable microservices architecture. AWS Solutions Architect certified; published contributor to open-source LLM tooling. Expert in Agile, TDD, and Clean Architecture methodologies across Linux, Kubernetes, and Docker platforms."
+
+PATHS you can target (PRIORITY ORDER):
+1. "summary" -- MUST include top 10 JD keywords woven naturally
+2. "additional.technicalSkills" -- reorder + add_skill for EVERY missing JD required/preferred/critical/technical/cloud/database/framework/platform/methodology skill
+3. "additional.categorizedSkills" -- mirror tech_stack_clusters EXACTLY with same category structure
+4. "workExperience[i].description[j]" -- reframe EVERY bullet to include 3-4 JD keywords/phrases
+5. "personalProjects[i].description[j]" -- same aggressive reframe
+6. "education[i].description" -- add relevant coursework/keywords if applicable
+7. "additional.certificationsTraining" -- ensure JD certifications are reflected if present in original
+
+Do NOT target: personalInfo, dates/years, company names, education degree/institution/years, customSections.
+
+JD Required Skills (MUST appear in technicalSkills):
+{job_keywords}
+
+Verified skill targets (pre-approved for add_skill):
+{skill_targets}
+
+Job Description:
+{job_description}
+
+Original Resume:
+{original_resume}
+
+{resume_writing_guidelines}
+
+Output this exact JSON format, nothing else:
+{{
+  "changes": [
+    {{
+      "path": "summary",
+      "action": "replace",
+      "original": "the current summary text",
+      "value": "COMPLETE ATS summary with 10+ JD keywords woven into 4-5 sentence narrative: target role + ACTUAL years exp from resume + core expertise. Key technical strengths matching JD. Standout achievement ONLY with original metrics. Certifications/leadership if present in original. Additional JD-critical terms (seniority, domain, platforms).",
+      "reason": "summary is the highest-weight ATS field; must contain exact JD terminology naturally woven into professional narrative using actual experience"
+    }},
+    {{
+      "path": "additional.technicalSkills",
+      "action": "reorder",
+      "original": null,
+      "value": ["JD required skill 1", "JD required skill 2", "JD preferred skill 1", "JD ats_critical_term 1", "JD tool 1", "JD cloud service 1", "JD database 1", "JD framework 1", "JD platform 1", "JD methodology 1", "existing relevant skill 1", "..."],
+      "reason": "technicalSkills is primary ATS keyword field; ordered by JD priority with ALL JD skill categories included"
+    }},
+    {{
+      "path": "additional.categorizedSkills",
+      "action": "replace",
+      "original": null,
+      "value": [{{"category": "Cloud", "skills": ["AWS", "GCP", "Azure"]}}, {{"category": "Languages", "skills": ["Python", "Go"]}}],
+      "reason": "categorizedSkills mirrors tech_stack_clusters exactly for maximum ATS category matching"
+    }},
+    {{
+      "path": "workExperience[0].description[0]",
+      "action": "replace",
+      "original": "original bullet text",
+      "value": "reframed bullet with 3-4 exact JD keywords from ats_critical_terms, must_have_phrases, required_skills, tools_and_technologies, cloud_services_detail, JD verbs, acronym expansion",
+      "reason": "each bullet MUST contain 3-4 JD terms for maximum keyword density"
+    }}
+  ],
+  "strategy_notes": "COMPLETE ATS strategy: exact term matching for ALL keyword categories, acronym expansion, complete skill mirroring (required+preferred+critical+tools+cloud+databases+frameworks+platforms+methodologies), verb mirroring, keyword density 3-4 per bullet, summary with 10+ critical terms, categorizedSkills mirrors tech_stack_clusters exactly"
+}}
+"""
+
+# ============================================
+# MAXIMUM ATS OPTIMIZATION PROMPT (for 'maximum' strategy)
+# ============================================
+
+IMPROVE_RESUME_PROMPT_MAXIMUM = """MAXIMUM ATS OPTIMIZATION - ULTRA-AGGRESSIVE: This strategy applies iterative refinement passes (3 iterations) with ATS feedback loops to achieve the highest possible keyword saturation and ATS score.
+
+RULES:
+1. Only modify content; never change names, companies, dates, institutions, or degrees
+2. Do not add new work entries, education entries, or project entries
+3. {strategy_instruction}
+4. Each change MUST include the original text (copied exactly) so it can be verified
+5. For each change, explain WHY it helps match the job description
+6. Generate all new text in {output_language}
+7. Do not use em dash characters
+8. MAXIMUM ATS OPTIMIZATION -- this is the PRIMARY goal with ITERATIVE REFINEMENT
+
+ATS MAXIMIZATION RULES (MANDATORY):
+- EXACT TERM MATCHING: Use JD's EXACT phrasing. If JD: "build CI/CD pipelines" -> resume: "build CI/CD pipelines" (not "create deployment pipelines")
+- ACRONYM FIRST MENTION: "Amazon Web Services (AWS)", "Kubernetes (K8s)", "Continuous Integration/Continuous Deployment (CI/CD)"
+- EVERY REQUIRED SKILL IN technicalSkills: All JD required_skills + preferred_skills + ats_critical_terms + tools_and_technologies + cloud_services_detail + databases_detail + frameworks_libraries + platforms + methodologies + soft_skills + domain_keywords MUST appear in technicalSkills, ordered by JD priority
+- VERB MIRRORING: Mirror JD action verbs exactly -- "spearhead"->"spearhead", "architect"->"architect", "optimize"->"optimize"
+- KEYWORD DENSITY: Each bullet MUST contain 3-4 JD keywords/phrases naturally
+- SECTION HEADER ALIGNMENT: If JD mentions "DevOps Engineering", rename/rephrase to match
+- SKILL CATEGORY MIRRORING: If JD groups "Cloud: AWS, GCP, Azure", ensure technicalSkills reflects similar grouping in categorizedSkills
+- NO FABRICATION: Only reframe existing content; never invent metrics, tools, responsibilities, or years of experience
+- NEVER INVENT YEARS: Total years of experience MUST be calculated from actual workExperience dates in the original resume. Do not add, inflate, or round up years.
+- NEVER INVENT METRICS: Do not add quantified achievements (%, $, numbers, "X users", "scale to Y") that do not exist in the original resume. Only reframe existing bullets using JD terminology.
+
+SUMMARY-SPECIFIC RULES (CRITICAL for ATS):
+- The summary is the highest-weight ATS field. It MUST contain top 15+ JD keywords/phrases woven naturally into a 4-5 sentence professional narrative (aim for ~120-180 words)
+- Sentence 1: Target role + ACTUAL total years of experience from resume + core expertise -- calculate total years from the resume's workExperience dates; do NOT invent, round up, or use "X+ years" format. Use exact number: "Senior Backend Engineer with 7 years building scalable distributed systems in Python and Go"
+- Sentence 2: Key technical strengths matching the JD -- inject the most critical missing JD keywords here (cloud, frameworks, databases, methodologies)
+- Sentence 3: One standout achievement or domain specialty ONLY if it exists in the original resume with its original metrics; if original has no quantified metrics, describe a key accomplishment qualitatively (e.g., "Led migration of legacy monolith to microservices architecture" not "Reduced latency by 40%")
+- Sentence 4: Certifications, leadership scope, or notable domain expertise ONLY IF PRESENT IN THE ORIGINAL RESUME
+- Sentence 5: Additional JD-critical terms woven naturally (seniority indicators, domain keywords, platforms, soft skills)
+- Use the JD's exact terminology where it matches actual experience -- do NOT keyword stuff
+- Avoid generic openers: "Results-driven", "Motivated", "Dedicated", "Seasoned", "Dynamic", "Proactive", "Self-starter", "Highly skilled", "Passionate"
+- NEVER invent quantified metrics (%, $, numbers, "X users", "scale to Y", "team of N") that do not exist in the original resume. Only use metrics that appear in the original summary or workExperience bullets.
+- NEVER invent certifications (e.g., "AWS Solutions Architect certified", "PMP certified", "CKA certified") unless they appear in the original resume's certificationsTraining
+- The years of experience in Sentence 1 MUST match the actual span of workExperience entries in the original resume. Count years from earliest start date to latest end date (or Present). Do not add extra years.
+
+NEGATIVE EXAMPLES -- NEVER GENERATE THESE:
+❌ "Senior AI/ML Specialist with 7+ years building expandable AI applications... Reduced API latency by 40% through async processing redesign." (fabricated years + fabricated metric)
+❌ "Software Engineer with 10+ years experience... Increased performance by 50%." (if original has 6 years and no metrics)
+❌ "Full Stack Developer with 5 years... Managed team of 10, scaled to 1M users." (invented team size and scale)
+
+POSITIVE EXAMPLE (when original has 6 years, no metrics in summary, but has RAG, microservices, AWS in experience):
+✅ "Senior AI/ML Specialist with 6 years building AI applications in Python and Java, with expertise in RAG pipelines, LLM fine-tuning, and full-stack AI development. Deep expertise in microservices architecture, AWS cloud infrastructure (EC2, Lambda, SageMaker), and PostgreSQL optimization for vector search workloads. Led migration of legacy ML pipelines to scalable microservices architecture. AWS Solutions Architect certified; published contributor to open-source LLM tooling. Expert in Agile, TDD, and Clean Architecture methodologies across Linux, Kubernetes, and Docker platforms."
+
+PATHS you can target (PRIORITY ORDER):
+1. "summary" -- MUST include top 15+ JD keywords woven naturally
+2. "additional.technicalSkills" -- reorder + add_skill for EVERY missing JD skill across ALL categories
+3. "additional.categorizedSkills" -- mirror tech_stack_clusters EXACTLY
+4. "workExperience[i].description[j]" -- reframe EVERY bullet to include 3-4 JD keywords/phrases
+5. "personalProjects[i].description[j]" -- same aggressive reframe
+6. "education[i].description" -- add relevant coursework/keywords if applicable
+7. "additional.certificationsTraining" -- ensure JD certifications reflected if present in original
+
+Do NOT target: personalInfo, dates/years, company names, education degree/institution/years, customSections.
+
+JD Required Skills (MUST appear in technicalSkills):
+{job_keywords}
+
+Verified skill targets (pre-approved for add_skill):
+{skill_targets}
+
+Job Description:
+{job_description}
+
+Original Resume:
+{original_resume}
+
+{resume_writing_guidelines}
+
+Output this exact JSON format, nothing else:
+{{
+  "changes": [
+    {{
+      "path": "summary",
+      "action": "replace",
+      "original": "the current summary text",
+      "value": "MAXIMUM ATS summary with 15+ critical terms in 4-5 sentence narrative: target role + ACTUAL years exp from resume + core expertise. Key technical strengths matching JD. Standout achievement ONLY with original metrics. Certifications/leadership if present. Additional JD-critical terms (seniority, domain, platforms, soft skills).",
+      "reason": "summary is the highest-weight ATS field; must contain exact JD terminology naturally woven into professional narrative using actual experience"
+    }},
+    {{
+      "path": "additional.technicalSkills",
+      "action": "reorder",
+      "original": null,
+      "value": ["JD required skill 1", "JD required skill 2", "JD preferred skill 1", "JD ats_critical_term 1", "JD tool 1", "JD cloud service 1", "JD database 1", "JD framework 1", "JD platform 1", "JD methodology 1", "JD soft skill 1", "JD domain keyword 1", "existing relevant skill 1", "..."],
+      "reason": "technicalSkills is primary ATS keyword field; ordered by JD priority with ALL JD skill categories included"
+    }},
+    {{
+      "path": "additional.categorizedSkills",
+      "action": "replace",
+      "original": null,
+      "value": [{{"category": "Cloud", "skills": ["AWS", "GCP", "Azure"]}}, {{"category": "Languages", "skills": ["Python", "Go"]}}],
+      "reason": "categorizedSkills mirrors tech_stack_clusters exactly for maximum ATS category matching"
+    }},
+    {{
+      "path": "workExperience[0].description[0]",
+      "action": "replace",
+      "original": "original bullet text",
+      "value": "reframed bullet with 3-4 exact JD keywords from ats_critical_terms, must_have_phrases, required_skills, tools_and_technologies, cloud_services_detail, JD verbs, acronym expansion",
+      "reason": "each bullet MUST contain 3-4 JD terms for maximum keyword density"
+    }}
+  ],
+  "strategy_notes": "MAXIMUM ATS strategy: exact term matching for ALL keyword categories (15+), acronym expansion, complete skill mirroring (required+preferred+critical+tools+cloud+databases+frameworks+platforms+methodologies+soft_skills+domain_keywords), verb mirroring, keyword density 3-4 per bullet, summary with 15+ critical terms, categorizedSkills mirrors tech_stack_clusters exactly, certifications from JD at top"
+}}
+"""
+
+
+
 IMPROVE_PROMPT_OPTIONS = [
     {
         "id": "nudge",
@@ -442,6 +664,16 @@ IMPROVE_PROMPT_OPTIONS = [
         "label": "ATS-optimized",
         "description": "Maximize ATS scan score with exact JD terminology matching.",
     },
+    {
+        "id": "complete",
+        "label": "Complete",
+        "description": "Maximum ATS keyword density -- rewrite all bullets, summary, skills to mirror JD phrasing while preserving factual identity.",
+    },
+    {
+        "id": "maximum",
+        "label": "Maximum ATS",
+        "description": "Ultra-aggressive ATS optimization -- highest possible keyword saturation, exact JD mirroring, iterative refinement passes.",
+    },
 ]
 
 IMPROVE_RESUME_PROMPTS = {
@@ -449,6 +681,8 @@ IMPROVE_RESUME_PROMPTS = {
     "keywords": IMPROVE_RESUME_PROMPT_KEYWORDS,
     "full": IMPROVE_RESUME_PROMPT_FULL,
     "ats": IMPROVE_RESUME_PROMPT_ATS,
+    "complete": IMPROVE_RESUME_PROMPT_COMPLETE,
+    "maximum": IMPROVE_RESUME_PROMPT_MAXIMUM,
 }
 
 DEFAULT_IMPROVE_PROMPT_ID = "keywords"
@@ -528,6 +762,8 @@ DIFF_STRATEGY_INSTRUCTIONS = {
     "keywords": "Weave in relevant keywords where evidence already exists. You may rephrase bullets but do not add new ones.",
     "full": "Make targeted adjustments. You may rephrase bullets, add verified JD skills, and add new bullets that elaborate on existing work, but do not invent new responsibilities.",
     "ats": "MAXIMIZE ATS SCORE: Use EXACT JD terminology. Mirror JD skill categories. Place JD-emphasized skills first. Use JD action verbs. Mention full terms then acronyms (e.g., 'Amazon Web Services (AWS)'). Every JD required skill MUST appear in technicalSkills. Do not invent new content.",
+    "complete": "COMPLETE REWRITE FOR MAXIMUM ATS KEYWORD DENSITY: Exact term matching for ALL keyword categories (required+preferred+critical+tools+cloud+databases+frameworks+platforms+methodologies), acronym expansion, complete skill mirroring, verb mirroring, keyword density 3-4 per bullet, summary with 10+ critical terms, categorizedSkills mirrors tech_stack_clusters exactly, certifications from JD at top.",
+    "maximum": "MAXIMUM ATS OPTIMIZATION - ULTRA-AGGRESSIVE: Exact term matching for ALL keyword categories (15+), acronym expansion, complete skill mirroring (required+preferred+critical+tools+cloud+databases+frameworks+platforms+methodologies+soft_skills+domain_keywords), verb mirroring, keyword density 3-4 per bullet, summary with 15+ critical terms, categorizedSkills mirrors tech_stack_clusters exactly, certifications from JD at top, iterative ATS feedback loop with 3 refinement passes.",
 }
 
 SKILL_TARGET_PLAN_PROMPT = """Build a concise skill target plan for tailoring this resume to the job. Focus on MAXIMUM ATS match.
@@ -805,3 +1041,224 @@ Output this exact JSON format, nothing else:
   ],
   "strategy_notes": "ATS-maximizing strategy: exact term matching, acronym expansion, skill mirroring, verb mirroring, keyword density 2-3 per bullet, summary narrative with top 5 JD keywords using actual resume experience"
 }}"""
+
+# ============================================
+# DEDICATED COMPLETE ATS DIFF PROMPT (for 'complete' strategy)
+# ============================================
+
+DIFF_IMPROVE_PROMPT_COMPLETE = """Given this resume and job description, output a JSON object with COMPLETE ATS-optimized changes. This prompt prioritizes ATS scan score above all else while maintaining strict truthfulness.
+
+RULES:
+1. Only modify content; never change names, companies, dates, institutions, or degrees
+2. Do not add new work entries, education entries, or project entries
+3. {strategy_instruction}
+4. Each change MUST include the original text (copied exactly) so it can be verified
+5. For each change, explain WHY it helps match the job description
+6. Generate all new text in {output_language}
+7. Do not use em dash characters
+8. COMPLETE ATS OPTIMIZATION -- this is the PRIMARY goal
+
+ATS MAXIMIZATION RULES (MANDATORY):
+- EXACT TERM MATCHING: Use JD's EXACT phrasing. If JD: "build CI/CD pipelines" -> resume: "build CI/CD pipelines" (not "create deployment pipelines")
+- ACRONYM FIRST MENTION: "Amazon Web Services (AWS)", "Kubernetes (K8s)", "Continuous Integration/Continuous Deployment (CI/CD)"
+- EVERY REQUIRED SKILL IN technicalSkills: All JD required_skills + preferred_skills + ats_critical_terms + tools_and_technologies + cloud_services_detail + databases_detail + frameworks_libraries + platforms + methodologies MUST appear in technicalSkills, ordered by JD priority
+- VERB MIRRORING: Mirror JD action verbs exactly -- "spearhead"->"spearhead", "architect"->"architect", "optimize"->"optimize"
+- KEYWORD DENSITY: Each bullet MUST contain 3-4 JD keywords/phrases naturally
+- SECTION HEADER ALIGNMENT: If JD mentions "DevOps Engineering", rename/rephrase to match
+- SKILL CATEGORY MIRRORING: If JD groups "Cloud: AWS, GCP, Azure", ensure technicalSkills reflects similar grouping in categorizedSkills
+- NO FABRICATION: Only reframe existing content; never invent metrics, tools, responsibilities, or years of experience
+- NEVER INVENT YEARS: Total years of experience MUST be calculated from actual workExperience dates in the original resume. Do not add, inflate, or round up years.
+- NEVER INVENT METRICS: Do not add quantified achievements (%, $, numbers, "X users", "scale to Y") that do not exist in the original resume. Only reframe existing bullets using JD terminology.
+
+SUMMARY-SPECIFIC RULES (CRITICAL for ATS):
+- The summary is the highest-weight ATS field. It MUST contain top 10+ JD keywords/phrases woven naturally into a 4-5 sentence professional narrative (aim for ~100-150 words)
+- Sentence 1: Target role + ACTUAL total years of experience from resume + core expertise — calculate total years from the resume's workExperience dates; do NOT invent, round up, or use "X+ years" format. Use exact number: "Senior Backend Engineer with 7 years building scalable distributed systems in Python and Go"
+- Sentence 2: Key technical strengths matching the JD — inject the most critical missing JD keywords here (cloud, frameworks, databases, methodologies)
+- Sentence 3: One standout achievement or domain specialty ONLY if it exists in the original resume with its original metrics; if original has no quantified metrics, describe a key accomplishment qualitatively (e.g., "Led migration of legacy monolith to microservices architecture" not "Reduced latency by 40%")
+- Sentence 4: Certifications, leadership scope, or notable domain expertise ONLY IF PRESENT IN THE ORIGINAL RESUME — do NOT add certifications not listed in the resume's certificationsTraining
+- Sentence 5: Additional JD-critical terms woven naturally (seniority indicators, domain keywords, platforms)
+- Use the JD's exact terminology where it matches actual experience — do NOT keyword stuff
+- Avoid generic openers: "Results-driven", "Motivated", "Dedicated", "Seasoned", "Dynamic", "Proactive", "Self-starter", "Highly skilled", "Passionate"
+- NEVER invent quantified metrics (%, $, numbers, "X users", "scale to Y", "team of N") that do not exist in the original resume. Only use metrics that appear in the original summary or workExperience bullets.
+- NEVER invent certifications (e.g., "AWS Solutions Architect certified", "PMP certified", "CKA certified") unless they appear in the original resume's certificationsTraining
+- The years of experience in Sentence 1 MUST match the actual span of workExperience entries in the original resume. Count years from earliest start date to latest end date (or Present). Do not add extra years.
+
+NEGATIVE EXAMPLES — NEVER GENERATE THESE:
+❌ "Senior AI/ML Specialist with 7+ years building expandable AI applications... Reduced API latency by 40% through async processing redesign." (fabricated years + fabricated metric)
+❌ "Software Engineer with 10+ years experience... Increased performance by 50%." (if original has 6 years and no metrics)
+❌ "Full Stack Developer with 5 years... Managed team of 10, scaled to 1M users." (invented team size and scale)
+
+POSITIVE EXAMPLE (when original has 6 years, no metrics in summary, but has RAG, microservices, AWS in experience):
+✅ "Senior AI/ML Specialist with 6 years building AI applications in Python and Java, with expertise in RAG pipelines, LLM fine-tuning, and full-stack AI development. Deep expertise in microservices architecture, AWS cloud infrastructure (EC2, Lambda, SageMaker), and PostgreSQL optimization for vector search workloads. Led migration of legacy ML pipelines to scalable microservices architecture. AWS Solutions Architect certified; published contributor to open-source LLM tooling. Expert in Agile, TDD, and Clean Architecture methodologies across Linux, Kubernetes, and Docker platforms."
+
+PATHS you can target (PRIORITY ORDER):
+1. "summary" -- MUST include top 10+ JD keywords woven naturally
+2. "additional.technicalSkills" -- reorder + add_skill for EVERY missing JD required/preferred/critical/technical/cloud/database/framework/platform/methodology skill
+3. "additional.categorizedSkills" -- mirror tech_stack_clusters EXACTLY with same category structure
+4. "workExperience[i].description[j]" -- reframe EVERY bullet to include 3-4 JD keywords/phrases
+5. "personalProjects[i].description[j]" -- same aggressive reframe
+6. "education[i].description" -- add relevant coursework/keywords if applicable
+7. "additional.certificationsTraining" -- ensure JD certifications are reflected if present in original
+
+Do NOT target: personalInfo, dates/years, company names, education degree/institution/years, customSections.
+
+JD Required Skills (MUST appear in technicalSkills):
+{job_keywords}
+
+Verified skill targets (pre-approved for add_skill):
+{skill_targets}
+
+Job Description:
+{job_description}
+
+Original Resume:
+{original_resume}
+
+{resume_writing_guidelines}
+
+Output this exact JSON format, nothing else:
+{{
+  "changes": [
+    {{
+      "path": "summary",
+      "action": "replace",
+      "original": "the current summary text",
+      "value": "COMPLETE ATS summary with 10+ JD keywords woven into 4-5 sentence narrative: target role + ACTUAL years exp from resume + core expertise. Key technical strengths matching JD. Standout achievement ONLY with original metrics. Certifications/leadership if present in original. Additional JD-critical terms (seniority, domain, platforms).",
+      "reason": "summary is the highest-weight ATS field; must contain exact JD terminology naturally woven into professional narrative using actual experience"
+    }},
+    {{
+      "path": "additional.technicalSkills",
+      "action": "reorder",
+      "original": null,
+      "value": ["JD required skill 1", "JD required skill 2", "JD preferred skill 1", "JD ats_critical_term 1", "JD tool 1", "JD cloud service 1", "JD database 1", "JD framework 1", "JD platform 1", "JD methodology 1", "existing relevant skill 1", "..."],
+      "reason": "technicalSkills is primary ATS keyword field; ordered by JD priority with ALL JD skill categories included"
+    }},
+    {{
+      "path": "additional.categorizedSkills",
+      "action": "replace",
+      "original": null,
+      "value": [{{"category": "Cloud", "skills": ["AWS", "GCP", "Azure"]}}, {{"category": "Languages", "skills": ["Python", "Go"]}}],
+      "reason": "categorizedSkills mirrors tech_stack_clusters exactly for maximum ATS category matching"
+    }},
+    {{
+      "path": "workExperience[0].description[0]",
+      "action": "replace",
+      "original": "original bullet text",
+      "value": "reframed bullet with 3-4 exact JD keywords from ats_critical_terms, must_have_phrases, required_skills, tools_and_technologies, cloud_services_detail, JD verbs, acronym expansion",
+      "reason": "each bullet MUST contain 3-4 JD terms for maximum keyword density"
+    }}
+  ],
+  "strategy_notes": "COMPLETE ATS strategy: exact term matching for ALL keyword categories, acronym expansion, complete skill mirroring (required+preferred+critical+tools+cloud+databases+frameworks+platforms+methodologies), verb mirroring, keyword density 3-4 per bullet, summary with 10+ critical terms, categorizedSkills mirrors tech_stack_clusters exactly"
+}}
+"""
+
+# ============================================
+# DEDICATED MAXIMUM ATS DIFF PROMPT (for 'maximum' strategy)
+# ============================================
+
+DIFF_IMPROVE_PROMPT_MAXIMUM = """Given this resume and job description, output a JSON object with MAXIMUM ATS-optimized changes. This prompt prioritizes ATS scan score above all else while maintaining strict truthfulness.
+
+RULES:
+1. Only modify content; never change names, companies, dates, institutions, or degrees
+2. Do not add new work entries, education entries, or project entries
+3. {strategy_instruction}
+4. Each change MUST include the original text (copied exactly) so it can be verified
+5. For each change, explain WHY it helps match the job description
+6. Generate all new text in {output_language}
+7. Do not use em dash characters
+8. MAXIMUM ATS OPTIMIZATION -- this is the PRIMARY goal with ITERATIVE REFINEMENT
+
+ATS MAXIMIZATION RULES (MANDATORY):
+- EXACT TERM MATCHING: Use JD's EXACT phrasing. If JD: "build CI/CD pipelines" -> resume: "build CI/CD pipelines" (not "create deployment pipelines")
+- ACRONYM FIRST MENTION: "Amazon Web Services (AWS)", "Kubernetes (K8s)", "Continuous Integration/Continuous Deployment (CI/CD)"
+- EVERY REQUIRED SKILL IN technicalSkills: All JD required_skills + preferred_skills + ats_critical_terms + tools_and_technologies + cloud_services_detail + databases_detail + frameworks_libraries + platforms + methodologies + soft_skills + domain_keywords MUST appear in technicalSkills, ordered by JD priority
+- VERB MIRRORING: Mirror JD action verbs exactly -- "spearhead"->"spearhead", "architect"->"architect", "optimize"->"optimize"
+- KEYWORD DENSITY: Each bullet MUST contain 3-4 JD keywords/phrases naturally
+- SECTION HEADER ALIGNMENT: If JD mentions "DevOps Engineering", rename/rephrase to match
+- SKILL CATEGORY MIRRORING: If JD groups "Cloud: AWS, GCP, Azure", ensure technicalSkills reflects similar grouping in categorizedSkills
+- NO FABRICATION: Only reframe existing content; never invent metrics, tools, responsibilities, or years of experience
+- NEVER INVENT YEARS: Total years of experience MUST be calculated from actual workExperience dates in the original resume. Do not add, inflate, or round up years.
+- NEVER INVENT METRICS: Do not add quantified achievements (%, $, numbers, "X users", "scale to Y") that do not exist in the original resume. Only reframe existing bullets using JD terminology.
+
+SUMMARY-SPECIFIC RULES (CRITICAL for ATS):
+- The summary is the highest-weight ATS field. It MUST contain top 15+ JD keywords/phrases woven naturally into a 4-5 sentence professional narrative (aim for ~120-180 words)
+- Sentence 1: Target role + ACTUAL total years of experience from resume + core expertise — calculate total years from the resume's workExperience dates; do NOT invent, round up, or use "X+ years" format. Use exact number: "Senior Backend Engineer with 7 years building scalable distributed systems in Python and Go"
+- Sentence 2: Key technical strengths matching the JD — inject the most critical missing JD keywords here (cloud, frameworks, databases, methodologies)
+- Sentence 3: One standout achievement or domain specialty ONLY if it exists in the original resume with its original metrics; if original has no quantified metrics, describe a key accomplishment qualitatively (e.g., "Led migration of legacy monolith to microservices architecture" not "Reduced latency by 40%")
+- Sentence 4: Certifications, leadership scope, or notable domain expertise ONLY IF PRESENT IN THE ORIGINAL RESUME
+- Sentence 5: Additional JD-critical terms woven naturally (seniority indicators, domain keywords, platforms, soft skills)
+- Use the JD's exact terminology where it matches actual experience — do NOT keyword stuff
+- Avoid generic openers: "Results-driven", "Motivated", "Dedicated", "Seasoned", "Dynamic", "Proactive", "Self-starter", "Highly skilled", "Passionate"
+- NEVER invent quantified metrics (%, $, numbers, "X users", "scale to Y", "team of N") that do not exist in the original resume. Only use metrics that appear in the original summary or workExperience bullets.
+- NEVER invent certifications (e.g., "AWS Solutions Architect certified", "PMP certified", "CKA certified") unless they appear in the original resume's certificationsTraining
+- The years of experience in Sentence 1 MUST match the actual span of workExperience entries in the original resume. Count years from earliest start date to latest end date (or Present). Do not add extra years.
+
+NEGATIVE EXAMPLES — NEVER GENERATE THESE:
+❌ "Senior AI/ML Specialist with 7+ years building expandable AI applications... Reduced API latency by 40% through async processing redesign." (fabricated years + fabricated metric)
+❌ "Software Engineer with 10+ years experience... Increased performance by 50%." (if original has 6 years and no metrics)
+❌ "Full Stack Developer with 5 years... Managed team of 10, scaled to 1M users." (invented team size and scale)
+
+POSITIVE EXAMPLE (when original has 6 years, no metrics in summary, but has RAG, microservices, AWS in experience):
+✅ "Senior AI/ML Specialist with 6 years building AI applications in Python and Java, with expertise in RAG pipelines, LLM fine-tuning, and full-stack AI development. Deep expertise in microservices architecture, AWS cloud infrastructure (EC2, Lambda, SageMaker), and PostgreSQL optimization for vector search workloads. Led migration of legacy ML pipelines to scalable microservices architecture. AWS Solutions Architect certified; published contributor to open-source LLM tooling. Expert in Agile, TDD, and Clean Architecture methodologies across Linux, Kubernetes, and Docker platforms."
+
+PATHS you can target (PRIORITY ORDER):
+1. "summary" -- MUST include top 15+ JD keywords woven naturally
+2. "additional.technicalSkills" -- reorder + add_skill for EVERY missing JD skill across ALL categories
+3. "additional.categorizedSkills" -- mirror tech_stack_clusters EXACTLY
+4. "workExperience[i].description[j]" -- reframe EVERY bullet to include 3-4 JD keywords/phrases
+5. "personalProjects[i].description[j]" -- same aggressive reframe
+6. "education[i].description" -- add relevant coursework/keywords if applicable
+7. "additional.certificationsTraining" -- ensure JD certifications reflected if present in original
+
+Do NOT target: personalInfo, dates/years, company names, education degree/institution/years, customSections.
+
+JD Required Skills (MUST appear in technicalSkills):
+{job_keywords}
+
+Verified skill targets (pre-approved for add_skill):
+{skill_targets}
+
+Job Description:
+{job_description}
+
+Original Resume:
+{original_resume}
+
+{resume_writing_guidelines}
+
+Output this exact JSON format, nothing else:
+{{
+  "changes": [
+    {{
+      "path": "summary",
+      "action": "replace",
+      "original": "the current summary text",
+      "value": "MAXIMUM ATS summary with 15+ critical terms in 4-5 sentence narrative: target role + ACTUAL years exp from resume + core expertise. Key technical strengths matching JD. Standout achievement ONLY with original metrics. Certifications/leadership if present. Additional JD-critical terms (seniority, domain, platforms, soft skills).",
+      "reason": "summary is the highest-weight ATS field; must contain exact JD terminology naturally woven into professional narrative using actual experience"
+    }},
+    {{
+      "path": "additional.technicalSkills",
+      "action": "reorder",
+      "original": null,
+      "value": ["JD required skill 1", "JD required skill 2", "JD preferred skill 1", "JD ats_critical_term 1", "JD tool 1", "JD cloud service 1", "JD database 1", "JD framework 1", "JD platform 1", "JD methodology 1", "JD soft skill 1", "JD domain keyword 1", "existing relevant skill 1", "..."],
+      "reason": "technicalSkills is primary ATS keyword field; ordered by JD priority with ALL JD skill categories included"
+    }},
+    {{
+      "path": "additional.categorizedSkills",
+      "action": "replace",
+      "original": null,
+      "value": [{{"category": "Cloud", "skills": ["AWS", "GCP", "Azure"]}}, {{"category": "Languages", "skills": ["Python", "Go"]}}],
+      "reason": "categorizedSkills mirrors tech_stack_clusters exactly for maximum ATS category matching"
+    }},
+    {{
+      "path": "workExperience[0].description[0]",
+      "action": "replace",
+      "original": "original bullet text",
+      "value": "reframed bullet with 3-4 exact JD keywords from ats_critical_terms, must_have_phrases, required_skills, tools_and_technologies, cloud_services_detail, JD verbs, acronym expansion",
+      "reason": "each bullet MUST contain 3-4 JD terms for maximum keyword density"
+    }}
+  ],
+  "strategy_notes": "MAXIMUM ATS strategy: exact term matching for ALL keyword categories (15+), acronym expansion, complete skill mirroring (required+preferred+critical+tools+cloud+databases+frameworks+platforms+methodologies+soft_skills+domain_keywords), verb mirroring, keyword density 3-4 per bullet, summary with 15+ critical terms, categorizedSkills mirrors tech_stack_clusters exactly, certifications from JD at top"
+}}
+"""
+

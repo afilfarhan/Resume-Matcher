@@ -5,6 +5,8 @@ multiple passes:
 1. Keyword injection - add missing JD keywords where supported by master resume
 2. AI phrase removal - replace AI-generated buzzwords with simpler alternatives
 3. Master alignment validation - ensure no fabricated content was added
+4. Keyword density optimization (MAXIMUM mode) - ensure maximum keyword coverage
+5. Iterative ATS score feedback loop (MAXIMUM mode) - continuously improve ATS score
 """
 
 import copy
@@ -165,6 +167,33 @@ async def refine_resume(
                 current = fix_alignment_violations(current, alignment.violations)
                 passes += 1
 
+    # Pass 4: Keyword density optimization (MAXIMUM mode)
+    if config.enable_keyword_density_optimization:
+        try:
+            current = await optimize_keyword_density(
+                current,
+                job_keywords,
+                master_resume,
+                job_description,
+            )
+            passes += 1
+        except Exception as e:
+            logger.warning("Keyword density optimization failed: %s", e)
+
+    # Pass 5: Iterative ATS score feedback loop (MAXIMUM mode)
+    if config.enable_ats_feedback_loop:
+        try:
+            current = await iterative_ats_optimization(
+                current,
+                job_keywords,
+                master_resume,
+                job_description,
+                config.max_ats_iterations,
+            )
+            passes += 1
+        except Exception as e:
+            logger.warning("ATS feedback loop failed: %s", e)
+
     # Calculate final match percentage
     final_match = calculate_keyword_match(current, job_keywords)
 
@@ -197,11 +226,29 @@ def analyze_keyword_gaps(
     tailored_text = _extract_all_text(tailored).lower()
     master_text = _extract_all_text(master).lower()
 
-    # Get all keywords from JD
+    # Get all keywords from JD - COMPREHENSIVE extraction for maximum ATS match
     all_jd_keywords: set[str] = set()
     all_jd_keywords.update(jd_keywords.get("required_skills", []))
     all_jd_keywords.update(jd_keywords.get("preferred_skills", []))
     all_jd_keywords.update(jd_keywords.get("keywords", []))
+    all_jd_keywords.update(jd_keywords.get("must_have_phrases", []))
+    all_jd_keywords.update(jd_keywords.get("soft_skills", []))
+    all_jd_keywords.update(jd_keywords.get("domain_keywords", []))
+    all_jd_keywords.update(jd_keywords.get("tools_and_technologies", []))
+    all_jd_keywords.update(jd_keywords.get("methodologies", []))
+    all_jd_keywords.update(jd_keywords.get("platforms", []))
+    all_jd_keywords.update(jd_keywords.get("frameworks_libraries", []))
+    all_jd_keywords.update(jd_keywords.get("databases_detail", []))
+    all_jd_keywords.update(jd_keywords.get("cloud_services_detail", []))
+    all_jd_keywords.update(jd_keywords.get("seniority_indicators", []))
+    all_jd_keywords.update(jd_keywords.get("ats_critical_terms", []))
+
+    # Also extract from tech_stack_clusters
+    tech_clusters = jd_keywords.get("tech_stack_clusters", {})
+    if isinstance(tech_clusters, dict):
+        for skills in tech_clusters.values():
+            if isinstance(skills, list):
+                all_jd_keywords.update(skills)
 
     # Find missing keywords
     missing: list[str] = []
@@ -581,6 +628,12 @@ def calculate_keyword_match(
     all_keywords.update(jd_keywords.get("required_skills", []))
     all_keywords.update(jd_keywords.get("preferred_skills", []))
     all_keywords.update(jd_keywords.get("keywords", []))
+    all_keywords.update(jd_keywords.get("must_have_phrases", []))
+    all_keywords.update(jd_keywords.get("ats_critical_terms", []))
+    all_keywords.update(jd_keywords.get("tools_and_technologies", []))
+    all_keywords.update(jd_keywords.get("cloud_services_detail", []))
+    all_keywords.update(jd_keywords.get("databases_detail", []))
+    all_keywords.update(jd_keywords.get("frameworks_libraries", []))
 
     # SVC-009: Return 0% if no keywords (not 100% - that's misleading)
     if not all_keywords:
@@ -691,6 +744,197 @@ def _extract_all_text_cached(data_json: str) -> str:
                     parts.extend(str(i) for i in items)
 
     return " ".join(p for p in parts if p)
+
+
+async def optimize_keyword_density(
+    tailored: dict[str, Any],
+    job_keywords: dict[str, Any],
+    master: dict[str, Any],
+    job_description: str,
+) -> dict[str, Any]:
+    """Optimize keyword density in the resume for maximum ATS match.
+
+    This pass ensures every possible JD keyword that the master resume supports
+    is woven into the tailored resume naturally.
+
+    Args:
+        tailored: Current tailored resume data
+        job_keywords: Extracted job keywords
+        master: Master resume data (source of truth)
+        job_description: Raw job description for context
+
+    Returns:
+        Updated resume data with optimized keyword density
+    """
+    from app.llm import complete_json
+    from app.prompts.refinement import KEYWORD_INJECTION_PROMPT
+
+    # Get comprehensive list of all JD keywords
+    all_jd_keywords: set[str] = set()
+    all_jd_keywords.update(job_keywords.get("required_skills", []))
+    all_jd_keywords.update(job_keywords.get("preferred_skills", []))
+    all_jd_keywords.update(job_keywords.get("keywords", []))
+    all_jd_keywords.update(job_keywords.get("must_have_phrases", []))
+    all_jd_keywords.update(job_keywords.get("soft_skills", []))
+    all_jd_keywords.update(job_keywords.get("domain_keywords", []))
+    all_jd_keywords.update(job_keywords.get("tools_and_technologies", []))
+    all_jd_keywords.update(job_keywords.get("methodologies", []))
+    all_jd_keywords.update(job_keywords.get("platforms", []))
+    all_jd_keywords.update(job_keywords.get("frameworks_libraries", []))
+    all_jd_keywords.update(job_keywords.get("databases_detail", []))
+    all_jd_keywords.update(job_keywords.get("cloud_services_detail", []))
+    all_jd_keywords.update(job_keywords.get("seniority_indicators", []))
+    all_jd_keywords.update(job_keywords.get("ats_critical_terms", []))
+
+    tech_clusters = job_keywords.get("tech_stack_clusters", {})
+    if isinstance(tech_clusters, dict):
+        for skills in tech_clusters.values():
+            if isinstance(skills, list):
+                all_jd_keywords.update(skills)
+
+    # Find which keywords are supported by master but missing from tailored
+    master_text = _extract_all_text(master).lower()
+    tailored_text = _extract_all_text(tailored).lower()
+
+    missing_supported = [
+        kw for kw in all_jd_keywords
+        if _keyword_in_text(kw, master_text) and not _keyword_in_text(kw, tailored_text)
+    ]
+
+    if not missing_supported:
+        return tailored
+
+    logger.info(f"Keyword density optimization: injecting {len(missing_supported)} missing supported keywords")
+
+    # Use the keyword injection prompt but with enhanced keyword list
+    truncated_jd = job_description[:2000] if len(job_description) > 2000 else job_description
+
+    prompt = KEYWORD_INJECTION_PROMPT.format(
+        keywords_to_inject=json.dumps(missing_supported),
+        current_resume=json.dumps(tailored),
+        master_resume=json.dumps(master),
+        job_description=truncated_jd,
+    )
+
+    try:
+        result = await complete_json(
+            prompt=prompt,
+            system_prompt=(
+                "You are a resume editor. Inject keywords naturally without adding "
+                "fabricated content. Return only valid JSON matching the input schema."
+            ),
+            max_tokens=8192,
+        )
+
+        if isinstance(result, dict) and _validate_resume_structure(result):
+            return result
+    except Exception as e:
+        logger.warning(f"Keyword density optimization failed: {e}")
+
+    return tailored
+
+
+async def iterative_ats_optimization(
+    tailored: dict[str, Any],
+    job_keywords: dict[str, Any],
+    master: dict[str, Any],
+    job_description: str,
+    max_iterations: int = 2,
+) -> dict[str, Any]:
+    """Iteratively optimize ATS score through multiple refinement passes.
+
+    Each iteration:
+    1. Calculate current ATS match percentage
+    2. Identify remaining gaps
+    3. Inject missing supported keywords
+    4. Verify improvement
+    5. Stop if no significant improvement or max iterations reached
+
+    Args:
+        tailored: Current tailored resume data
+        job_keywords: Extracted job keywords
+        master: Master resume data
+        job_description: Raw job description
+        max_iterations: Maximum number of optimization iterations
+
+    Returns:
+        Optimized resume data
+    """
+    current = _deep_copy(tailored)
+    previous_match = calculate_keyword_match(current, job_keywords)
+
+    for iteration in range(max_iterations):
+        logger.info(f"ATS optimization iteration {iteration + 1}/{max_iterations}, current match: {previous_match:.1f}%")
+
+        # Find missing keywords that are supported by master
+        master_text = _extract_all_text(master).lower()
+        current_text = _extract_all_text(current).lower()
+
+        all_jd_keywords: set[str] = set()
+        all_jd_keywords.update(job_keywords.get("required_skills", []))
+        all_jd_keywords.update(job_keywords.get("preferred_skills", []))
+        all_jd_keywords.update(job_keywords.get("keywords", []))
+        all_jd_keywords.update(job_keywords.get("must_have_phrases", []))
+        all_jd_keywords.update(job_keywords.get("ats_critical_terms", []))
+        all_jd_keywords.update(job_keywords.get("tools_and_technologies", []))
+        all_jd_keywords.update(job_keywords.get("cloud_services_detail", []))
+        all_jd_keywords.update(job_keywords.get("databases_detail", []))
+        all_jd_keywords.update(job_keywords.get("frameworks_libraries", []))
+
+        missing_supported = [
+            kw for kw in all_jd_keywords
+            if _keyword_in_text(kw, master_text) and not _keyword_in_text(kw, current_text)
+        ]
+
+        if not missing_supported:
+            logger.info("No more supported keywords to inject")
+            break
+
+        # Inject a batch of keywords
+        batch = missing_supported[:20]  # Limit batch size
+        truncated_jd = job_description[:2000] if len(job_description) > 2000 else job_description
+
+        from app.llm import complete_json
+        from app.prompts.refinement import KEYWORD_INJECTION_PROMPT
+
+        prompt = KEYWORD_INJECTION_PROMPT.format(
+            keywords_to_inject=json.dumps(batch),
+            current_resume=json.dumps(current),
+            master_resume=json.dumps(master),
+            job_description=truncated_jd,
+        )
+
+        try:
+            result = await complete_json(
+                prompt=prompt,
+                system_prompt=(
+                    "You are a resume editor. Inject keywords naturally without adding "
+                    "fabricated content. Return only valid JSON matching the input schema."
+                ),
+                max_tokens=8192,
+            )
+
+            if isinstance(result, dict) and _validate_resume_structure(result):
+                current = result
+                new_match = calculate_keyword_match(current, job_keywords)
+
+                logger.info(f"Iteration {iteration + 1}: match improved from {previous_match:.1f}% to {new_match:.1f}%")
+
+                # Stop if improvement is negligible
+                if new_match - previous_match < 1.0:
+                    logger.info("Negligible improvement, stopping iterations")
+                    break
+
+                previous_match = new_match
+            else:
+                logger.warning("Keyword injection returned invalid structure, stopping")
+                break
+
+        except Exception as e:
+            logger.warning(f"ATS optimization iteration {iteration + 1} failed: {e}")
+            break
+
+    return current
 
 
 def _deep_copy(data: dict[str, Any]) -> dict[str, Any]:

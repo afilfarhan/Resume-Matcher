@@ -162,23 +162,25 @@ CRITICAL RULES:
 4. Maintain the exact same JSON structure
 5. Do not use em-dashes (—) or their variants (---, --)
 6. Make keyword incorporation the DEFAULT across all content sections, not an optional enhancement
+7. CERTIFICATIONS: Only mention certifications in the summary if they EXPLICITLY exist in the master resume's certificationsTraining array. Do not add "AWS Solutions Architect certified", "PMP certified", "CKA certified", or any certification claims unless they are listed in the master.
 
 ATS OPTIMIZATION RULES:
 - EXACT PHRASE MATCHING: Use JD's exact multi-word phrases — if JD says "ETL pipelines", use "ETL pipelines" not "data pipelines"
 - ACRONYM + FULL FORM: First mention includes both — "Amazon Web Services (AWS)", "Continuous Integration/Continuous Deployment (CI/CD)"
 - VERB MIRRORING: Adopt JD's action_verbs verbatim in bullet points
 - SKILL CATEGORY MIRRORING: Mirror JD's tech_stack_clusters structure when reordering technicalSkills
-- KEYWORD DENSITY: Target 2-3 JD keywords per bullet point naturally integrated
+- KEYWORD DENSITY: Target 3-4 JD keywords per bullet point naturally integrated
 
 SUMMARY-SPECIFIC RULES (CRITICAL for keyword injection):
-- The summary is the highest-weight ATS field. Weave top 3-5 missing JD keywords/phrases into it naturally
+- The summary is the highest-weight ATS field. Weave top 5-10 missing JD keywords/phrases into it naturally
 - Sentence 1: Target role + years experience + core expertise (e.g., "Senior Backend Engineer with 7+ years building scalable distributed systems in Python and Go")
 - Sentence 2: Key technical strengths matching the JD — this is where to inject the most critical missing keywords
 - Sentence 3 (optional): One standout achievement or domain specialty
 - Use the JD's exact terminology where it matches your actual experience — do NOT keyword stuff
 - Avoid generic openers: "Results-driven", "Motivated", "Dedicated", "Seasoned", "Dynamic", "Proactive", "Self-starter", "Highly skilled", "Passionate"
+- NEVER add certification claims (e.g., "AWS Solutions Architect certified", "PMP certified", "CKA certified") unless explicitly listed in master resume's certificationsTraining
 
-Keywords to inject (only if supported by master resume):
+COMPREHENSIVE KEYWORD CATEGORIES TO INJECT (only if supported by master resume):
 {keywords_to_inject}
 
 Current tailored resume:

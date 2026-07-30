@@ -250,6 +250,51 @@ def _validate_summary_years_and_metrics(
             f"Only use metrics that exist in the original resume."
         )
     
+    # 3. Check for fabricated certifications in summary
+    original_certs = set(
+        c.lower().strip() 
+        for c in original_resume_data.get("additional", {}).get("certificationsTraining", [])
+        if isinstance(c, str) and c.strip()
+    )
+    # Common certification patterns to detect in summary
+    cert_patterns = [
+        r"(AWS\s+Solutions\s+Architect\s+certified?\.?)",
+        r"(AWS\s+Certified\s+\w+(?:\s+\w+)?\.?)",
+        r"(CKA\s+certified?\.?)",
+        r"(PMP\s+certified?\.?)",
+        r"(CISSP\s+certified?\.?)",
+        r"(Certified\s+\w+(?:\s+\w+)?\.?)",
+        r"(\w+\s+certified\.?)",
+    ]
+    found_certs = set()
+    for pattern in cert_patterns:
+        matches = re.findall(pattern, new_summary, re.IGNORECASE)
+        for m in matches:
+            found_certs.add(m.strip().lower())
+    
+    if found_certs:
+        # Check if any found certification is NOT in the original resume
+        fabricated_certs = []
+        for cert in found_certs:
+            # Check if this cert (or a reasonable match) exists in original
+            matched = False
+            for orig_cert in original_certs:
+                # Simple fuzzy match: check if key words from found cert appear in original
+                cert_keywords = set(re.findall(r'\b\w+\b', cert.lower()))
+                orig_keywords = set(re.findall(r'\b\w+\b', orig_cert.lower()))
+                # If at least 2 significant words match, consider it the same cert
+                if len(cert_keywords & orig_keywords) >= 2:
+                    matched = True
+                    break
+            if not matched:
+                fabricated_certs.append(cert)
+        
+        if fabricated_certs:
+            warnings.append(
+                f"Summary contains certifications not in original resume: {', '.join(fabricated_certs)}. "
+                f"Do not invent certifications. Only reference certifications from certificationsTraining."
+            )
+    
     return warnings
 
 
@@ -707,7 +752,7 @@ async def generate_resume_diffs(
         resume_input = original_resume
 
     # Use dedicated ATS-optimized prompt for maximum ATS match, else standard diff prompt
-    if selected_id == "ats":
+    if selected_id in ("ats", "complete"):
         prompt = DIFF_IMPROVE_PROMPT_ATS.format(
             strategy_instruction=strategy_instruction,
             output_language=output_language,
@@ -857,6 +902,47 @@ def _prepare_keywords_for_prompt(job_keywords: dict[str, Any]) -> str:
     must_have = job_keywords.get("must_have_phrases", [])
     if must_have:
         sections.append("MUST-HAVE phrases (exact JD phrases that MUST appear in resume):\n- " + "\n- ".join(str(p) for p in must_have))
+
+    # New comprehensive keyword fields for maximum ATS match
+    soft_skills = job_keywords.get("soft_skills", [])
+    if soft_skills:
+        sections.append("Soft skills to incorporate:\n- " + "\n- ".join(str(s) for s in soft_skills))
+
+    domain_keywords = job_keywords.get("domain_keywords", [])
+    if domain_keywords:
+        sections.append("Domain-specific keywords:\n- " + "\n- ".join(str(d) for d in domain_keywords))
+
+    tools_tech = job_keywords.get("tools_and_technologies", [])
+    if tools_tech:
+        sections.append("Tools & technologies to mention:\n- " + "\n- ".join(str(t) for t in tools_tech))
+
+    methodologies = job_keywords.get("methodologies", [])
+    if methodologies:
+        sections.append("Methodologies to reference:\n- " + "\n- ".join(str(m) for m in methodologies))
+
+    platforms = job_keywords.get("platforms", [])
+    if platforms:
+        sections.append("Platforms to reference:\n- " + "\n- ".join(str(p) for p in platforms))
+
+    frameworks = job_keywords.get("frameworks_libraries", [])
+    if frameworks:
+        sections.append("Frameworks & libraries:\n- " + "\n- ".join(str(f) for f in frameworks))
+
+    databases_detail = job_keywords.get("databases_detail", [])
+    if databases_detail:
+        sections.append("Databases (detail):\n- " + "\n- ".join(str(d) for d in databases_detail))
+
+    cloud_services = job_keywords.get("cloud_services_detail", [])
+    if cloud_services:
+        sections.append("Cloud services (detail):\n- " + "\n- ".join(str(c) for c in cloud_services))
+
+    seniority_indicators = job_keywords.get("seniority_indicators", [])
+    if seniority_indicators:
+        sections.append("Seniority indicators to reflect:\n- " + "\n- ".join(str(s) for s in seniority_indicators))
+
+    ats_critical = job_keywords.get("ats_critical_terms", [])
+    if ats_critical:
+        sections.append("ATS CRITICAL TERMS (TOP PRIORITY - must appear in resume):\n- " + "\n- ".join(str(a) for a in ats_critical))
 
     return "\n\n".join(sections) if sections else "No specific keywords extracted."
 
