@@ -66,7 +66,7 @@ export const DEFAULT_TEMPLATE_SETTINGS: TemplateSettings = {
   pageSize: 'A4',
   margins: { top: 10, bottom: 10, left: 10, right: 10 },
   spacing: { section: 3, item: 2, lineHeight: 3 },
-  fontSize: { base: 3, headerScale: 3, headerFont: 'serif', bodyFont: 'sans-serif' },
+  fontSize: { base: 4, headerScale: 3, headerFont: 'serif', bodyFont: 'sans-serif' },
   compactMode: false,
   showContactIcons: true,
   showHyperlinks: false,
