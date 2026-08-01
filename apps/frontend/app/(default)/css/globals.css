@@ -243,6 +243,7 @@
 @media print {
   .resume-body {
     padding: var(--margin-top) var(--margin-right) var(--margin-bottom) var(--margin-left) !important;
+    display: block !important;
   }
 
   .resume-body .resume-section-title,
@@ -250,6 +251,59 @@
     border-bottom-color: #9ca3af !important;
     break-after: avoid !important;
     page-break-after: avoid !important;
+  }
+
+  /* Modern template section titles - ensure accent colors print */
+  .resume-body .section-title-accent {
+    color: var(--resume-accent-primary) !important;
+    border-bottom-color: var(--resume-accent-primary) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    display: block !important;
+  }
+
+  .resume-body .name-underline {
+    background-color: var(--resume-accent-primary) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    display: block !important;
+  }
+
+  .resume-body header {
+    display: block !important;
+  }
+
+  .resume-body .resume-header {
+    display: block !important;
+  }
+
+  .resume-body .resume-section {
+    display: block !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+
+  .resume-body .resume-stack,
+  .resume-body .resume-stack-tight {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .resume-body .resume-items {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .resume-body .resume-item {
+    display: block !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .resume-body .resume-meta,
+  .resume-body .resume-meta-sm {
+    display: flex !important;
+    flex-wrap: wrap !important;
   }
 
   /* Reinforce page break rules in print - only for individual items */
@@ -270,4 +324,33 @@
     break-before: avoid !important;
     page-break-before: avoid !important;
   }
-}
+
+  /* Prevent links from breaking across lines */
+  .resume-body a {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  /* Ensure skill pills don't break */
+    .resume-body .resume-skill-pill {
+      white-space: nowrap !important;
+      display: inline-flex !important;
+      margin-right: 0.25rem !important;
+      margin-bottom: 0.25rem !important;
+    }
+
+    /* Force skills container to wrap in print */
+    .resume-body .resume-stack > div > div.flex,
+    .resume-body .resume-stack-tight > div > div.flex {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 0.25rem !important;
+    }
+
+    /* Ensure links are visible and clickable in PDF */
+    .resume-body a[href] {
+      text-decoration: underline !important;
+      color: #000000 !important;
+      pointer-events: auto !important;
+    }
+  }

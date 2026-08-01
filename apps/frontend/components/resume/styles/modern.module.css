@@ -41,31 +41,19 @@
   widows: 3;
 }
 
-/* Smaller accent title for sidebar (if used) */
-.section-title-accent-sm {
-  font-size: calc(var(--font-size-base) * var(--section-header-scale) * 0.88);
-  font-family: var(--header-font);
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--resume-accent-primary);
-  border-bottom: 2px solid var(--resume-accent-primary);
-  margin-bottom: var(--item-gap);
-  padding-bottom: 0.125rem;
-  letter-spacing: 0.05em;
-  /* Prevent title from being orphaned at bottom of page */
-  break-after: avoid;
-  page-break-after: avoid;
-  orphans: 3;
-  widows: 3;
+/* Additional section title - ensure visual hierarchy */
+.section-title-accent + .resume-stack > * {
+  margin-top: 0;
 }
 
 @media print {
-  .section-title-accent,
-  .section-title-accent-sm {
+  .section-title-accent {
     break-after: avoid !important;
     page-break-after: avoid !important;
     color: var(--resume-accent-primary) !important;
     border-bottom-color: var(--resume-accent-primary) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .name-underline {

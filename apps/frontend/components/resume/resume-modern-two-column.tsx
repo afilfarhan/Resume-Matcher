@@ -167,6 +167,8 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
     );
   };
 
+  const separator = <span className={baseStyles['text-muted']} aria-hidden="true"> | </span>;
+
   // Render contact info based on layout
   const renderContactInfo = () => {
     if (!personalInfo) return null;
@@ -225,19 +227,19 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
 
       return (
         <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
-          <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1`}>
+          <div className={`flex flex-wrap justify-center gap-x-2 gap-y-1`}>
             {firstLine.map((c, i) => (
               <React.Fragment key={c.key}>
-                {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+                {i > 0 && separator}
                 {c.render()}
               </React.Fragment>
             ))}
           </div>
           {secondLine.length > 0 && (
-            <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1`}>
+            <div className={`flex flex-wrap justify-center gap-x-2 gap-y-1`}>
               {secondLine.map((c, i) => (
                 <React.Fragment key={c.key}>
-                  {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+                  {i > 0 && separator}
                   {c.render()}
                 </React.Fragment>
               ))}
@@ -247,12 +249,12 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
       );
     }
 
-    // single-line (default)
+    // single-line (default) - use pipe separators for better visual separation
     return (
-      <div className={`flex flex-wrap justify-center gap-x-3 gap-y-1 ${baseStyles['resume-meta']}`}>
+      <div className={`flex flex-wrap justify-center gap-x-2 gap-y-1 ${baseStyles['resume-meta']}`}>
         {contacts.map((c, i) => (
           <React.Fragment key={c.key}>
-            {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+            {i > 0 && separator}
             {c.render()}
           </React.Fragment>
         ))}
@@ -531,7 +533,13 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
               >
                 {headingFallbacks.languages}
               </h3>
-              <p className={baseStyles['resume-text-xs']}>{languages.join(' • ')}</p>
+              <div className="flex flex-wrap gap-1">
+                {languages.map((lang, index) => (
+                  <span key={index} className={baseStyles['resume-skill-pill']}>
+                    {lang}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
 
@@ -546,7 +554,7 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
               <ul className={baseStyles['resume-list']}>
                 {awards.map((award, index) => (
                   <li key={index} className={baseStyles['resume-text-xs']}>
-                    {award}
+                    •&nbsp;{award}
                   </li>
                 ))}
               </ul>

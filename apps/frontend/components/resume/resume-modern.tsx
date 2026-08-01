@@ -138,6 +138,9 @@ export const ResumeModern: React.FC<ResumeModernProps> = ({
       },
     ].filter((c) => c.render());
 
+    // Separator for inline layouts
+    const separator = <span className={baseStyles['text-muted']} aria-hidden="true"> | </span>;
+
     if (personalInfoLayout === 'stacked') {
       return (
         <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
@@ -159,19 +162,19 @@ export const ResumeModern: React.FC<ResumeModernProps> = ({
 
       return (
         <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
-          <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1`}>
+          <div className={`flex flex-wrap justify-center gap-x-2 gap-y-1`}>
             {firstLine.map((c, i) => (
               <React.Fragment key={c.key}>
-                {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+                {i > 0 && separator}
                 {c.render()}
               </React.Fragment>
             ))}
           </div>
           {secondLine.length > 0 && (
-            <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1`}>
+            <div className={`flex flex-wrap justify-center gap-x-2 gap-y-1`}>
               {secondLine.map((c, i) => (
                 <React.Fragment key={c.key}>
-                  {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+                  {i > 0 && separator}
                   {c.render()}
                 </React.Fragment>
               ))}
@@ -181,12 +184,12 @@ export const ResumeModern: React.FC<ResumeModernProps> = ({
       );
     }
 
-    // single-line (default)
+    // single-line (default) - use pipe separators for better visual separation
     return (
-      <div className={`flex flex-wrap justify-center gap-x-1 gap-y-1 ${baseStyles['resume-meta']}`}>
+      <div className={`flex flex-wrap justify-center gap-x-2 gap-y-1 ${baseStyles['resume-meta']}`}>
         {contacts.map((c, i) => (
           <React.Fragment key={c.key}>
-            {i > 0 && <span className={baseStyles['text-muted']}>,</span>}
+            {i > 0 && separator}
             {c.render()}
           </React.Fragment>
         ))}
@@ -381,7 +384,7 @@ export const ResumeModern: React.FC<ResumeModernProps> = ({
         );
 
       default:
-        // Custom section - render using DynamicResumeSection
+        // Custom section - render using DynamicResumeSectionModern
         if (!section.isDefault) {
           return (
             <DynamicResumeSectionModern key={section.id} sectionMeta={section} resumeData={data} />
@@ -502,34 +505,51 @@ const AdditionalSection: React.FC<{
       <h3 className={styles['section-title-accent']}>{displayName}</h3>
       <div className={`${baseStyles['resume-stack']} ${baseStyles['resume-text-sm']}`}>
         {(technicalSkills.length > 0 || (categorizedSkills && categorizedSkills.length > 0)) && (
-          <div className="flex">
-            <span>
-              {categorizedSkills && categorizedSkills.length > 0 ? (
-                <div className={baseStyles['resume-stack']}>
-                  {categorizedSkills.map((category, idx) => (
-                    <div key={idx}>
-                      <strong>{category.name}:</strong> {category.skills.join(', ')}
+          <div>
+            {categorizedSkills && categorizedSkills.length > 0 ? (
+              <div className={baseStyles['resume-stack']}>
+                {categorizedSkills.map((category, idx) => (
+                  <div key={idx} className={baseStyles['resume-stack-tight']}>
+                    <span className="font-bold">{category.name}:</span>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {category.skills.map((skill, skillIdx) => (
+                        <span key={skillIdx} className={baseStyles['resume-skill-pill']}>
+                          {skill}
+                        </span>
+                      ))}
                     </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                <span className="font-bold">{mergedLabels.technicalSkills}</span>
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {technicalSkills.map((skill, index) => (
+                    <span key={index} className={baseStyles['resume-skill-pill']}>
+                      {skill}
+                    </span>
                   ))}
                 </div>
-              ) : (
-                <>
-                  <span className="font-bold w-32 shrink-0">{mergedLabels.technicalSkills}</span>
-                  {technicalSkills.join(', ')}
-                </>
-              )}
-            </span>
+              </>
+            )}
           </div>
         )}
         {languages.length > 0 && (
-          <div className="flex">
-            <span className="font-bold w-32 shrink-0">{mergedLabels.languages}</span>
-            <span>{languages.join(', ')}</span>
+          <div className={baseStyles['resume-stack-tight']}>
+            <span className="font-bold">{mergedLabels.languages}</span>
+            <div className="flex flex-wrap gap-1 mt-1">
+              {languages.map((lang, index) => (
+                <span key={index} className={baseStyles['resume-skill-pill']}>
+                  {lang}
+                </span>
+              ))}
+            </div>
           </div>
         )}
         {certificationsTraining.length > 0 && (
           <div className="flex flex-col gap-1">
-            <span className="font-bold w-32 shrink-0">{mergedLabels.certifications}</span>
+            <span className="font-bold">{mergedLabels.certifications}</span>
             <ul className={`ml-10 ${baseStyles['resume-list']} ${baseStyles['resume-text-sm']}`}>
               {certificationsTraining.map((cert, index) => (
                 <li key={index} className="flex">
@@ -542,7 +562,7 @@ const AdditionalSection: React.FC<{
         )}
         {awards.length > 0 && (
           <div className="flex flex-col gap-1">
-            <span className="font-bold w-32 shrink-0">{mergedLabels.awards}</span>
+            <span className="font-bold">{mergedLabels.awards}</span>
             <ul className={`ml-10 ${baseStyles['resume-list']} ${baseStyles['resume-text-sm']}`}>
               {awards.map((award, index) => (
                 <li key={index} className="flex">

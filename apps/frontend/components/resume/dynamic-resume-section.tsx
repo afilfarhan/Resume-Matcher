@@ -76,7 +76,7 @@ const TextSectionContent: React.FC<{ text: string }> = ({ text }) => {
   if (!text.trim()) return null;
 
   return <p className={`text-justify ${baseStyles['resume-text']}`}>{text}</p>;
-};
+}
 
 /**
  * Item List Section Content (like Experience)
@@ -134,6 +134,6 @@ const StringListSectionContent: React.FC<{ strings: string[] }> = ({ strings }) 
   if (strings.length === 0) return null;
 
   return <div className={baseStyles['resume-text-sm']}>{strings.join(', ')}</div>;
-};
+}
 
 export default DynamicResumeSection;
