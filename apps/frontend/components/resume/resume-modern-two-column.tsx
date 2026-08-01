@@ -173,29 +173,55 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
 
     const contacts = [
       { key: 'email', render: () => renderContactDetail('Email', personalInfo.email, 'mailto:') },
-      { key: 'phone', render: () => personalInfo.phone && renderContactDetail('Phone', personalInfo.phone, 'tel:') },
-      { key: 'info', render: () => personalInfo.info && (
-        <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
-      )},
-      { key: 'location', render: () => personalInfo.location && renderContactDetail('Location', personalInfo.location) },
-      { key: 'website', render: () => personalInfo.website && renderContactDetail('Website', personalInfo.website) },
-      { key: 'linkedin', render: () => personalInfo.linkedin && renderContactDetail('LinkedIn', personalInfo.linkedin) },
-      { key: 'github', render: () => personalInfo.github && renderContactDetail('GitHub', personalInfo.github) },
-    ].filter(c => c.render());
+      {
+        key: 'phone',
+        render: () =>
+          personalInfo.phone && renderContactDetail('Phone', personalInfo.phone, 'tel:'),
+      },
+      {
+        key: 'info',
+        render: () =>
+          personalInfo.info && (
+            <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+          ),
+      },
+      {
+        key: 'location',
+        render: () =>
+          personalInfo.location && renderContactDetail('Location', personalInfo.location),
+      },
+      {
+        key: 'website',
+        render: () => personalInfo.website && renderContactDetail('Website', personalInfo.website),
+      },
+      {
+        key: 'linkedin',
+        render: () =>
+          personalInfo.linkedin && renderContactDetail('LinkedIn', personalInfo.linkedin),
+      },
+      {
+        key: 'github',
+        render: () => personalInfo.github && renderContactDetail('GitHub', personalInfo.github),
+      },
+    ].filter((c) => c.render());
 
     if (personalInfoLayout === 'stacked') {
       return (
         <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
           {contacts.map((c, i) => (
-            <span key={c.key} className="w-full text-center">{c.render()}</span>
+            <span key={c.key} className="w-full text-center">
+              {c.render()}
+            </span>
           ))}
         </div>
       );
     }
 
     if (personalInfoLayout === 'two-line') {
-      const firstLine = contacts.filter(c => ['email', 'phone', 'info'].includes(c.key));
-      const secondLine = contacts.filter(c => ['location', 'website', 'linkedin', 'github'].includes(c.key));
+      const firstLine = contacts.filter((c) => ['email', 'phone', 'info'].includes(c.key));
+      const secondLine = contacts.filter((c) =>
+        ['location', 'website', 'linkedin', 'github'].includes(c.key)
+      );
 
       return (
         <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
@@ -244,11 +270,11 @@ export const ResumeModernTwoColumn: React.FC<ResumeModernTwoColumnProps> = ({
         {personalInfo?.title && (
           <div className={`${baseStyles['resume-title']} mt-1`}>{personalInfo.title}</div>
         )}
-{personalInfo && (
-            <div className={`${baseStyles['resume-meta']} flex flex-wrap gap-x-3 gap-y-1 mt-2`}>
-              {renderContactInfo()}
-            </div>
-          )}
+        {personalInfo && (
+          <div className={`${baseStyles['resume-meta']} flex flex-wrap gap-x-3 gap-y-1 mt-2`}>
+            {renderContactInfo()}
+          </div>
+        )}
       </div>
 
       {/* Two-Column Grid */}

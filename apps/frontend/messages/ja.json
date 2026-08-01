@@ -435,7 +435,7 @@
       "effectiveItemGap": "項目間隔",
       "effectiveLineHeight": "行間",
       "effectiveBaseFont": "本文フォント",
-"effectiveHeaderScale": "見出しスケール",
+      "effectiveHeaderScale": "見出しスケール",
       "effectiveHeaderFont": "見出しフォント",
       "effectiveBodyFont": "本文フォント",
       "effectiveHyperlinks": "ハイパーリンク",
@@ -532,31 +532,31 @@
     "promptLabel": "調整の強さ",
     "promptDescription": "求人情報にどの程度合わせるかを選択してください。",
     "promptOptions": {
-          "nudge": {
-            "label": "軽く調整",
-            "description": "既存の経験に合わせて最小限の修正。"
-          },
-          "keywords": {
-            "label": "キーワード強化",
-            "description": "役割や範囲を変えずにキーワードを追加。"
-          },
-          "full": {
-            "label": "完全に調整",
-            "description": "求人情報を使って全面的に調整。"
-          },
-          "ats": {
-            "label": "ATS最適化",
-            "description": "求人情報の正確な用語を使用してATSスキャンスコアを最大化。"
-          },
-          "complete": {
-            "label": "完全書き換え",
-            "description": "ATSキーワード密度を最大化 — すべての箇条書き、概要、スキルを求人の表現に合わせて書き換え、事実上のアイデンティティを維持。"
-          },
-          "maximum": {
-            "label": "ATS最大",
-            "description": "超積極的ATS最適化 — 最高のキーワード飽和、求人の正確なミラーリング、積極的なリフレーム。"
-          }
-        },
+      "nudge": {
+        "label": "軽く調整",
+        "description": "既存の経験に合わせて最小限の修正。"
+      },
+      "keywords": {
+        "label": "キーワード強化",
+        "description": "役割や範囲を変えずにキーワードを追加。"
+      },
+      "full": {
+        "label": "完全に調整",
+        "description": "求人情報を使って全面的に調整。"
+      },
+      "ats": {
+        "label": "ATS最適化",
+        "description": "求人情報の正確な用語を使用してATSスキャンスコアを最大化。"
+      },
+      "complete": {
+        "label": "完全書き換え",
+        "description": "ATSキーワード密度を最大化 — すべての箇条書き、概要、スキルを求人の表現に合わせて書き換え、事実上のアイデンティティを維持。"
+      },
+      "maximum": {
+        "label": "ATS最大",
+        "description": "超積極的ATS最適化 — 最高のキーワード飽和、求人の正確なミラーリング、積極的なリフレーム。"
+      }
+    },
     "analyzeJob": "求人を分析",
     "generateTailored": "カスタマイズ履歴書を生成",
     "setupRequiredTitle": "[ 設定が必要 ]",

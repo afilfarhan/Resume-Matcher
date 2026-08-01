@@ -104,26 +104,34 @@ export const ResumeLatex: React.FC<ResumeLatexProps> = ({
   const renderContactInfo = () => {
     const contacts = [
       { key: 'phone', render: () => renderContactDetail('Phone', personalInfo?.phone, 'tel:') },
-      { key: 'info', render: () => personalInfo?.info && <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span> },
+      {
+        key: 'info',
+        render: () =>
+          personalInfo?.info && (
+            <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+          ),
+      },
       { key: 'email', render: () => renderContactDetail('Email', personalInfo?.email, 'mailto:') },
       { key: 'linkedin', render: () => renderContactDetail('LinkedIn', personalInfo?.linkedin) },
       { key: 'github', render: () => renderContactDetail('GitHub', personalInfo?.github) },
       { key: 'website', render: () => renderContactDetail('Website', personalInfo?.website) },
-    ].filter(c => c.render());
+    ].filter((c) => c.render());
 
     if (personalInfoLayout === 'stacked') {
       return (
         <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
           {contacts.map((c, i) => (
-            <span key={c.key} className="w-full text-center">{c.render()}</span>
+            <span key={c.key} className="w-full text-center">
+              {c.render()}
+            </span>
           ))}
         </div>
       );
     }
 
     if (personalInfoLayout === 'two-line') {
-      const firstLine = contacts.filter(c => ['phone', 'info', 'email'].includes(c.key));
-      const secondLine = contacts.filter(c => ['linkedin', 'github', 'website'].includes(c.key));
+      const firstLine = contacts.filter((c) => ['phone', 'info', 'email'].includes(c.key));
+      const secondLine = contacts.filter((c) => ['linkedin', 'github', 'website'].includes(c.key));
 
       return (
         <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>

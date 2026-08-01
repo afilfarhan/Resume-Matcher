@@ -186,26 +186,42 @@ export const ResumeVivid: React.FC<ResumeVividProps> = ({
       { key: 'linkedin', render: () => renderContactDetail('LinkedIn', personalInfo.linkedin) },
       { key: 'github', render: () => renderContactDetail('GitHub', personalInfo.github) },
       { key: 'email', render: () => renderContactDetail('Email', personalInfo.email, 'mailto:') },
-      { key: 'phone', render: () => personalInfo.phone && renderContactDetail('Phone', personalInfo.phone, 'tel:') },
-      { key: 'info', render: () => personalInfo.info && (
-        <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
-      )},
-      { key: 'location', render: () => personalInfo.location && renderContactDetail('Location', personalInfo.location) },
-    ].filter(c => c.render());
+      {
+        key: 'phone',
+        render: () =>
+          personalInfo.phone && renderContactDetail('Phone', personalInfo.phone, 'tel:'),
+      },
+      {
+        key: 'info',
+        render: () =>
+          personalInfo.info && (
+            <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+          ),
+      },
+      {
+        key: 'location',
+        render: () =>
+          personalInfo.location && renderContactDetail('Location', personalInfo.location),
+      },
+    ].filter((c) => c.render());
 
     if (personalInfoLayout === 'stacked') {
       return (
         <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
           {contacts.map((c, i) => (
-            <span key={c.key} className="w-full text-center">{c.render()}</span>
+            <span key={c.key} className="w-full text-center">
+              {c.render()}
+            </span>
           ))}
         </div>
       );
     }
 
     if (personalInfoLayout === 'two-line') {
-      const firstLine = contacts.filter(c => ['website', 'linkedin', 'github', 'email', 'phone'].includes(c.key));
-      const secondLine = contacts.filter(c => ['info', 'location'].includes(c.key));
+      const firstLine = contacts.filter((c) =>
+        ['website', 'linkedin', 'github', 'email', 'phone'].includes(c.key)
+      );
+      const secondLine = contacts.filter((c) => ['info', 'location'].includes(c.key));
 
       return (
         <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
@@ -253,9 +269,7 @@ export const ResumeVivid: React.FC<ResumeVividProps> = ({
           {nameRest && <span className={styles.nameRest}> {nameRest}</span>}
         </h1>
         {personalInfo?.title && <div className={styles.titleLine}>{personalInfo.title}</div>}
-        {personalInfo && (
-          renderContactInfo()
-        )}
+        {personalInfo && renderContactInfo()}
       </div>
 
       {/* Two-Column Grid */}

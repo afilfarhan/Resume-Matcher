@@ -72,7 +72,9 @@ function parseAccentColor(value: string | undefined): AccentColor {
 /**
  * Parse personal info layout
  */
-function parsePersonalInfoLayout(value: string | undefined): 'single-line' | 'two-line' | 'stacked' {
+function parsePersonalInfoLayout(
+  value: string | undefined
+): 'single-line' | 'two-line' | 'stacked' {
   if (value === 'single-line' || value === 'two-line' || value === 'stacked') {
     return value;
   }

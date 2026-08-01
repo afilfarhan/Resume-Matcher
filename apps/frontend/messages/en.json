@@ -532,31 +532,31 @@
     "promptLabel": "Tailoring intensity",
     "promptDescription": "Choose how strongly to align your resume to the job description.",
     "promptOptions": {
-          "nudge": {
-            "label": "Light nudge",
-            "description": "Minimal edits to better align existing experience."
-          },
-          "keywords": {
-            "label": "Keyword enhance",
-            "description": "Blend in relevant keywords without changing role or scope."
-          },
-          "full": {
-            "label": "Full tailor",
-            "description": "Comprehensive tailoring using the job description."
-          },
-          "ats": {
-            "label": "ATS-optimized",
-            "description": "Maximize ATS scan score with exact JD terminology matching."
-          },
-          "complete": {
-            "label": "Complete",
-            "description": "Maximum ATS keyword density — rewrite all bullets, summary, skills to mirror JD phrasing while preserving factual identity."
-          },
-          "maximum": {
-            "label": "Maximum ATS",
-            "description": "Ultra-aggressive ATS optimization — highest possible keyword saturation, exact JD mirroring, aggressive reframe."
-          }
-        },
+      "nudge": {
+        "label": "Light nudge",
+        "description": "Minimal edits to better align existing experience."
+      },
+      "keywords": {
+        "label": "Keyword enhance",
+        "description": "Blend in relevant keywords without changing role or scope."
+      },
+      "full": {
+        "label": "Full tailor",
+        "description": "Comprehensive tailoring using the job description."
+      },
+      "ats": {
+        "label": "ATS-optimized",
+        "description": "Maximize ATS scan score with exact JD terminology matching."
+      },
+      "complete": {
+        "label": "Complete",
+        "description": "Maximum ATS keyword density — rewrite all bullets, summary, skills to mirror JD phrasing while preserving factual identity."
+      },
+      "maximum": {
+        "label": "Maximum ATS",
+        "description": "Ultra-aggressive ATS optimization — highest possible keyword saturation, exact JD mirroring, aggressive reframe."
+      }
+    },
     "analyzeJob": "Analyze Job",
     "generateTailored": "Generate Tailored Resume",
     "setupRequiredTitle": "[ SETUP REQUIRED ]",

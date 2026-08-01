@@ -532,31 +532,31 @@
     "promptLabel": "匹配强度",
     "promptDescription": "选择与职位描述对齐的程度。",
     "promptOptions": {
-          "nudge": {
-            "label": "轻度调整",
-            "description": "最小化修改以更好匹配现有经验。"
-          },
-          "keywords": {
-            "label": "关键词增强",
-            "description": "不改变角色或范围，融入相关关键词。"
-          },
-          "full": {
-            "label": "完全定制",
-            "description": "基于职位描述进行全面定制。"
-          },
-          "ats": {
-            "label": "ATS优化",
-            "description": "使用职位描述的确切术语最大化 ATS 扫描分数。"
-          },
-          "complete": {
-            "label": "完全重写",
-            "description": "最大化 ATS 关键词密度 — 重写所有要点、摘要、技能以镜像职位措辞，同时保留事实身份。"
-          },
-          "maximum": {
-            "label": "ATS最大",
-            "description": "超积极 ATS 优化 — 最高可能的关键词饱和度，精确 JD 镜像，积极重构。"
-          }
-        },
+      "nudge": {
+        "label": "轻度调整",
+        "description": "最小化修改以更好匹配现有经验。"
+      },
+      "keywords": {
+        "label": "关键词增强",
+        "description": "不改变角色或范围，融入相关关键词。"
+      },
+      "full": {
+        "label": "完全定制",
+        "description": "基于职位描述进行全面定制。"
+      },
+      "ats": {
+        "label": "ATS优化",
+        "description": "使用职位描述的确切术语最大化 ATS 扫描分数。"
+      },
+      "complete": {
+        "label": "完全重写",
+        "description": "最大化 ATS 关键词密度 — 重写所有要点、摘要、技能以镜像职位措辞，同时保留事实身份。"
+      },
+      "maximum": {
+        "label": "ATS最大",
+        "description": "超积极 ATS 优化 — 最高可能的关键词饱和度，精确 JD 镜像，积极重构。"
+      }
+    },
     "analyzeJob": "分析职位",
     "generateTailored": "生成定制简历",
     "setupRequiredTitle": "[ 需要配置 ]",

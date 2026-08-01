@@ -385,45 +385,45 @@ export default function TailorPage() {
         <div className="space-y-6">
           <Dropdown
             options={
-                          promptOptions.length > 0
-                            ? promptOptions.map((opt) => ({
-                                id: opt.id,
-                                label: t(`tailor.promptOptions.${opt.id}.label`),
-                                description: t(`tailor.promptOptions.${opt.id}.description`),
-                              }))
-                            : [
-                                {
-                                  id: 'nudge',
-                                  label: t('tailor.promptOptions.nudge.label'),
-                                  description: t('tailor.promptOptions.nudge.description'),
-                                },
-                                {
-                                  id: 'keywords',
-                                  label: t('tailor.promptOptions.keywords.label'),
-                                  description: t('tailor.promptOptions.keywords.description'),
-                                },
-                                {
-                                  id: 'full',
-                                  label: t('tailor.promptOptions.full.label'),
-                                  description: t('tailor.promptOptions.full.description'),
-                                },
-                                {
-                                  id: 'ats',
-                                  label: t('tailor.promptOptions.ats.label'),
-                                  description: t('tailor.promptOptions.ats.description'),
-                                },
-                                {
-                                  id: 'complete',
-                                  label: t('tailor.promptOptions.complete.label'),
-                                  description: t('tailor.promptOptions.complete.description'),
-                                },
-                                {
-                                  id: 'maximum',
-                                  label: t('tailor.promptOptions.maximum.label'),
-                                  description: t('tailor.promptOptions.maximum.description'),
-                                },
-                              ]
-                        }
+              promptOptions.length > 0
+                ? promptOptions.map((opt) => ({
+                    id: opt.id,
+                    label: t(`tailor.promptOptions.${opt.id}.label`),
+                    description: t(`tailor.promptOptions.${opt.id}.description`),
+                  }))
+                : [
+                    {
+                      id: 'nudge',
+                      label: t('tailor.promptOptions.nudge.label'),
+                      description: t('tailor.promptOptions.nudge.description'),
+                    },
+                    {
+                      id: 'keywords',
+                      label: t('tailor.promptOptions.keywords.label'),
+                      description: t('tailor.promptOptions.keywords.description'),
+                    },
+                    {
+                      id: 'full',
+                      label: t('tailor.promptOptions.full.label'),
+                      description: t('tailor.promptOptions.full.description'),
+                    },
+                    {
+                      id: 'ats',
+                      label: t('tailor.promptOptions.ats.label'),
+                      description: t('tailor.promptOptions.ats.description'),
+                    },
+                    {
+                      id: 'complete',
+                      label: t('tailor.promptOptions.complete.label'),
+                      description: t('tailor.promptOptions.complete.description'),
+                    },
+                    {
+                      id: 'maximum',
+                      label: t('tailor.promptOptions.maximum.label'),
+                      description: t('tailor.promptOptions.maximum.description'),
+                    },
+                  ]
+            }
             value={selectedPromptId}
             onChange={(value) => {
               hasUserSelectedPrompt.current = true;

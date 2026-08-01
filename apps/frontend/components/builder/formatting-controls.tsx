@@ -493,21 +493,23 @@ export const FormattingControls: React.FC<FormattingControlsProps> = ({ settings
                   {t('builder.formatting.personalInfoLayout')}
                 </span>
                 <div className="flex gap-2">
-                  {(['single-line', 'two-line', 'stacked'] as PersonalInfoLayout[]).map((layout) => (
-                    <button
-                      key={layout}
-                      onClick={() => handlePersonalInfoLayoutChange(layout)}
-                      className={`flex items-center gap-1.5 px-3 py-2 border font-mono text-[10px] uppercase tracking-wider transition-all ${
-                        settings.personalInfoLayout === layout
-                          ? 'border-blue-700 bg-white shadow-[2px_2px_0px_0px_#1D4ED8]'
-                          : 'border-black bg-white hover:bg-paper-tint'
-                      }`}
-                      title={t(`builder.formatting.personalInfoLayoutOptions.${layout}`)}
-                    >
-                      <span className="w-4 h-4 border border-steel-grey flex items-center justify-center" />
-                      <span>{t(`builder.formatting.personalInfoLayoutOptions.${layout}`)}</span>
-                    </button>
-                  ))}
+                  {(['single-line', 'two-line', 'stacked'] as PersonalInfoLayout[]).map(
+                    (layout) => (
+                      <button
+                        key={layout}
+                        onClick={() => handlePersonalInfoLayoutChange(layout)}
+                        className={`flex items-center gap-1.5 px-3 py-2 border font-mono text-[10px] uppercase tracking-wider transition-all ${
+                          settings.personalInfoLayout === layout
+                            ? 'border-blue-700 bg-white shadow-[2px_2px_0px_0px_#1D4ED8]'
+                            : 'border-black bg-white hover:bg-paper-tint'
+                        }`}
+                        title={t(`builder.formatting.personalInfoLayoutOptions.${layout}`)}
+                      >
+                        <span className="w-4 h-4 border border-steel-grey flex items-center justify-center" />
+                        <span>{t(`builder.formatting.personalInfoLayoutOptions.${layout}`)}</span>
+                      </button>
+                    )
+                  )}
                 </div>
               </div>
             </div>
@@ -555,9 +557,7 @@ export const FormattingControls: React.FC<FormattingControlsProps> = ({ settings
                 </div>
                 <div>
                   {t('builder.formatting.effectiveHyperlinks')}:{' '}
-                  {settings.showHyperlinks
-                    ? t('common.enabled')
-                    : t('common.disabled')}
+                  {settings.showHyperlinks ? t('common.enabled') : t('common.disabled')}
                 </div>
               </div>
               {settings.compactMode && (

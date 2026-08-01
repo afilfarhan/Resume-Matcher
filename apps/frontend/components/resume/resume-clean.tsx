@@ -116,29 +116,41 @@ export const ResumeClean: React.FC<ResumeCleanProps> = ({
 
     const contacts = [
       { key: 'location', render: () => renderContactDetail('Location', personalInfo.location) },
-      { key: 'phone', render: () => personalInfo.phone && renderContactDetail('Phone', personalInfo.phone, 'tel:') },
-      { key: 'info', render: () => personalInfo.info && (
-        <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
-      )},
+      {
+        key: 'phone',
+        render: () =>
+          personalInfo.phone && renderContactDetail('Phone', personalInfo.phone, 'tel:'),
+      },
+      {
+        key: 'info',
+        render: () =>
+          personalInfo.info && (
+            <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+          ),
+      },
       { key: 'email', render: () => renderContactDetail('Email', personalInfo.email, 'mailto:') },
       { key: 'linkedin', render: () => renderContactDetail('LinkedIn', personalInfo.linkedin) },
       { key: 'github', render: () => renderContactDetail('GitHub', personalInfo.github) },
       { key: 'website', render: () => renderContactDetail('Website', personalInfo.website) },
-    ].filter(c => c.render());
+    ].filter((c) => c.render());
 
     if (personalInfoLayout === 'stacked') {
       return (
         <div className={`flex flex-col items-center gap-1 ${styles.contactRow}`}>
           {contacts.map((c, i) => (
-            <span key={c.key} className="w-full text-center">{c.render()}</span>
+            <span key={c.key} className="w-full text-center">
+              {c.render()}
+            </span>
           ))}
         </div>
       );
     }
 
     if (personalInfoLayout === 'two-line') {
-      const firstLine = contacts.filter(c => ['location', 'phone', 'info'].includes(c.key));
-      const secondLine = contacts.filter(c => ['email', 'linkedin', 'github', 'website'].includes(c.key));
+      const firstLine = contacts.filter((c) => ['location', 'phone', 'info'].includes(c.key));
+      const secondLine = contacts.filter((c) =>
+        ['email', 'linkedin', 'github', 'website'].includes(c.key)
+      );
 
       return (
         <div className={`flex flex-col items-center gap-1 ${styles.contactRow}`}>
@@ -166,7 +178,9 @@ export const ResumeClean: React.FC<ResumeCleanProps> = ({
 
     // single-line (default)
     return (
-      <div className={`flex flex-wrap justify-center items-center gap-x-2 gap-y-1 ${styles.contactRow}`}>
+      <div
+        className={`flex flex-wrap justify-center items-center gap-x-2 gap-y-1 ${styles.contactRow}`}
+      >
         {contacts.map((c, i) => (
           <React.Fragment key={c.key}>
             {i > 0 && <span className={styles.sep}>|</span>}
@@ -369,7 +383,7 @@ export const ResumeClean: React.FC<ResumeCleanProps> = ({
     <div className={styles.container}>
       {personalInfo && (
         <header className={`text-center ${baseStyles['resume-header']}`}>
-{personalInfo.name && <h1 className={`${styles.name} mb-1`}>{personalInfo.name}</h1>}
+          {personalInfo.name && <h1 className={`${styles.name} mb-1`}>{personalInfo.name}</h1>}
           {personalInfo.title && (
             <div className={`${styles.tagline} mb-1`}>{personalInfo.title}</div>
           )}

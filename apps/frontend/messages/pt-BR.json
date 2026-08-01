@@ -532,31 +532,31 @@
     "promptLabel": "Intensidade de personalização",
     "promptDescription": "Escolha o quanto alinhar seu currículo à descrição da vaga.",
     "promptOptions": {
-          "nudge": {
-            "label": "Ajuste leve",
-            "description": "Edições mínimas para melhor alinhar a experiência existente."
-          },
-          "keywords": {
-            "label": "Realce de palavras-chave",
-            "description": "Incorporar palavras-chave relevantes sem alterar cargo ou escopo."
-          },
-          "full": {
-            "label": "Personalização completa",
-            "description": "Personalização abrangente usando a descrição da vaga."
-          },
-          "ats": {
-            "label": "Otimizado para ATS",
-            "description": "Maximiza pontuação de escaneamento ATS com correspondência exata de terminologia da vaga."
-          },
-          "complete": {
-            "label": "Reescrita completa",
-            "description": "Máxima densidade de palavras-chave ATS — reescreve todos os tópicos, resumo, habilidades para espelhar a linguagem da vaga, preservando identidade factual."
-          },
-          "maximum": {
-            "label": "ATS Máximo",
-            "description": "Otimização ATS ultra-agressiva — máxima saturação de palavras-chave, espelhamento exato da vaga, reframe agressivo."
-          }
-        },
+      "nudge": {
+        "label": "Ajuste leve",
+        "description": "Edições mínimas para melhor alinhar a experiência existente."
+      },
+      "keywords": {
+        "label": "Realce de palavras-chave",
+        "description": "Incorporar palavras-chave relevantes sem alterar cargo ou escopo."
+      },
+      "full": {
+        "label": "Personalização completa",
+        "description": "Personalização abrangente usando a descrição da vaga."
+      },
+      "ats": {
+        "label": "Otimizado para ATS",
+        "description": "Maximiza pontuação de escaneamento ATS com correspondência exata de terminologia da vaga."
+      },
+      "complete": {
+        "label": "Reescrita completa",
+        "description": "Máxima densidade de palavras-chave ATS — reescreve todos os tópicos, resumo, habilidades para espelhar a linguagem da vaga, preservando identidade factual."
+      },
+      "maximum": {
+        "label": "ATS Máximo",
+        "description": "Otimização ATS ultra-agressiva — máxima saturação de palavras-chave, espelhamento exato da vaga, reframe agressivo."
+      }
+    },
     "analyzeJob": "Analisar Vaga",
     "generateTailored": "Gerar Currículo Personalizado",
     "setupRequiredTitle": "[ CONFIGURAÇÃO NECESSÁRIA ]",

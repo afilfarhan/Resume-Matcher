@@ -45,7 +45,7 @@
 
 .resume-meta {
   font-family: var(--resume-font-mono);
-  font-size: calc(var(--font-size-base) * 0.82);
+  font-size: calc(var(--font-size-base) * 1.0);
   color: var(--resume-text-tertiary);
 }
 

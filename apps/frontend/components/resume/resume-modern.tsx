@@ -106,21 +106,45 @@ export const ResumeModern: React.FC<ResumeModernProps> = ({
 
     const contacts = [
       { key: 'email', render: () => renderContactDetail('Email', personalInfo.email, 'mailto:') },
-      { key: 'phone', render: () => personalInfo.phone && renderContactDetail('Phone', personalInfo.phone, 'tel:') },
-      { key: 'info', render: () => personalInfo.info && (
-        <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
-      )},
-      { key: 'location', render: () => personalInfo.location && renderContactDetail('Location', personalInfo.location) },
-      { key: 'website', render: () => personalInfo.website && renderContactDetail('Website', personalInfo.website) },
-      { key: 'linkedin', render: () => personalInfo.linkedin && renderContactDetail('LinkedIn', personalInfo.linkedin) },
-      { key: 'github', render: () => personalInfo.github && renderContactDetail('GitHub', personalInfo.github) },
-    ].filter(c => c.render());
+      {
+        key: 'phone',
+        render: () =>
+          personalInfo.phone && renderContactDetail('Phone', personalInfo.phone, 'tel:'),
+      },
+      {
+        key: 'info',
+        render: () =>
+          personalInfo.info && (
+            <span style={{ color: 'var(--resume-text-primary)' }}>{personalInfo.info}</span>
+          ),
+      },
+      {
+        key: 'location',
+        render: () =>
+          personalInfo.location && renderContactDetail('Location', personalInfo.location),
+      },
+      {
+        key: 'website',
+        render: () => personalInfo.website && renderContactDetail('Website', personalInfo.website),
+      },
+      {
+        key: 'linkedin',
+        render: () =>
+          personalInfo.linkedin && renderContactDetail('LinkedIn', personalInfo.linkedin),
+      },
+      {
+        key: 'github',
+        render: () => personalInfo.github && renderContactDetail('GitHub', personalInfo.github),
+      },
+    ].filter((c) => c.render());
 
     if (personalInfoLayout === 'stacked') {
       return (
         <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
           {contacts.map((c, i) => (
-            <span key={c.key} className="w-full text-center">{c.render()}</span>
+            <span key={c.key} className="w-full text-center">
+              {c.render()}
+            </span>
           ))}
         </div>
       );
@@ -128,8 +152,10 @@ export const ResumeModern: React.FC<ResumeModernProps> = ({
 
     if (personalInfoLayout === 'two-line') {
       // Split into two lines: first line has email, phone, info; second line has location, website, linkedin, github
-      const firstLine = contacts.filter(c => ['email', 'phone', 'info'].includes(c.key));
-      const secondLine = contacts.filter(c => ['location', 'website', 'linkedin', 'github'].includes(c.key));
+      const firstLine = contacts.filter((c) => ['email', 'phone', 'info'].includes(c.key));
+      const secondLine = contacts.filter((c) =>
+        ['location', 'website', 'linkedin', 'github'].includes(c.key)
+      );
 
       return (
         <div className={`flex flex-col items-center gap-1 ${baseStyles['resume-meta']}`}>
@@ -477,7 +503,6 @@ const AdditionalSection: React.FC<{
       <div className={`${baseStyles['resume-stack']} ${baseStyles['resume-text-sm']}`}>
         {(technicalSkills.length > 0 || (categorizedSkills && categorizedSkills.length > 0)) && (
           <div className="flex">
-            <span className="font-bold w-32 shrink-0">{mergedLabels.technicalSkills}</span>
             <span>
               {categorizedSkills && categorizedSkills.length > 0 ? (
                 <div className={baseStyles['resume-stack']}>
@@ -488,7 +513,10 @@ const AdditionalSection: React.FC<{
                   ))}
                 </div>
               ) : (
-                technicalSkills.join(', ')
+                <>
+                  <span className="font-bold w-32 shrink-0">{mergedLabels.technicalSkills}</span>
+                  {technicalSkills.join(', ')}
+                </>
               )}
             </span>
           </div>
@@ -500,15 +528,29 @@ const AdditionalSection: React.FC<{
           </div>
         )}
         {certificationsTraining.length > 0 && (
-          <div className="flex">
+          <div className="flex flex-col gap-1">
             <span className="font-bold w-32 shrink-0">{mergedLabels.certifications}</span>
-            <span>{certificationsTraining.join(', ')}</span>
+            <ul className={`ml-10 ${baseStyles['resume-list']} ${baseStyles['resume-text-sm']}`}>
+              {certificationsTraining.map((cert, index) => (
+                <li key={index} className="flex">
+                  <span className="mr-1.5 flex-shrink-0">•&nbsp;</span>
+                  <span>{cert}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
         {awards.length > 0 && (
-          <div className="flex">
+          <div className="flex flex-col gap-1">
             <span className="font-bold w-32 shrink-0">{mergedLabels.awards}</span>
-            <span>{awards.join(', ')}</span>
+            <ul className={`ml-10 ${baseStyles['resume-list']} ${baseStyles['resume-text-sm']}`}>
+              {awards.map((award, index) => (
+                <li key={index} className="flex">
+                  <span className="mr-1.5 flex-shrink-0">•&nbsp;</span>
+                  <span>{award}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </div>
